@@ -1,24 +1,25 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
-import { updateDeck, deleteDeck, getCards, createCard, updateCard, deleteCard, upsertCard } from '../lib/api'
+import { getDeck, getCurrentUser, updateDeck, deleteDeck, getCards, createCard, updateCard, deleteCard, upsertCard } from '../lib/api'
 import { uploadImage } from '../lib/api'
 import { parseAndValidateImport } from '../lib/importCards'
 
 type Params = { id: string }
 
+type CardView = {
+  id: string
+  card_code: string
+  front_text: string
+  back_text: string
+  front_image_path: string | null
+  back_image_path: string | null
+}
+
 export default function DeckEdit() {
   const navigate = useNavigate()
   const { id } = useParams<Params>()
   const [deck, setDeck] = useState<{ id: string; name: string; tag: string | null } | null>(null)
-  const [cards, setCards] = useState<{
-    id: string
-    card_code: string
-    front_text: string
-    back_text: string
-    front_image_path: string | null
-    back_image_path: string | null
-  }[]>([])
+  const [cards, setCards] = useState<CardView[]>([])
   const [loading, setLoading] = useState(true)
   const [savingDeck, setSavingDeck] = useState(false)
   const [deckName, setDeckName] = useState('')
@@ -29,8 +30,9 @@ export default function DeckEdit() {
   const load = useCallback(async () => {
     if (!id) return
     setLoading(true)
+    setError('')
     try {
-      const { data: deckData } = await supabase.from('decks').select('*').eq('id', id).single()
+      const deckData = await getDeck(id)
       setDeck(deckData)
       setDeckName(deckData.name)
       setDeckTag(deckData.tag ?? '')
@@ -61,6 +63,7 @@ export default function DeckEdit() {
       return
     }
     setSavingDeck(true)
+    setError('')
     try {
       await updateDeck(id!, { name: deckName.trim(), tag: deckTag.trim() || null })
       if (deck) setDeck({ ...deck, name: deckName.trim(), tag: deckTag.trim() || null })
@@ -81,13 +84,33 @@ export default function DeckEdit() {
     }
   }
 
-  if (loading) return <div className="page">Carregando...</div>
-  if (!deck) return <div className="page">Baralho não encontrado.</div>
+  if (loading) return (
+    <div className="page loading-state">
+      <h3>Carregando baralho…</h3>
+    </div>
+  )
+  if (error && !deck) {
+    return (
+      <div className="page error-state">
+        <h3>Erro ao carregar</h3>
+        <p>{error}</p>
+        <button className="btn btn-primary" onClick={load}>Tentar de novo</button>
+      </div>
+    )
+  }
+  if (!deck) return (
+    <div className="page error-state">
+      <h3>Baralho não encontrado.</h3>
+      <button className="btn" onClick={() => navigate('/')}>Voltar ao início</button>
+    </div>
+  )
 
   return (
     <div className="page">
-      <h1>Editar baralho</h1>
-      {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem' }}>{error}</p>}
+      <header style={{ marginBottom: '1.5rem' }}>
+        <h1>Editar baralho</h1>
+      </header>
+      {error && <p style={{ color: 'var(--err)', marginBottom: '1rem' }}>{error}</p>}
 
       <form onSubmit={handleSaveDeck} className="card section">
         <h2>Baralho</h2>
@@ -101,7 +124,7 @@ export default function DeckEdit() {
             <input className="input" value={deckTag} onChange={(e) => setDeckTag(e.target.value)} placeholder="Ex: #estudo" />
           </div>
           <button className="btn btn-primary" type="submit" disabled={savingDeck}>
-            {savingDeck ? 'Salvando...' : 'Salvar baralho'}
+            {savingDeck ? 'Salvando…' : 'Salvar baralho'}
           </button>
         </div>
         <button
@@ -137,18 +160,24 @@ export default function DeckEdit() {
       )}
 
       {cards.length === 0 ? (
-        <p>Nenhum cartão ainda. Adicione um abaixo.</p>
+        <div className="empty-state">
+          <h3>Nenhum cartão ainda</h3>
+          <p>Adicione um abaixo.</p>
+        </div>
       ) : (
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {cards.map((card) => (
-            <li key={card.id} className="card" style={{ padding: '1rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                <span style={{ fontWeight: '600', color: 'var(--accent)' }}>#{card.card_code}</span>
+            <li key={card.id} className="card section">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <strong style={{ color: 'var(--rose-600)' }}>#{card.card_code}</strong>
+                  <p style={{ marginTop: '0.25rem', color: 'var(--muted)' }}>{card.front_text}</p>
+                </div>
                 <button
                   className="btn btn-danger"
                   type="button"
                   onClick={() => handleDeleteCard(card.id)}
-                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.875rem' }}
+                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.875rem', minHeight: 'auto' }}
                 >
                   Excluir
                 </button>
@@ -216,8 +245,7 @@ function CardForm({ deckId, onCardAdded }: { deckId: string; onCardAdded: () => 
       let frontPath: string | undefined
       let backPath: string | undefined
 
-      // Get user id
-      const { data: { user } } = await supabase.auth.getUser()
+      const user = await getCurrentUser()
       if (!user) throw new Error('Usuário não autenticado')
 
       if (frontImage) {
@@ -253,7 +281,7 @@ function CardForm({ deckId, onCardAdded }: { deckId: string; onCardAdded: () => 
   return (
     <form onSubmit={handleSubmit} className="card section">
       <h3>Novo cartão</h3>
-      {error && <p style={{ color: 'var(--danger)', marginBottom: '0.75rem' }}>{error}</p>}
+      {error && <p style={{ color: 'var(--err)', marginBottom: '0.75rem' }}>{error}</p>}
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
         <div style={{ flex: 1, minWidth: '150px' }}>
           <label className="label">ID do cartão (opcional)</label>
@@ -304,7 +332,7 @@ function CardForm({ deckId, onCardAdded }: { deckId: string; onCardAdded: () => 
         )}
       </div>
       <button className="btn btn-primary" type="submit" disabled={saving} style={{ minHeight: '44px' }}>
-        {saving ? 'Adicionando...' : 'Adicionar cartão'}
+        {saving ? 'Adicionando…' : 'Adicionar cartão'}
       </button>
     </form>
   )
@@ -326,7 +354,7 @@ function ImportCardForm({ deckId, onClose, onImported }: { deckId: string; onClo
     if (!result) return
     setConfirming(true)
     try {
-      const { data: { user } } = await supabase.auth.getUser()
+      const user = await getCurrentUser()
       if (!user) throw new Error('Usuário não autenticado')
 
       for (const card of result.valid) {
@@ -354,7 +382,7 @@ function ImportCardForm({ deckId, onClose, onImported }: { deckId: string; onClo
       <form onSubmit={handleParse} className="card section">
         <h3>Importar cartões</h3>
         <p style={{ fontSize: '0.875rem', color: 'var(--muted)', marginBottom: '0.75rem' }}>
-          Formato: <code>{'[{' + '"id": "CARD-001", "question": "...", "answer": "..."' + '}]'}</code>
+          Formato: <code>{'[{' + '\"id\": \"CARD-001\", \"question\": \"...\", \"answer\": \"...\"' + '}]'}</code>
         </p>
         <textarea
           className="input"
@@ -383,7 +411,7 @@ function ImportCardForm({ deckId, onClose, onImported }: { deckId: string; onClo
       {invalid.length > 0 && (
         <div style={{ marginBottom: '0.75rem' }}>
           <h4 style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}>Itens inválidos:</h4>
-          <ul style={{ fontSize: '0.875rem', color: 'var(--danger)', listStyle: 'disc', paddingLeft: '1.2rem' }}>
+          <ul style={{ fontSize: '0.875rem', color: 'var(--err)', listStyle: 'disc', paddingLeft: '1.2rem' }}>
             {invalid.map((err: any) => (
               <li key={err.index}>Item {err.index + 1}: {err.reason}</li>
             ))}
@@ -400,7 +428,7 @@ function ImportCardForm({ deckId, onClose, onImported }: { deckId: string; onClo
           onClick={handleConfirm}
           disabled={confirming || valid.length === 0}
         >
-          {confirming ? 'Importando...' : `Importar ${valid.length} cartão${valid.length !== 1 ? 's' : ''}`}
+          {confirming ? 'Importando…' : `Importar ${valid.length} cartão${valid.length !== 1 ? 's' : ''}`}
         </button>
       </div>
     </div>

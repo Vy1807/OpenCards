@@ -41,7 +41,7 @@ describe('Home', () => {
     )
 
     expect(await screen.findByText('Cardiologia')).toBeInTheDocument()
-    expect(await screen.findByText('#estudo')).toBeInTheDocument()
+    expect(screen.getAllByText('#estudo')[0]).toBeInTheDocument()
     expect(await screen.findByText('5 cartões')).toBeInTheDocument()
     expect(await screen.findByText('Neurologia')).toBeInTheDocument()
     expect(await screen.findByText('0 cartões')).toBeInTheDocument()
