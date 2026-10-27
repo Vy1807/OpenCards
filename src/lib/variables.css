@@ -1,0 +1,16 @@
+:root {
+  --foreground: #0f172a;
+  --background: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --button-bg: #ffffff;
+  --button-text: #0f172a;
+  --input-bg: #ffffff;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --success: #059669;
+}
