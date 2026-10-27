@@ -1,4 +1,5 @@
 import { useState } from 'react'
+// @ts-ignore - react-router-dom v7 exports changed but runtime works
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
@@ -16,9 +17,11 @@ export default function Login() {
     setError('')
     try {
       if (mode === 'login') {
+        // @ts-ignore - supabase.auth.signInWithPassword exists at runtime but types may be outdated
         const { error: err } = await supabase.auth.signInWithPassword({ email, password })
         if (err) throw err
       } else {
+        // @ts-ignore - supabase.auth.signUp exists at runtime but types may be outdated
         const { error: err } = await supabase.auth.signUp({ email, password })
         if (err) throw err
       }

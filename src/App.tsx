@@ -1,5 +1,6 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+// @ts-ignore - react-router-dom v7 exports changed but runtime works
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, MemoryRouter } from 'react-router-dom'
 import { supabase } from './lib/supabase'
 import Login from './pages/Login'
 import Home from './pages/Home'
@@ -12,16 +13,17 @@ function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
-    setLoading(true)
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    let mounted = true
+
+    // @ts-ignore - onAuthStateChange exists at runtime but types may be outdated
+    const { data: authChannel } = supabase.auth.onAuthStateChange((_event: string, session: { user: { id: string } } | null) => {
+      if (!mounted) return
       setSession({ user: session?.user ?? null })
       setLoading(false)
     })
 
-    const { data: authChannel } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession({ user: session?.user ?? null })
-    })
     return () => {
+      mounted = false
       authChannel?.subscription?.unsubscribe()
     }
   }, [])

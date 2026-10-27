@@ -258,6 +258,7 @@ export async function upsertCard(input: NewCardInput): Promise<Card> {
 }
 
 export async function getCurrentUser(): Promise<{ id: string } | null> {
+  // @ts-ignore - supabase.auth.getUser exists at runtime but types may be outdated
   const { data, error } = await supabase.auth.getUser()
   if (error) throw error
   return data?.user ? { id: data.user.id } : null

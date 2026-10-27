@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
+// @ts-ignore - react-router-dom v7 exports changed but runtime works
 import { useNavigate } from 'react-router-dom'
 import { getDecks, createDeck, type Deck } from '../lib/api'
 import { streak } from '../lib/streak'

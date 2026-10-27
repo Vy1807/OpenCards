@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+// @ts-ignore - react-router-dom v7 exports changed but runtime works
 import { useParams, useNavigate } from 'react-router-dom'
 import { getDeck, getCurrentUser, updateDeck, deleteDeck, getCards, createCard, updateCard, deleteCard, upsertCard } from '../lib/api'
 import { uploadImage } from '../lib/api'

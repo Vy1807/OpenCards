@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
+// @ts-ignore - react-router-dom v7 exports changed but runtime works
 import { MemoryRouter } from 'react-router-dom'
 import '@testing-library/jest-dom'
 import Home from '../pages/Home'

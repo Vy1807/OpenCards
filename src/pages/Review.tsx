@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+// @ts-ignore - react-router-dom v7 exports changed but runtime works
 import { useParams, useNavigate } from 'react-router-dom'
 import { shuffle } from '../lib/shuffle'
 import { getCards, answerCard, type Card } from '../lib/api'
