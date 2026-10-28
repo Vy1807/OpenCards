@@ -1,6 +1,6 @@
 import React from 'react'
 // @ts-ignore - react-router-dom v7 exports changed but runtime works
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useParams, MemoryRouter } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { supabase } from './lib/supabase'
 import Login from './pages/Login'
 import Home from './pages/Home'
