@@ -467,6 +467,10 @@ h3 {
   color: var(--ink);
 }
 
+.header__nav {
+  display: none;
+}
+
 .header__actions {
   display: inline-flex;
   align-items: center;
@@ -615,5 +619,180 @@ body {
   /* Botões de ação primária em largura total */
   .btn.btn-primary {
     width: 100%;
+  }
+}
+
+/* Desktop — U-431: telas ≥1024px */
+@media (min-width: 1024px) {
+  html {
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+  }
+
+  /* Cabeçalho desktop: navegação no centro, avatar à direita */
+  .header {
+    padding: var(--space-6) var(--space-8);
+    gap: var(--space-8);
+  }
+
+  .header__actions {
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .header__brand {
+    font-size: 1.5rem;
+    margin-right: auto;
+  }
+
+  .header__brand-name {
+    font-size: 1.5rem;
+  }
+
+  .header__title {
+    font-size: 1.5rem;
+  }
+
+  /* Navegação desktop (aparece apenas em telas grandes) */
+  .header__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-left: var(--space-4);
+  }
+
+  .header__nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .header__nav-link:hover,
+  .header__nav-link[aria-current="page"] {
+    background: var(--surface-2);
+    color: var(--primary);
+  }
+
+  /* Usuário desktop: só o avatar + nome (sem ícone de tema duplicado) */
+  .user-menu__trigger {
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .user-menu__name {
+    display: inline;
+    font-weight: 500;
+  }
+
+  /* Dropdown do menu do usuário desktop */
+  .user-menu__dropdown {
+    top: calc(100% + var(--space-2));
+    right: 0;
+    left: auto;
+    min-width: 220px;
+    margin-top: var(--space-2);
+  }
+
+  /* Home desktop: grade de 3 colunas */
+  .home-decks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  /* Tela do baralho desktop: duas colunas */
+  .deck-page-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .deck-page-sidebar {
+    position: sticky;
+    top: var(--space-4);
+    height: fit-content;
+  }
+
+  /* Revisão desktop: cartão grande centralizado */
+  .review-card-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .review-actions.desktop {
+    flex-direction: row !important;
+    width: auto !important;
+    justify-content: center;
+  }
+
+  .review-actions.desktop > button {
+    flex: none !important;
+    width: auto !important;
+  }
+
+  /* Novo cartão desktop: duas colunas */
+  .new-card-layout {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  /* Login desktop: painel de marca à esquerda, formulário à direita */
+  .auth-layout-desktop {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: var(--space-8);
+    align-items: start;
+    min-height: 80vh;
+  }
+
+  .auth-brand-panel {
+    display: flex;
+    flexDirection: column;
+    justifyContent: center;
+    padding: var(--space-8);
+    background: var(--surface-2);
+    border-radius: var(--radius-lg);
+    height: fit-content;
+  }
+
+  .auth-brand-panel h2 {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 var(--space-4) 0;
+  }
+
+  .auth-brand-panel p {
+    color: var(--muted);
+    line-height: var(--line-height-loose);
+    margin: 0;
+  }
+
+  /* Container centralizado para conteúdos internos */
+  .container-max {
+    max-width: 1200px;
+    margin: 0 auto;
   }
 }

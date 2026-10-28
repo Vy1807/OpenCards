@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../app/providers';
 import ThemeMenu from '../../shared/ui/ThemeMenu';
 import { ArrowLeftIcon, LogoutIcon, UserIcon } from '../../shared/ui/icons';
@@ -47,6 +47,7 @@ type HeaderProps = {
 export default function Header({ title, showBack = false, backTo = '/' }: HeaderProps) {
   const { user, signOut } = useAuthSafe();
   const navigate = useNavigateSafe();
+  const location = useLocation();
 
   const handleSignOut = useCallback(async () => {
     await signOut();
@@ -78,6 +79,26 @@ export default function Header({ title, showBack = false, backTo = '/' }: Header
       {title && (
         <span className="header__title">{title}</span>
       )}
+
+      {/* Navegação desktop — aparece apenas em telas ≥1024px */}
+      <nav className="header__nav" aria-label="Navegação principal">
+        <button
+          type="button"
+          className="header__nav-link"
+          onClick={() => navigate('/')}
+          aria-current={location?.pathname === '/' ? 'page' : undefined}
+        >
+          Baralhos
+        </button>
+        <button
+          type="button"
+          className="header__nav-link"
+          onClick={() => navigate('/')}
+          aria-current={location?.pathname === '/' ? 'page' : undefined}
+        >
+          Revisar
+        </button>
+      </nav>
 
       <div className="header__actions">
         <ThemeMenu />
