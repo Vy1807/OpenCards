@@ -51,7 +51,7 @@ export default function Cadastro() {
     setErroForm('');
     try {
       // Validacao assincrona contra o Supabase: cadastro de auth só
-      // prossegue se o e-mail ainda nao estiver em uso.
+      // prossegue se o e-mail ainda não estiver em uso.
       await signUp(dados.email, dados.senha);
 
       const currentUser = await getCurrentUser();

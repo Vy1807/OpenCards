@@ -116,13 +116,13 @@ describe('Review — B-301: avaliação bloqueada antes de virar o card', () => 
       expect(screen.getByText('Pergunta 1')).toBeInTheDocument();
     });
 
-    const dificil = screen.getByRole('button', { name: /Difícil/ });
+    const difícil = screen.getByRole('button', { name: /Difícil/ });
     const bom = screen.getByRole('button', { name: /Bom/ });
-    const facil = screen.getByRole('button', { name: /Fácil/ });
+    const fácil = screen.getByRole('button', { name: /Fácil/ });
 
-    expect(dificil).toBeDisabled();
+    expect(difícil).toBeDisabled();
     expect(bom).toBeDisabled();
-    expect(facil).toBeDisabled();
+    expect(fácil).toBeDisabled();
   });
 
   it('após virar o card, botões de avaliação ficam habilitados', async () => {
@@ -138,13 +138,13 @@ describe('Review — B-301: avaliação bloqueada antes de virar o card', () => 
       expect(screen.getByText('Resposta 1')).toBeInTheDocument();
     });
 
-    const dificil = screen.getByRole('button', { name: /Difícil/ });
+    const difícil = screen.getByRole('button', { name: /Difícil/ });
     const bom = screen.getByRole('button', { name: /Bom/ });
-    const facil = screen.getByRole('button', { name: /Fácil/ });
+    const fácil = screen.getByRole('button', { name: /Fácil/ });
 
-    expect(dificil).not.toBeDisabled();
+    expect(difícil).not.toBeDisabled();
     expect(bom).not.toBeDisabled();
-    expect(facil).not.toBeDisabled();
+    expect(fácil).not.toBeDisabled();
   });
 
   it('Enter vira o card (teclado)', async () => {
