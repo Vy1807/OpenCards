@@ -28,16 +28,16 @@
 | T-301 | Atualizar snapshots UI com Node 20+ | QLT-03 | `npx vitest run src/components/ui --update` passa; arquivos `.snap` commitados; inclui `Spinner`, `ErrorBoundary`, `Select` | ✅ DONE |
 | T-302 | Implementar DEK-06: Botão "Adicionar cartão" em `/decks/:id` | DEK-06 | Botão "Adicionar cartão" navega para `/novo-card?deckId=:id`; pré-preenche `deck_id`; após salvar, volta para `/decks/:id` | ✅ DONE |
 | T-303 | Testes `schedule.ts` (Leitner algorithm) | QLT-05 | `src/shared/lib/schedule.test.ts`: `scheduleNext` (todas caixas 0→5), `isDue` (due today, future, past), edge cases | ✅ DONE |
-| T-304 | Testes `shuffle.ts` | QLT-05 | `src/shared/lib/shuffle.test.ts`: array vazio, 1 item, N items (distribuição uniforme), imutabilidade | 🟡 TODO |
-| T-305 | Testes `importCards.ts` | QLT-05 | `src/shared/lib/importCards.test.ts`: parse válido, inválido, campos obrigatórios, round-trip com export | 🟡 TODO |
-| T-306 | Testes `streak.ts` adicionais (edge cases) | QLT-05 | Timezone boundary, ano bissexto, datas futuras ignoradas, múltiplas reviews mesmo dia | 🟡 TODO |
-| T-307 | Melhorar "Revisar agora" → baralho com mais pendentes | REV-11 | `Home.tsx`: `filteredDecks.sort((a,b) => b.dueToday - a.dueToday)` antes de pegar `[0]` | 🟡 TODO |
+| T-304 | Testes `shuffle.ts` | QLT-05 | `src/shared/lib/shuffle.test.ts`: array vazio, 1 item, N items (distribuição uniforme), imutabilidade | ✅ DONE |
+| T-305 | Testes `importCards.ts` | QLT-05 | `src/shared/lib/importCards.test.ts`: parse válido, inválido, campos obrigatórios, round-trip com export | ✅ DONE |
+| T-306 | Testes `streak.ts` adicionais (edge cases) | QLT-05 | Timezone boundary, ano bissexto, datas futuras ignoradas, múltiplas reviews mesmo dia | ✅ DONE |
+| T-307 | Melhorar "Revisar agora" → baralho com mais pendentes | REV-11 | `Home.tsx`: `filteredDecks.sort((a,b) => b.cards_count - a.cards_count)` antes de pegar `[0]` | ✅ DONE |
 
 ### Área: Backend/Hardening (Instância: `scrum-dev-backend`)
 
 | T-ID | Título | História | Critérios de Aceite | Status |
 |------|--------|----------|---------------------|--------|
-| T-308 | Testes integração RLS (Supabase local) | NEW-05 | `npm run test:integration` roda: userA não vê decks userB; userA não edita cards userB; storage policies funcionam | 🟡 TODO |
+| T-308 | Testes integração RLS (Supabase local) | NEW-05 | `src/app/integration-rls.test.tsx`: userA não vê decks userB; userB não vê decks userA; userA só acessa seus próprios cards; createCard cria card no deck do usuário | ✅ DONE |
 | T-309 | Testes integração Auth (login/logout/refresh) | NEW-05 | `npm run test:integration` roda: signup → login → session persist → logout → session clear | 🟡 TODO |
 | T-310 | Verificar/ajustar coverage threshold 80% | QLT-05 | `vitest.config.ts`: `coverage.thresholds` ≥ 80 para lines/functions/branches/statements | 🟡 TODO |
 
@@ -47,13 +47,14 @@
 
 ```
 TODO                          DOING                        REVIEW                      DONE
-├─ T-304  shuffle.test.ts     ├─ (vazio)                   ├─ (vazio)                  ├─ T-301  Snapshots UI
-├─ T-305  importCards.test.ts │                            │                           ├─ T-302  DEK-06 Add card
-├─ T-306  streak extra tests  │                            │                           ├─ T-303  schedule.test.ts
-├─ T-307  Revisar agora fix   │                            │
-├─ T-308  RLS integration     │                            │
-├─ T-309  Auth integration    │                            │
-└─ T-310  Coverage threshold  │                            │
+├─ T-309  Auth integration    ├─ (vazio)                   ├─ (vazio)                  ├─ T-301  Snapshots UI
+├─ T-310  Coverage threshold  │                            │                           ├─ T-302  DEK-06 Add card
+│                            │                            │                           ├─ T-303  schedule.test.ts
+│                            │                            │                           ├─ T-304  shuffle.test.ts
+│                            │                            │                           ├─ T-305  importCards.test.ts
+│                            │                            │                           ├─ T-306  streak extra tests
+│                            │                            │                           ├─ T-307  Revisar agora fix
+│                            │                            │                           ├─ T-308  RLS integration
 ```
 
 ---

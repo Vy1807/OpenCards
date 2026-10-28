@@ -40,11 +40,14 @@ export default function Home() {
   const filteredDecks = useMemo(() => {
     const s = search.toLowerCase();
     const t = filterTag;
-    return decks.filter((d) => {
-      const matchName = d.name.toLowerCase().includes(s);
-      const matchTag = t === '' || t === 'Todos' ? true : d.tag === t;
-      return matchName && matchTag;
-    });
+    return decks
+      .filter((d) => {
+        const matchName = d.name.toLowerCase().includes(s);
+        const matchTag = t === '' || t === 'Todos' ? true : d.tag === t;
+        return matchName && matchTag;
+      })
+      // Revisar agora → prioriza baralho com mais cards pendentes (cards_count como proxy)
+      .sort((a, b) => (b.cards_count ?? 0) - (a.cards_count ?? 0));
   }, [decks, search, filterTag]);
 
   const currentStreak = streak([], new Date());
