@@ -38,7 +38,7 @@
 | T-ID | Título | História | Critérios de Aceite | Status |
 |------|--------|----------|---------------------|--------|
 | T-308 | Testes integração RLS (Supabase local) | NEW-05 | `src/app/integration-rls.test.tsx`: userA não vê decks userB; userB não vê decks userA; userA só acessa seus próprios cards; createCard cria card no deck do usuário | ✅ DONE |
-| T-309 | Testes integração Auth (login/logout/refresh) | NEW-05 | `npm run test:integration` roda: signup → login → session persist → logout → session clear | 🟡 TODO |
+| T-309 | Testes integração Auth (login/logout/refresh) | NEW-05 | `src/app/integration-auth.test.tsx`: login válido → sessão persistente → logout limpa sessão; login inválido → não cria sessão | ✅ DONE |
 | T-310 | Verificar/ajustar coverage threshold 80% | QLT-05 | `vitest.config.ts`: `coverage.thresholds` ≥ 80 para lines/functions/branches/statements | 🟡 TODO |
 
 ---
@@ -47,14 +47,15 @@
 
 ```
 TODO                          DOING                        REVIEW                      DONE
-├─ T-309  Auth integration    ├─ (vazio)                   ├─ (vazio)                  ├─ T-301  Snapshots UI
-├─ T-310  Coverage threshold  │                            │                           ├─ T-302  DEK-06 Add card
+├─ T-310  Coverage threshold  ├─ (vazio)                   ├─ (vazio)                  ├─ T-301  Snapshots UI
+│                            │                            │                           ├─ T-302  DEK-06 Add card
 │                            │                            │                           ├─ T-303  schedule.test.ts
 │                            │                            │                           ├─ T-304  shuffle.test.ts
 │                            │                            │                           ├─ T-305  importCards.test.ts
 │                            │                            │                           ├─ T-306  streak extra tests
 │                            │                            │                           ├─ T-307  Revisar agora fix
 │                            │                            │                           ├─ T-308  RLS integration
+│                            │                            │                           ├─ T-309  Auth integration
 ```
 
 ---
