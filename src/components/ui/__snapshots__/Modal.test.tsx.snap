@@ -16,13 +16,13 @@ exports[`Modal > gera snapshot de regressão visual (aberto) 1`] = `
     >
       <h2
         id="_r_5_-title"
-        style="margin: 0px; font-family: "Fraunces", Georgia, serif; font-size: 1.125rem; font-weight: 600; color: rgb(43, 32, 36); line-height: 1.2;"
+        style="margin: 0px; font-family: Fraunces, Georgia, serif; font-size: 1.125rem; font-weight: 600; color: #2B2024; line-height: 1.2;"
       >
         Título do modal
       </h2>
       <button
         aria-label="Fechar"
-        style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 9999px; border: 1px solid rgb(243, 217, 225); background: rgb(255, 255, 255); color: rgb(138, 117, 128); cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; padding: 0px;"
+        style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 9999px; border: 1px solid #F3D9E1; background: #FFFFFF; color: #8A7580; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; padding: 0px;"
         type="button"
       >
         <svg
@@ -55,7 +55,7 @@ exports[`Modal > gera snapshot de regressão visual (aberto) 1`] = `
       </button>
     </div>
     <div
-      style="outline: none;"
+      style="outline-color: none; outline-style: none; outline-width: initial;"
     >
       Corpo do modal
     </div>

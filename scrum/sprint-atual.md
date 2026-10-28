@@ -25,7 +25,7 @@
 
 | T-ID | Título | História | Critérios de Aceite | Status |
 |------|--------|----------|---------------------|--------|
-| T-301 | Atualizar snapshots UI com Node 20+ | QLT-03 | `npx vitest run src/components/ui --update` passa; arquivos `.snap` commitados; inclui `Spinner`, `ErrorBoundary`, `Select` | 🟡 TODO |
+| T-301 | Atualizar snapshots UI com Node 20+ | QLT-03 | `npx vitest run src/components/ui --update` passa; arquivos `.snap` commitados; inclui `Spinner`, `ErrorBoundary`, `Select` | ✅ DONE |
 | T-302 | Implementar DEK-06: Botão "Adicionar cartão" em `/decks/:id` | DEK-06 | Botão "Adicionar cartão" abre modal OU navega para `/novo-card?deckId=:id`; pré-preenche `deck_id`; após criar, volta para `/decks/:id` | 🟡 TODO |
 | T-303 | Testes `schedule.ts` (Leitner algorithm) | QLT-05 | `src/shared/lib/schedule.test.ts`: `scheduleNext` (todas caixas 0→5), `isDue` (due today, future, past), edge cases | 🟡 TODO |
 | T-304 | Testes `shuffle.ts` | QLT-05 | `src/shared/lib/shuffle.test.ts`: array vazio, 1 item, N items (distribuição uniforme), imutabilidade | 🟡 TODO |
@@ -47,10 +47,8 @@
 
 ```
 TODO                          DOING                        REVIEW                      DONE
-├─ T-301  Snapshots UI        ├─ (vazio)                   ├─ (vazio)                  ├─ (Sprint 3 inicia)
-├─ T-302  DEK-06 Add card     │                            │
-├─ T-303  schedule.test.ts    │                            │
-├─ T-304  shuffle.test.ts     │                            │
+├─ T-302  DEK-06 Add card     ├─ T-303  schedule.test.ts   ├─ (vazio)                  ├─ T-301  Snapshots UI
+├─ T-304  shuffle.test.ts     │                            │                           ├─ (Sprint 3 inicia)
 ├─ T-305  importCards.test.ts │                            │
 ├─ T-306  streak extra tests  │                            │
 ├─ T-307  Revisar agora fix   │                            │

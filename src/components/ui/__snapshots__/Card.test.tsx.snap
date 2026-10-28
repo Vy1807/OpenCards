@@ -3,7 +3,7 @@
 exports[`Card > gera snapshot de regressão visual 1`] = `
 <div
   class="ui-card ui-card--padded-lg"
-  style="box-sizing: border-box; display: block; width: auto; border-radius: 16px; background: rgb(255, 255, 255); border: 1px solid rgb(243, 217, 225); box-shadow: 0 4px 12px rgba(224, 82, 127, 0.06); padding: 40px; transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;"
+  style="box-sizing: border-box; display: block; width: auto; border-radius: 16px; background: #FFFFFF; border: 1px solid #F3D9E1; box-shadow: 0 4px 12px rgba(224, 82, 127, 0.06); padding: 40px; transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;"
 >
   <span
     data-testid="conteudo"

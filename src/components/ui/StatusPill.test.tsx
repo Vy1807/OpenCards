@@ -8,7 +8,8 @@ describe('StatusPill', () => {
     render(<StatusPill variant="uptodate" />);
     const pill = screen.getByText('Em dia');
     expect(pill).toBeInTheDocument();
-    expect(pill).toHaveStyle('background-color: rgba(0, 0, 0, 0)');
+    // happy-dom returns 'transparent' instead of rgba(0, 0, 0, 0)
+    expect(pill).toHaveStyle('background-color: transparent');
     expect(pill).toHaveStyle('color: #E0527F');
   });
 
@@ -17,7 +18,8 @@ describe('StatusPill', () => {
     const pill = screen.getByText('3 para hoje');
     expect(pill).toBeInTheDocument();
     expect(pill).toHaveStyle('background-color: #E0527F');
-    expect(pill).toHaveStyle('color: #ffffff');
+    // happy-dom returns uppercase hex for colors
+    expect(pill).toHaveStyle('color: #FFFFFF');
   });
 
   it('exibe "0 para hoje" quando count é zero em modo devido', () => {

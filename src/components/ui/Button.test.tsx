@@ -13,7 +13,8 @@ describe('Button', () => {
     const { container } = render(<Button variant="solid">Salvar</Button>);
     const button = container.firstChild as HTMLElement;
     expect(button).toHaveStyle('background-color: #E0527F');
-    expect(button).toHaveStyle('color: #ffffff');
+    // happy-dom returns uppercase hex for colors
+    expect(button).toHaveStyle('color: #FFFFFF');
   });
 
   it('desabilitado aplica opacidade e desativa interação', () => {
