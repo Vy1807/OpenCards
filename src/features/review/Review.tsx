@@ -7,7 +7,6 @@ import type { Card } from '../../entities/card/model/card';
 import Flashcard from './Flashcard';
 import Confetti from './Confetti';
 import { CheckIcon, CloseIcon, ArrowRightIcon, ArrowLeftIcon } from '../../shared/ui/icons';
-import Header from '../../components/ui/Header';
 import ProgressBar from '../../components/ui/ProgressBar';
 import { tokens } from '../../design/tokens';
 
@@ -153,7 +152,6 @@ export default function Review() {
     return (
       <div className="page">
         <header style={{ marginBottom: tokens.space[6] }}>
-          <Header title="Revisão concluída" showBack backTo={`/decks/${id}`} />
         </header>
         <section className="card section" style={{ textAlign: 'center' }}>
           <div className="ring" style={{ transform: `rotate(${-45 + ringDeg}deg)` }}>
@@ -228,13 +226,12 @@ export default function Review() {
           gap: tokens.space[4],
         }}
       >
-        <Header title="Revisão do dia" showBack backTo={`/decks/${id}`} />
-        <span
+      <span
           style={{
             fontFamily: tokens.typography.fontHeading,
             fontSize: tokens.typography.fontSize.lg,
             fontWeight: '700',
-            color: tokens.colors.ink,
+            color: 'var(--ink)',
             whiteSpace: 'nowrap',
           }}
         >
@@ -287,7 +284,7 @@ export default function Review() {
         <p
           style={{
             fontSize: tokens.typography.fontSize.xs,
-            color: tokens.colors.muted,
+            color: 'var(--muted)',
             textAlign: 'center',
           }}
         >
@@ -311,8 +308,8 @@ export default function Review() {
               minHeight: '56px',
               fontSize: '1rem',
               background: 'transparent',
-              color: tokens.colors.err,
-              border: `1px solid ${tokens.colors.err}`,
+              color: 'var(--err)',
+              border: `1px solid var(--err)`,
             }}
           >
             <ArrowLeftIcon size={16} aria-hidden="true" /> Difícil
@@ -338,8 +335,8 @@ export default function Review() {
               minHeight: '56px',
               fontSize: '1rem',
               background: 'transparent',
-              color: tokens.colors.ok,
-              border: `1px solid ${tokens.colors.ok}`,
+              color: 'var(--ok)',
+              border: `1px solid var(--ok)`,
             }}
           >
             Fácil <ArrowRightIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
@@ -350,7 +347,7 @@ export default function Review() {
         <p
           style={{
             fontSize: tokens.typography.fontSize.sm,
-            color: tokens.colors.primary,
+            color: 'var(--color-primary)',
             fontWeight: '600',
             textAlign: 'center',
             margin: 0,

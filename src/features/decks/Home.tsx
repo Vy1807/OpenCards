@@ -16,7 +16,6 @@ import {
   InfoIcon,
 } from '../../shared/ui/icons';
 import { tokens } from '../../design/tokens';
-import Header from '../../components/ui/Header';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -106,8 +105,6 @@ export default function Home() {
 
   return (
     <div className="page" style={{ maxWidth: '1000px', margin: '0 auto', padding: '1rem' }}>
-      <Header title="Baralhos" />
-
       {/* Ação: criar novo baralho */}
       <div style={{ display: 'flex', gap: tokens.space[2], marginBottom: tokens.space[4] }}>
         <button
@@ -164,7 +161,7 @@ export default function Home() {
         </form>
       )}
 
-      {formError && <p style={{ color: tokens.colors.err, marginBottom: tokens.space[4] }}>{formError}</p>}
+      {formError && <p style={{ color: 'var(--err)', marginBottom: tokens.space[4] }}>{formError}</p>}
 
       {/* Saudação + resumo + "Revisar agora" em bloco de destaque */}
       <section className="card section" style={{ marginBottom: tokens.space[6], padding: tokens.space[6] }}>
@@ -178,7 +175,7 @@ export default function Home() {
           >
             <path
               d="M0,20 Q100,0 200,20 T400,20 T600,20 T700,20"
-              stroke={tokens.colors.primary}
+              stroke="var(--color-primary)"
               strokeWidth="3"
               fill="none"
             />
@@ -189,7 +186,7 @@ export default function Home() {
             fontFamily: tokens.typography.fontHeading,
             fontSize: tokens.typography.fontSize.xxl,
             fontWeight: '700',
-            color: tokens.colors.ink,
+            color: 'var(--ink)',
             margin: '0 0 0.75rem 0',
           }}
         >
@@ -208,13 +205,13 @@ export default function Home() {
             style={{
               fontFamily: tokens.typography.fontBody,
               fontSize: tokens.typography.fontSize.sm,
-              color: tokens.colors.muted,
+              color: 'var(--muted)',
             }}
           >
             {formatStreak(currentStreak)}
             <span
               style={{
-                color: tokens.colors.primary,
+                color: 'var(--color-primary)',
                 fontWeight: '600',
               }}
             >
@@ -236,7 +233,7 @@ export default function Home() {
                 style={{
                   fontFamily: tokens.typography.fontBody,
                   fontSize: tokens.typography.fontSize.sm,
-                  color: tokens.colors.primary,
+                  color: 'var(--color-primary)',
                   fontWeight: '600',
                 }}
               >
@@ -389,7 +386,7 @@ export default function Home() {
                           margin: 0,
                           fontFamily: tokens.typography.fontHeading,
                           fontSize: tokens.typography.fontSize.lg,
-                          color: tokens.colors.ink,
+                          color: 'var(--ink)',
                         }}
                       >
                         {deck.name}
@@ -399,8 +396,8 @@ export default function Home() {
                       <span
                         style={{
                           fontSize: tokens.typography.fontSize.xs,
-                          color: tokens.colors.onPrimary,
-                          background: tokens.colors.primary,
+                          color: 'var(--on-primary)',
+                          background: 'var(--color-primary)',
                           borderRadius: tokens.radius.full,
                           padding: '0.125rem 0.5rem',
                           fontWeight: '600',
@@ -433,7 +430,7 @@ export default function Home() {
                     <span
                       style={{
                         fontSize: tokens.typography.fontSize.xs,
-                        color: tokens.colors.muted,
+                        color: 'var(--muted)',
                       }}
                     >
                       Clique para abrir

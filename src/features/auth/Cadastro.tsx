@@ -19,7 +19,7 @@ const schema = z
     telefone: z.string().refine(validarTelefone, { message: 'Telefone invalido.' }),
   })
   .refine((dados) => dados.senha === dados.confirmarSenha, {
-    message: 'As senhas nao coincidem.',
+    message: 'As senhas não coincidem.',
     path: ['confirmarSenha'],
   });
 
@@ -56,10 +56,10 @@ export default function Cadastro() {
 
       const currentUser = await getCurrentUser();
       if (!currentUser) {
-        throw new Error('Nao foi possivel restaurar a sessao apos o cadastro.');
+        throw new Error('Não foi possível restaurar a sessão após o cadastro.');
       }
 
-      // Dados complementares persistidos no Supabase (tabela profiles, RLS por usuario).
+      // Dados complementares persistidos no Supabase (tabela profiles, RLS por usuário).
       await upsertProfile({
         userId: currentUser.id,
         nome: dados.nome,
@@ -74,7 +74,7 @@ export default function Cadastro() {
       if (/already registered/i.test(mensagem)) {
         setError('email', {
           type: 'manual',
-          message: 'Este e-mail ja esta em uso. Tente entrar.',
+          message: 'Este e-mail já está em uso. Tente entrar.',
         });
       } else {
         setErroForm(mensagem);

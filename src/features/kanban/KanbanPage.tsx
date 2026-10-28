@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AlertIcon } from '../../shared/ui/icons';
-import Header from '../../components/ui/Header';
 import { tokens } from '../../design/tokens';
 
 import Board from './components/Board';
@@ -61,7 +60,6 @@ export default function KanbanPage() {
 
   return (
     <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1rem' }}>
-      <Header title="Quadro Kanban" showBack backTo="/" />
       {error && (
         <div
           style={{

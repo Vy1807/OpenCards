@@ -71,11 +71,11 @@ export default function Column({
         gap: tokens.spacing[3],
         minWidth: '300px',
         width: 280,
-        background: tokens.colors.background,
+        background: 'var(--surface)',
         borderRadius: tokens.radius.md,
         padding: tokens.spacing[3],
         border: dragOver
-          ? `2px dashed ${tokens.colors.primary}`
+          ? `2px dashed var(--color-primary)`
           : `1px solid transparent`,
         boxShadow: tokens.shadows.md,
       } as React.CSSProperties}
@@ -97,7 +97,7 @@ export default function Column({
             fontFamily: tokens.typography.fontHeading,
             fontSize: tokens.typography.fontSize.xxl,
             fontWeight: tokens.typography.fontWeight.semibold,
-            color: tokens.colors.ink,
+            color: 'var(--ink)',
           }}
         >
           {title}
@@ -107,7 +107,7 @@ export default function Column({
             fontFamily: tokens.typography.fontBody,
             fontSize: tokens.typography.fontSize.xs,
             fontWeight: tokens.typography.fontWeight.semibold,
-            color: tokens.colors.muted,
+            color: 'var(--muted)',
           }}
         >
           {cards.length} cartões
@@ -157,9 +157,9 @@ export default function Column({
                   fontSize: tokens.typography.fontSize.sm,
                   padding: '0.625rem 0.875rem',
                   borderRadius: tokens.radius.sm,
-                  border: `1px solid ${tokens.colors.line}`,
-                  background: tokens.colors.surface,
-                  color: tokens.colors.ink,
+                  border: `1px solid var(--line)`,
+                  background: 'var(--surface)',
+                  color: 'var(--ink)',
                   width: '100%',
                 }}
               />
@@ -186,8 +186,8 @@ export default function Column({
               size="sm"
               onClick={() => setAdding(true)}
               style={{
-                color: tokens.colors.primary,
-                border: `1px dashed ${tokens.colors.primary}`,
+                color: 'var(--color-primary)',
+                border: `1px dashed var(--color-primary)`,
                 textAlign: 'left',
                 padding: `${tokens.spacing[2]} ${tokens.spacing[3]}`,
               }}

@@ -1,16 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDeck } from './useDeck';
-import { exportCards } from '../../shared/lib/exportCards';
+import { parseAndValidateImport } from '../../shared/lib/importCards';
 import {
   AlertIcon,
-  DownloadIcon,
   InfoIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon,
+  UploadIcon,
 } from '../../shared/ui/icons';
-import Header from '../../components/ui/Header';
 import { tokens } from '../../design/tokens';
 
 type Params = { id: string };
@@ -18,15 +17,16 @@ type Params = { id: string };
 export default function Deck() {
   const navigate = useNavigate();
   const { id } = useParams<Params>();
-  const { deck, cards, loading, refresh, getDeckStats, deleteCard } = useDeck(id!);
+  const { deck, cards, loading, refresh, getDeckStats, deleteCard, createCard } = useDeck(id!);
   const [stats, setStats] = useState<{
     total: number;
     mastered: number;
     dueToday: number;
     accuracy: number;
   } | null>(null);
-  const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [deckError, setDeckError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     if (!id) return;
@@ -49,24 +49,38 @@ export default function Deck() {
     load();
   }, [load, id]);
 
-  const handleExport = async () => {
-    setExporting(true);
+  const handleImport = async (file: File) => {
+    setImporting(true);
+    setDeckError('');
     try {
-      const exported = exportCards(cards);
-      const json = JSON.stringify(exported, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${(deck?.name || 'baralho').replace(/\\s+/g, '_')}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      const text = await file.text();
+      const result = parseAndValidateImport(text);
+      if (result.invalid.length > 0) {
+        setDeckError(
+          result.invalid
+            .map((e) => `Item ${e.index + 1}: ${e.reason}`)
+            .join('\n')
+        );
+        return;
+      }
+      for (const card of result.valid) {
+        await createCard({
+          deck_id: id!,
+          card_code: undefined,
+          front_text: card.question,
+          back_text: card.answer,
+          front_image_path: null,
+          back_image_path: null,
+        });
+      }
+      setDeckError(
+        `Importados ${result.valid.length} cartão${result.valid.length !== 1 ? 's' : ''} com sucesso.`
+      );
+      await refresh();
     } catch {
-      // erro de exportação
+      setDeckError('Não foi possível importar o arquivo.');
     } finally {
-      setExporting(false);
+      setImporting(false);
     }
   };
 
@@ -94,8 +108,6 @@ export default function Deck() {
 
   return (
     <div className="page">
-      <Header title={deck.name} showBack backTo="/" />
-
       {/* Título e stats do baralho */}
       <section className="card section" style={{ marginBottom: tokens.space[6] }}>
         <div
@@ -105,6 +117,31 @@ export default function Deck() {
             gap: tokens.space[4],
           }}
         >
+          <h1
+            style={{
+              fontFamily: tokens.typography.fontHeading,
+              fontSize: tokens.typography.fontSize.xxl,
+              fontWeight: '700',
+              color: 'var(--ink)',
+              margin: 0,
+            }}
+          >
+            {deck?.name}
+          </h1>
+          {deck?.tag && (
+            <span
+              style={{
+                fontSize: tokens.typography.fontSize.xs,
+                color: 'var(--on-primary)',
+                background: 'var(--color-primary)',
+                borderRadius: tokens.radius.full,
+                padding: '0.125rem 0.5rem',
+                fontWeight: '600',
+              }}
+            >
+              {deck.tag}
+            </span>
+          )}
           {/* Estatísticas em grid 2x2 */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: tokens.space[3] }}>
             <div style={{ textAlign: 'center' }}>
@@ -113,7 +150,7 @@ export default function Deck() {
                   display: 'block',
                   fontSize: '1.5rem',
                   fontWeight: '700',
-                  color: tokens.colors.primary,
+                  color: 'var(--color-primary)',
                 }}
               >
                 {total}
@@ -128,7 +165,7 @@ export default function Deck() {
                   display: 'block',
                   fontSize: '1.5rem',
                   fontWeight: '700',
-                  color: tokens.colors.ok,
+                  color: 'var(--ok)',
                 }}
               >
                 {mastered}
@@ -143,7 +180,7 @@ export default function Deck() {
                   display: 'block',
                   fontSize: '1.5rem',
                   fontWeight: '700',
-                  color: tokens.colors.err,
+                  color: 'var(--err)',
                 }}
               >
                 {dueToday}
@@ -158,7 +195,7 @@ export default function Deck() {
                   display: 'block',
                   fontSize: '1.5rem',
                   fontWeight: '700',
-                  color: tokens.colors.ink,
+                  color: 'var(--ink)',
                 }}
               >
                 {accuracy}%
@@ -173,7 +210,7 @@ export default function Deck() {
           <div className="ecg-progress">
             <div className="ecg-progress__fill" style={{ width: `${progress}%` }} />
           </div>
-          <p style={{ fontSize: '0.875rem', color: tokens.colors.muted, textAlign: 'center' }}>
+          <p style={{ fontSize: '0.875rem',            color: 'var(--muted)', textAlign: 'center' }}>
             {mastered} de {total} dominados
           </p>
         </div>
@@ -206,8 +243,8 @@ export default function Deck() {
               minHeight: '48px',
               padding: `${tokens.space[3]} ${tokens.space[5]}`,
               border: 'var(--border)',
-              background: tokens.colors.surface,
-              color: tokens.colors.ink,
+              background: 'var(--surface)',
+              color: 'var(--ink)',
             }}
           >
             <PlusIcon size={16} style={{ verticalAlign: 'middle' }} />
@@ -227,8 +264,8 @@ export default function Deck() {
                 alignItems: 'center',
                 gap: tokens.space[3],
                 border: 'var(--border)',
-                background: tokens.colors.surface,
-                color: tokens.colors.ink,
+                background: 'var(--surface)',
+                color: 'var(--ink)',
               }}
               title="Editar baralho"
             >
@@ -237,8 +274,8 @@ export default function Deck() {
             </button>
             <button
               className="btn"
-              onClick={handleExport}
-              disabled={exporting || !hasCards}
+              onClick={() => fileInputRef.current?.click()}
+              disabled={importing || !hasCards}
               style={{
                 minHeight: '48px',
                 width: '100%',
@@ -247,13 +284,23 @@ export default function Deck() {
                 alignItems: 'center',
                 gap: tokens.space[3],
                 border: 'var(--border)',
-                background: tokens.colors.surface,
-                color: tokens.colors.ink,
+                background: 'var(--surface)',
+                color: 'var(--ink)',
               }}
             >
-              <DownloadIcon size={18} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />
-              {exporting ? 'Exportando…' : 'Exportar JSON'}
+              <UploadIcon size={18} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />
+              {importing ? 'Importando…' : 'Importar JSON'}
             </button>
+            <input
+              type="file"
+              accept=".json"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleImport(file);
+              }}
+            />
           </div>
         </div>
       </div>
@@ -297,7 +344,7 @@ export default function Deck() {
                     style={{
                       marginTop: tokens.space[2],
                       fontSize: '0.875rem',
-                      color: tokens.colors.secondary,
+                      color: 'var(--color-secondary)',
                       fontStyle: 'italic',
                     }}
                   >

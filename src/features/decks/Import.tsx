@@ -4,7 +4,6 @@ import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Select from '../../components/ui/Select';
 import { UploadIcon, AlertIcon, CheckIcon } from '../../shared/ui/icons';
-import Header from '../../components/ui/Header';
 import { parseAndValidateImport, type ImportCard } from '../../shared/lib/importCards';
 import { tokens } from '../../design/tokens';
 
@@ -117,7 +116,6 @@ export default function Import() {
 
   return (
     <div className="page" style={{ maxWidth: '720px', margin: '0 auto', padding: '1rem' }}>
-      <Header title="Importar cartões" showBack backTo="/" />
       {toast && (
         <div
           style={{
@@ -143,7 +141,7 @@ export default function Import() {
         style={{
           fontFamily: tokens.typography.fontHeading,
           fontSize: tokens.typography.fontSize.xxl,
-          color: tokens.colors.ink,
+          color: 'var(--ink)',
           margin: '0 0 1rem 0',
         }}
       >
@@ -164,7 +162,7 @@ export default function Import() {
           <p
             style={{
               fontSize: tokens.typography.fontSize.sm,
-              color: tokens.colors.muted,
+              color: 'var(--muted)',
               marginTop: '0.5rem',
             }}
           >
@@ -207,7 +205,7 @@ export default function Import() {
             style={{
               margin: 0,
               fontSize: tokens.typography.fontSize.sm,
-              color: tokens.colors.muted,
+              color: 'var(--muted)',
             }}
           >
             Arraste um arquivo JSON ou clique para selecionar.
@@ -225,7 +223,7 @@ export default function Import() {
             style={{
               margin: '0 0 0.5rem 0',
               fontSize: tokens.typography.fontSize.sm,
-              color: tokens.colors.muted,
+              color: 'var(--muted)',
             }}
           >
             Ou cole o JSON
@@ -241,9 +239,9 @@ export default function Import() {
               fontSize: tokens.typography.fontSize.sm,
               padding: '0.75rem',
               borderRadius: tokens.radius.sm,
-              border: `1px solid ${tokens.colors.line}`,
-              background: tokens.colors.surface,
-              color: tokens.colors.ink,
+              border: `1px solid var(--line)`,
+              background: 'var(--surface)',
+              color: 'var(--ink)',
               resize: 'vertical',
             }}
           />
@@ -278,7 +276,7 @@ export default function Import() {
                 style={{
                   fontSize: tokens.typography.fontSize.sm,
                   marginBottom: '0.25rem',
-                  color: tokens.colors.err,
+                  color: 'var(--err)',
                 }}
               >
                 Itens inválidos:
@@ -286,7 +284,7 @@ export default function Import() {
               <ul
                 style={{
                   fontSize: tokens.typography.fontSize.sm,
-                  color: tokens.colors.err,
+                  color: 'var(--err)',
                   listStyle: 'disc',
                   paddingLeft: '1.2rem',
                 }}

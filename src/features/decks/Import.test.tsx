@@ -98,7 +98,7 @@ describe('Import (tela de importacao em lote)', () => {
     const dropzone = screen.getByText(/Escolher arquivo .json/).parentElement as HTMLElement;
     const file = new File(
       [JSON.stringify([{ id: 'CARD-DROP', question: 'Q?', answer: 'A' }])],
-      'cartoes.json',
+      'cartões.json',
       { type: 'application/json' }
     );
 

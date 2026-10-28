@@ -12,7 +12,7 @@ export interface ProgressBarProps {
 /**
  * Barra de progresso linear usando a paleta primária (rosa forte no preenchimento,
  * rosa claro no fundo). Usada para mostrar percentual de dominacao e avance da
- * revisao do dia.
+ * revisão do dia.
  */
 export default function ProgressBar({ value, label, className, style }: ProgressBarProps) {
   const pct = Math.min(100, Math.max(0, value ?? 0));

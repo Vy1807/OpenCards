@@ -9,7 +9,7 @@ export interface MaskedInputProps {
   id?: string;
   /** Valor desmascarado (apenas digitos), controlado pelo form. */
   value: string;
-  /** Disparado com o valor desmascarado a cada mudanca do usuario. */
+  /** Disparado com o valor desmascarado a cada mudança do usuário. */
   onChange: (valor: string) => void;
   label?: string;
   className?: string;
@@ -22,7 +22,7 @@ export interface MaskedInputProps {
  *
  * O imask e dono do valor visível do input; o form recebe apenas o valor
  * desmascarado. Sincroniza de volta apenas quando o valor controlado muda
- * por fora (ex.: reset), preservando o cursor do usuario.
+ * por fora (ex.: reset), preservando o cursor do usuário.
  */
 export function MaskedInput({
   id,

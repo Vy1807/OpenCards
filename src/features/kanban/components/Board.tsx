@@ -74,7 +74,7 @@ export default function Board({
         flexDirection: 'column',
         gap: tokens.spacing[6],
         width: '100%',
-        background: tokens.colors.background,
+        background: 'var(--surface)',
       } as React.CSSProperties}
     >
       <header
@@ -90,7 +90,7 @@ export default function Board({
             fontFamily: tokens.typography.fontHeading,
             fontSize: tokens.typography.fontSize.xxl,
             fontWeight: tokens.typography.fontWeight.semibold,
-            color: tokens.colors.ink,
+            color: 'var(--ink)',
           }}
         >
           Quadro Kanban

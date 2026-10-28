@@ -215,7 +215,35 @@ supabase/
 6. **Decidir Kanban ↔ Decks** (HDN-05) — alinhar com PO antes de expandir Kanban
 7. **Criar testes faltantes** (QLT-01, QLT-02) — `streak.test.ts`, `exportCards.test.ts`
 
----
+---\n
+## B-400: Triagem dos itens da Sprint 3 (concluída)
 
-**Assinatura**: Arquiteto (scrum-arquiteto)  
-**Próxima revisão**: Quando FUN-01/02/03 resolvidos e CI verde.
+| ID | Título | Status | Observação |
+|----|--------|--------|------------|
+| B-301 | Revisão: mostrar a pergunta primeiro | ✅ ok | Implementado em Review.tsx + Flashcard.test.tsx (6 testes) |
+| B-302 | Botão "Editar" piscando | ✅ ok | AuthProvider estabiliza referência de user; decisão #15 |
+| B-303 | Texto espelhado no verso | ✅ ok | Removeu `scaleX(-1)`; flip 3D CSS correto |
+| B-304 | Contraste insuficiente | ✅ ok | Tokens de contraste adicionados; verificado em 5 temas |
+| B-305 | Cabeçalho da revisão sobreposto | ✅ ok | Seta duplicada removida; título flex/ellipsis |
+| B-306 | "0 diasdesde" sem espaço | ✅ ok | `formatStreak()` adicionada; 3 testes |
+| T-310 | Sistema de tokens de design | ✅ ok | 5 novos tokens CSS/TS; 8 temas mantidos |
+| T-311 | Cinco novos temas | ✅ ok | rosa-menta, azul-laranja, roxo-amarelo, verde-coral, dark-neon |
+| T-312 | Seletor de tema + migração | ✅ ok | ThemeMenu com data-theme; migração localStorage |
+| T-313 | Contraste WCAG AA | ✅ ok | contrast.test.ts com 21 testes; cores ajustadas |
+| U-320 | Escala de espaçamento | ✅ ok | --space-1 a --space-8; container 720px |
+| U-321 | Cabeçalho consistente | ✅ ok | Header único em 6 páginas; wrappers seguros |
+| U-322 | Home formulário colapsado | ✅ ok | Formulário "Novo baralho" colapsado; card redesenhado |
+| U-323 | Hierarquia de ações | ✅ ok | Revisar primário; Adicionar secundário; Editar/Exportar terciários |
+| U-324 | Layout da revisão | ✅ ok | Cabeçalho sem sobreposição; scroll interno; próximo intervalo |
+| U-325 | Formulário de novo card | ✅ ok | Textarea com altura que cresce; prévia Frente/Verso |
+| U-326 | Mobile first | ✅ ok | Media queries @media (max-width: 360px); review-actions coluna |
+| M-330 | Atalhos de teclado na revisão | ⬜ Aberto | Só setas (←/→) implementadas; falta 1/2/3 e dica atualizada |
+| M-331 | Resumo ao fim da sessão | ⬜ Aberto | Tela final existe; falta distribuição Difícil/Bom/Fácil |
+| M-332 | Desfazer última avaliação | ⬜ Aberto | Não implementado |
+| M-333 | Confirmação ao excluir, estados vazios | ⬜ Parcial | `confirm()` existe; falta toast/desfazer/estados vazios |
+| M-334 | Acessibilidade | ⬜ Parcial | Foco e rótulos básicos; não completa (M-334) |
+| M-335 | Testes E2E com Playwright | ⬜ Aberto | Não configurado |
+
+**Conclusão da triagem B-400:** Todos os itens P0/P1 da Sprint 3 (B-301 a B-306, T-310 a T-313, U-320 a U-326) estão ✅ ok. Os itens M-330 a M-335 (P2) continuam abertos e entram no backlog da Sprint 4 conforme prioridade.
+
+---\n

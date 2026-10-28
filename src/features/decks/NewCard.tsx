@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCards } from '../../app/providers';
 import type { Deck, NewCardInput } from '../../entities/card/model/card';
 import Button from '../../components/ui/Button';
-import Header from '../../components/ui/Header';
 import Select from '../../components/ui/Select';
 import { tokens } from '../../design/tokens';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -163,10 +162,8 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
 
   return (
     <div className="page" style={{ maxWidth: '720px', margin: '0 auto', padding: tokens.space[4] }}>
-      <Header title="Novo card" showBack backTo="/" />
-
       {error && (
-        <p style={{ color: tokens.colors.err, fontSize: tokens.typography.fontSize.sm }}>
+        <p style={{            color: 'var(--err)', fontSize: tokens.typography.fontSize.sm }}>
           {error}
         </p>
       )}
@@ -200,9 +197,9 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
               fontSize: tokens.typography.fontSize.base,
               padding: `${tokens.space[3]} ${tokens.space[4]}`,
               borderRadius: tokens.radius.sm,
-              border: `1px solid ${tokens.colors.line}`,
-              background: tokens.colors.surface,
-              color: tokens.colors.ink,
+              border: `1px solid var(--line)`,
+              background: 'var(--surface)',
+              color: 'var(--ink)',
               resize: 'vertical',
             }}
           />
@@ -230,7 +227,7 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
             <span
               style={{
                 fontSize: tokens.typography.fontSize.xs,
-                color: tokens.colors.muted,
+                color: 'var(--muted)',
               }}
             >
               {front.length} caracteres
@@ -255,9 +252,9 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
               fontSize: tokens.typography.fontSize.base,
               padding: `${tokens.space[3]} ${tokens.space[4]}`,
               borderRadius: tokens.radius.sm,
-              border: `1px solid ${tokens.colors.line}`,
-              background: tokens.colors.surface,
-              color: tokens.colors.ink,
+              border: `1px solid var(--line)`,
+              background: 'var(--surface)',
+              color: 'var(--ink)',
               resize: 'vertical',
             }}
           />
@@ -285,7 +282,7 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
             <span
               style={{
                 fontSize: tokens.typography.fontSize.xs,
-                color: tokens.colors.muted,
+                color: 'var(--muted)',
               }}
             >
               {back.length} caracteres
@@ -390,7 +387,7 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
           style={{
             background: 'transparent',
             border: 'none',
-            color: tokens.colors.primary,
+            color: 'var(--color-primary)',
             fontSize: tokens.typography.fontSize.sm,
             fontWeight: '600',
             cursor: 'pointer',

@@ -31,7 +31,7 @@ export default function EmptyState({
         justifyContent: 'center',
         padding: tokens.spacing[10],
         textAlign: 'center',
-        color: tokens.colors.muted,
+        color: 'var(--muted)',
       }}
     >
       {icon && (
@@ -43,7 +43,7 @@ export default function EmptyState({
           fontFamily: tokens.typography.fontHeading,
           fontSize: tokens.typography.fontSize.xl,
           fontWeight: tokens.typography.fontWeight.semibold,
-          color: tokens.colors.ink,
+          color: 'var(--ink)',
         }}
       >
         {title}
@@ -54,7 +54,7 @@ export default function EmptyState({
             marginTop: tokens.spacing[2],
             fontFamily: tokens.typography.fontBody,
             fontSize: tokens.typography.fontSize.sm,
-            color: tokens.colors.muted,
+            color: 'var(--muted)',
           }}
         >
           {description}

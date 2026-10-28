@@ -46,7 +46,7 @@ const preencherFormulario = () => {
 };
 
 describe('Cadastro', () => {
-  it('cadastra o usuario, persiste o perfil no Supabase e avisa ao usuario', async () => {
+  it('cadastra o usuário, persiste o perfil no Supabase e avisa ao usuário', async () => {
     preencherFormulario();
     fireEvent.submit(screen.getByRole('button', { name: 'Criar conta' }).closest('form')!);
 
@@ -76,16 +76,16 @@ describe('Cadastro', () => {
 
     await waitFor(() => expect(screen.getByText('CPF invalido.')).toBeInTheDocument());
     expect(screen.getByText('Senha deve ter pelo menos 8 caracteres.')).toBeInTheDocument();
-    expect(screen.getByText('As senhas nao coincidem.')).toBeInTheDocument();
+    expect(screen.getByText('As senhas não coincidem.')).toBeInTheDocument();
     expect(mockSignUp).not.toHaveBeenCalled();
   });
 
-  it('mapeia erro de e-mail ja cadastrado do Supabase para o campo inline', async () => {
+  it('mapeia erro de e-mail já cadastrado do Supabase para o campo inline', async () => {
     mockSignUp.mockRejectedValueOnce(new Error('User already registered'));
     preencherFormulario();
     fireEvent.submit(screen.getByRole('button', { name: 'Criar conta' }).closest('form')!);
 
-    await waitFor(() => expect(screen.getByText(/Este e-mail ja esta em uso/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Este e-mail já está em uso/)).toBeInTheDocument());
     expect(mockGetCurrentUser).not.toHaveBeenCalled();
     expect(mockUpsertProfile).not.toHaveBeenCalled();
   });

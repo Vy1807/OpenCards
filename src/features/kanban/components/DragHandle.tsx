@@ -2,8 +2,6 @@
  * OpenCards — Kanban drag handle (accessible grip for draggable cards).
  */
 
-import { tokens } from '../../../design/tokens';
-
 export interface DragHandleProps {
   className?: string;
   style?: React.CSSProperties;
@@ -18,7 +16,7 @@ export default function DragHandle({
     width: '6px',
     height: '6px',
     borderRadius: '50%',
-    background: tokens.colors.muted,
+    background: 'var(--muted)',
   };
 
   return (
@@ -30,7 +28,7 @@ export default function DragHandle({
       style={{
         display: 'inline-flex',
         gap: '4px',
-        color: tokens.colors.muted,
+        color: 'var(--muted)',
         cursor: 'grab',
         userSelect: 'none',
         ...style,
