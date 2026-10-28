@@ -527,3 +527,88 @@ h3 {
 .user-menu__item:hover {
   background: var(--surface-2);
 }
+
+/* Mobile first — U-326: telas usáveis em 360px, sem rolagem horizontal,
+   botões de avaliação dentro do alcance do polegar. */
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: var(--space-4) var(--space-3);
+    margin: 0;
+  }
+
+  .header {
+    padding: var(--space-4) var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .header__brand-name {
+    font-size: 1.125rem;
+  }
+
+  .header__title {
+    font-size: 1rem;
+  }
+
+  .btn {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+
+  .input {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+
+  .card {
+    padding: var(--space-4);
+  }
+
+  /* Botões de avaliação da revisão — coluna única, alcance do polegar */
+  .review-actions,
+  .review-actions > * {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .review-actions > button {
+    flex: none !important;
+    width: 100% !important;
+  }
+
+  /* Flashcard: reduzir padding em telas pequenas */
+  .flashcard-face {
+    padding: var(--space-4);
+    max-height: 280px;
+  }
+
+  /* Tela de novo card: textarea menor */
+  textarea {
+    min-height: 80px;
+  }
+
+  /* Container da página centralizado sem largura fixa excessiva */
+  .page {
+    max-width: 100%;
+  }
+
+  /* Evitar que inputs/textareas transbordem */
+  input,
+  textarea,
+  select {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Botões de ação primária em largura total */
+  .btn.btn-primary {
+    width: 100%;
+  }
+}

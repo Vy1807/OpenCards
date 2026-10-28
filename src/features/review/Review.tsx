@@ -297,7 +297,9 @@ export default function Review() {
 
       {/* Botões de avaliação com próximo intervalo */}
       <div style={{ width: '100%', maxWidth: '420px', marginBottom: tokens.space[6] }}>
-        <div style={{ display: 'flex', gap: tokens.space[3], width: '100%', marginBottom: tokens.space[3] }}>
+        <div
+          className="review-actions"
+          style={{ display: 'flex', gap: tokens.space[3], width: '100%', marginBottom: tokens.space[3] }}>
           <button
             className="btn"
             onClick={() => handleAnswer(false)}
