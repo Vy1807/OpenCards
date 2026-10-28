@@ -3,37 +3,29 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCards } from '../../app/providers';
 import type { Deck, NewCardInput } from '../../entities/card/model/card';
 import Button from '../../components/ui/Button';
-import Card from '../../components/ui/Card';
-import Input from '../../components/ui/Input';
-import Select from '../../components/ui/Select';
-import { UploadIcon } from '../../shared/ui/icons';
 import Header from '../../components/ui/Header';
+import Select from '../../components/ui/Select';
 import { tokens } from '../../design/tokens';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export type NewCardMode = 'manual' | 'import';
 
 export interface NewCardProps {
-  /** Baralhos disponíveis para o select de destino. */
   decks: Deck[];
-  /** Chamado ao salvar; recebe os dados do novo cartão. */
   onSave: (input: NewCardInput) => Promise<void>;
-  /** Quando true desabilita o botão de salvar (p. ex. durante carregamento). */
   creating?: boolean;
-  /** Baralho pré-selecionado (vindo de query param ?deckId=). */
   defaultDeckId?: string;
 }
 
 /**
- * Tela "Novo card" com layout bi-partido.
+ * Tela "Novo card" — formulário centralizado com largura máxima 720px.
  *
- * Coluna esquerda: formulário (select de baralho, frente e verso, botões
- * "Anexar imagem" e barra de ações). Coluna direita: pré-visualização reativa
- * que atualiza em tempo real à medida que o usuário digita, com o verso
- * renderizado espelhado via `transform: scaleX(-1)`.
+ * Pergunta e Resposta em textarea com altura que cresce + contador de caracteres.
+ * Prévia do card no tema atual com alternância Frente/Verso (não ambas ao mesmo tempo).
+ * Botões: Salvar card (primário), Salvar e criar outro (secundário), Cancelar (texto).
+ * O botão primário só fica habilitado quando Pergunta e Resposta estão preenchidas.
  */
 function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProps) {
-  const [mode, setMode] = useState<NewCardMode>('manual');
   const [deckId, setDeckId] = useState<string>(defaultDeckId || '');
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
@@ -41,7 +33,10 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
   const [backUrl, setBackUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [showFront, setShowFront] = useState(true);
 
+  const frontRef = useRef<HTMLTextAreaElement>(null);
+  const backRef = useRef<HTMLTextAreaElement>(null);
   const frontFileRef = useRef<HTMLInputElement>(null);
   const backFileRef = useRef<HTMLInputElement>(null);
 
@@ -50,11 +45,8 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
       const url = kind === 'front' ? frontUrl : backUrl;
       if (url) {
         URL.revokeObjectURL(url);
-        if (kind === 'front') {
-          setFrontUrl(null);
-        } else {
-          setBackUrl(null);
-        }
+        if (kind === 'front') setFrontUrl(null);
+        else setBackUrl(null);
       }
     },
     [frontUrl, backUrl]
@@ -68,11 +60,8 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
   }, [frontUrl, backUrl]);
 
   const pickFile = useCallback((kind: 'front' | 'back') => {
-    if (kind === 'front') {
-      frontFileRef.current?.click();
-    } else {
-      backFileRef.current?.click();
-    }
+    if (kind === 'front') frontFileRef.current?.click();
+    else backFileRef.current?.click();
   }, []);
 
   const handleImage = useCallback(
@@ -80,24 +69,25 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
       const file = e.target.files?.[0] || null;
       const url = file ? URL.createObjectURL(file) : null;
       const prev = kind === 'front' ? frontUrl : backUrl;
-      if (prev) {
-        URL.revokeObjectURL(prev);
-      }
-      if (kind === 'front') {
-        setFrontUrl(url);
-      } else {
-        setBackUrl(url);
-      }
+      if (prev) URL.revokeObjectURL(prev);
+      if (kind === 'front') setFrontUrl(url);
+      else setBackUrl(url);
     },
     [frontUrl, backUrl]
   );
+
+  const autoResize = (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       setError('');
-      if (!deckId || !front.trim() || !back.trim()) {
-        setError('Preencha o baralho, a frente e o verso.');
+      if (!front.trim() || !back.trim()) {
+        setError('Preencha a pergunta e a resposta.');
         return;
       }
       setSaving(true);
@@ -133,17 +123,7 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
     revoke('back');
   }, [revoke]);
 
-  const toggleStyle = (active: boolean) => ({
-    background: active ? tokens.colors.primary : 'transparent',
-    color: active ? tokens.colors.inkInverse : tokens.colors.muted,
-    border: 'none',
-    padding: '0.5rem 1rem',
-    fontSize: tokens.typography.fontSize.sm,
-    fontWeight: tokens.typography.fontWeight.medium,
-    fontFamily: tokens.typography.fontBody,
-    cursor: 'pointer',
-    flex: 1,
-  });
+  const canSave = front.trim() !== '' && back.trim() !== '';
 
   const imageButton = (kind: 'front' | 'back') => (
     <button
@@ -163,198 +143,62 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
         cursor: creating ? 'not-allowed' : 'pointer',
       }}
     >
-      <UploadIcon size={14} style={{ verticalAlign: 'middle' }} /> Anexar imagem
+      <svg
+        width="14"
+        height="14"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+        style={{ verticalAlign: 'middle' }}
+      >
+        <polyline points="16 3 12 7 8 3" />
+        <line x1="12" x2="12" y1="7" y2="21" />
+        <polyline points="22 18 18 18 18 22" />
+      </svg>
+      Anexar imagem
     </button>
   );
 
-  const hasDeck = decks.some((d) => d.id === deckId);
-  const canSave = hasDeck && front.trim() !== '' && back.trim() !== '';
-
   return (
-    <div
-      className="page"
-      style={{
-        maxWidth: '960px',
-        margin: '0 auto',
-        padding: '1rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-      }}
-    >
+    <div className="page" style={{ maxWidth: '720px', margin: '0 auto', padding: tokens.space[4] }}>
       <Header title="Novo card" showBack backTo="/" />
-      <div>
-        <p
-          style={{
-            fontSize: tokens.typography.fontSize.sm,
-            color: tokens.colors.muted,
-            marginTop: '0.25rem',
-          }}
-        >
-          Crie um cartão de flashcard para o baralho selecionado.
-        </p>
-      </div>
 
       {error && (
-        <p style={{ color: tokens.colors.err, fontSize: tokens.typography.fontSize.sm }}>{error}</p>
+        <p style={{ color: tokens.colors.err, fontSize: tokens.typography.fontSize.sm }}>
+          {error}
+        </p>
       )}
 
-      {/* Toggle grupo: Criar manualmente vs Importar JSON */}
-      <div
-        style={{
-          display: 'flex',
-          border: `1px solid ${tokens.colors.line}`,
-          borderRadius: tokens.radius.md,
-          background: tokens.colors.surface,
-          width: 'fit-content',
-        }}
-      >
-        <button
-          type="button"
-          role="radio"
-          aria-checked={mode === 'manual'}
-          onClick={() => setMode('manual')}
-          style={toggleStyle(mode === 'manual')}
-        >
-          Criar manualmente
-        </button>
-        <button
-          type="button"
-          role="radio"
-          aria-checked={mode === 'import'}
-          onClick={() => setMode('import')}
-          style={toggleStyle(mode === 'import')}
-        >
-          Importar JSON
-        </button>
-      </div>
+      {/* Pergunta e Resposta — textarea com altura que cresce + contador */}
+      <section className="card section" style={{ marginBottom: tokens.space[6] }}>
+        <div style={{ flex: 1, minWidth: '260px' }}>
+          <Select
+            options={decks.map((d) => ({ value: d.id, label: d.name }))}
+            value={deckId}
+            onChange={setDeckId}
+            label="Baralho de destino"
+            disabled={creating}
+          />
+        </div>
 
-      {mode === 'manual' ? (
-        <form
-          id="new-card-form"
-          onSubmit={handleSubmit}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ flex: 1, minWidth: '260px' }}>
-            <Select
-              label="Baralho de destino"
-              options={decks.map((d) => ({ value: d.id, label: d.name }))}
-              value={deckId}
-              onChange={setDeckId}
-              disabled={creating}
-            />
-          </div>
-          <div
-            style={{
-              flex: 1,
-              minWidth: '260px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-            }}
-          >
-            <Input
-              label="Frente · pergunta"
-              value={front}
-              onChange={(e) => setFront(e.target.value)}
-              placeholder="Digite a pergunta"
-              disabled={creating}
-            />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {imageButton('front')}
-              <input
-                type="file"
-                accept="image/*"
-                ref={frontFileRef}
-                style={{ display: 'none' }}
-                onChange={handleImage('front')}
-              />
-              {frontUrl && (
-                <img
-                  src={frontUrl}
-                  alt="prévia frente"
-                  style={{
-                    maxWidth: '120px',
-                    maxHeight: '120px',
-                    borderRadius: tokens.radius.sm,
-                    marginLeft: '0.5rem',
-                  }}
-                />
-              )}
-            </div>
-            <Input
-              label="Verso · resposta"
-              value={back}
-              onChange={(e) => setBack(e.target.value)}
-              placeholder="Digite a resposta"
-              disabled={creating}
-            />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              {imageButton('back')}
-              <input
-                type="file"
-                accept="image/*"
-                ref={backFileRef}
-                style={{ display: 'none' }}
-                onChange={handleImage('back')}
-              />
-              {backUrl && (
-                <img
-                  src={backUrl}
-                  alt="prévia verso"
-                  style={{
-                    maxWidth: '120px',
-                    maxHeight: '120px',
-                    borderRadius: tokens.radius.sm,
-                    marginLeft: '0.5rem',
-                  }}
-                />
-              )}
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <Button
-              variant="solid"
-              onClick={handleSubmit}
-              disabled={creating || saving || !canSave}
-            >
-              {saving ? 'Salvando…' : 'Salvar card'}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleSubmit}
-              disabled={creating || saving || !canSave}
-            >
-              Salvar e criar outro
-            </Button>
-            <Button variant="ghost" onClick={handleCancel} disabled={creating || saving}>
-              Cancelar
-            </Button>
-          </div>
-        </form>
-      ) : (
-        <Card
-          bordered
-          shadowed
-          style={{
-            border: `1px dashed ${tokens.colors.primaryLightStronger}`,
-            background: tokens.colors.primaryLight,
-            padding: tokens.spacing[8],
-          }}
-        >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.space[3] }}>
           <textarea
-            placeholder='[{ "id": "CARD-001", "question": "...", "answer": "..." }]'
+            ref={frontRef}
+            value={front}
+            onChange={(e) => {
+              setFront(e.target.value);
+              autoResize(e.target);
+            }}
+            placeholder="Digite a pergunta"
+            disabled={creating}
             style={{
               width: '100%',
-              minHeight: '160px',
-              fontFamily: 'monospace',
-              fontSize: tokens.typography.fontSize.sm,
-              padding: '0.75rem',
+              minHeight: '96px',
+              fontFamily: tokens.typography.fontBody,
+              fontSize: tokens.typography.fontSize.base,
+              padding: `${tokens.space[3]} ${tokens.space[4]}`,
               borderRadius: tokens.radius.sm,
               border: `1px solid ${tokens.colors.line}`,
               background: tokens.colors.surface,
@@ -362,80 +206,200 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
               resize: 'vertical',
             }}
           />
-          <Button variant="solid" disabled style={{ marginTop: '0.75rem', width: 'fit-content' }}>
-            Importar cards
-          </Button>
-        </Card>
-      )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: tokens.space[2] }}>
+            {imageButton('front')}
+            <input
+              type="file"
+              accept="image/*"
+              ref={frontFileRef}
+              style={{ display: 'none' }}
+              onChange={handleImage('front')}
+            />
+            {frontUrl && (
+              <img
+                src={frontUrl}
+                alt="prévia frente"
+                style={{
+                  maxWidth: '120px',
+                  maxHeight: '120px',
+                  borderRadius: tokens.radius.sm,
+                  marginLeft: tokens.space[2],
+                }}
+              />
+            )}
+            <span
+              style={{
+                fontSize: tokens.typography.fontSize.xs,
+                color: tokens.colors.muted,
+              }}
+            >
+              {front.length} caracteres
+            </span>
+          </div>
+        </div>
 
-      {/* Pré-visualização reativa (coluna direita do layout bi-partido) */}
-      <Card
-        padded="lg"
-        shadowed
-        style={{
-          background: tokens.colors.primaryLight,
-          minHeight: '320px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.75rem',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        data-testid="card-preview"
-      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.space[3] }}>
+          <textarea
+            ref={backRef}
+            value={back}
+            onChange={(e) => {
+              setBack(e.target.value);
+              autoResize(e.target);
+            }}
+            placeholder="Digite a resposta"
+            disabled={creating}
+            style={{
+              width: '100%',
+              minHeight: '96px',
+              fontFamily: tokens.typography.fontBody,
+              fontSize: tokens.typography.fontSize.base,
+              padding: `${tokens.space[3]} ${tokens.space[4]}`,
+              borderRadius: tokens.radius.sm,
+              border: `1px solid ${tokens.colors.line}`,
+              background: tokens.colors.surface,
+              color: tokens.colors.ink,
+              resize: 'vertical',
+            }}
+          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: tokens.space[2] }}>
+            {imageButton('back')}
+            <input
+              type="file"
+              accept="image/*"
+              ref={backFileRef}
+              style={{ display: 'none' }}
+              onChange={handleImage('back')}
+            />
+            {backUrl && (
+              <img
+                src={backUrl}
+                alt="prévia verso"
+                style={{
+                  maxWidth: '120px',
+                  maxHeight: '120px',
+                  borderRadius: tokens.radius.sm,
+                  marginLeft: tokens.space[2],
+                }}
+              />
+            )}
+            <span
+              style={{
+                fontSize: tokens.typography.fontSize.xs,
+                color: tokens.colors.muted,
+              }}
+            >
+              {back.length} caracteres
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: tokens.space[3], width: '100%' }}>
+          <Button
+            variant="solid"
+            onClick={handleSubmit}
+            disabled={creating || saving || !canSave}
+          >
+            {saving ? 'Salvando…' : 'Salvar card'}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              void handleSubmit({ preventDefault: () => {} } as React.FormEvent).then(() => {
+                setFront('');
+                setBack('');
+              });
+            }}
+            disabled={creating || saving || !canSave}
+          >
+            Salvar e criar outro
+          </Button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            disabled={creating || saving}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: tokens.colors.muted,
+              fontSize: tokens.typography.fontSize.sm,
+              cursor: creating || saving ? 'not-allowed' : 'pointer',
+              padding: 0,
+            }}
+          >
+            Cancelar
+          </button>
+        </div>
+      </section>
+
+      {/* Pré-visualização do card — Frente/Verso alternados, não ambos ao mesmo tempo */}
+      <section className="card section" style={{ marginBottom: tokens.space[6] }}>
         <div
           style={{
             fontSize: tokens.typography.fontSize.xs,
             color: tokens.colors.muted,
             textAlign: 'center',
+            marginBottom: tokens.space[2],
           }}
         >
-          #{deckId ? 'selecionado' : '—'} · Frente
+          #{deckId ? 'selecionado' : '—'} · {showFront ? 'Frente' : 'Verso'}
         </div>
         <div
-          data-testid="preview-front"
           style={{
-            fontSize: '1.25rem',
-            fontWeight: '600',
-            textAlign: 'center',
-            wordBreak: 'break-word',
+            width: '100%',
+            maxWidth: '320px',
+            minHeight: '220px',
+            border: 'var(--border)',
+            borderRadius: tokens.radius.lg,
+            background: tokens.colors.surface,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: tokens.space[3],
+            padding: tokens.space[6],
+            margin: '0 auto',
           }}
+          onClick={() => setShowFront((f) => !f)}
         >
-          {front || 'Pergunta'}
-        </div>
-        {frontUrl && (
-          <img
-            src={frontUrl}
-            alt="prévia frente"
-            style={{
-              maxWidth: '200px',
-              maxHeight: '200px',
-              borderRadius: tokens.radius.md,
-            }}
-          />
-        )}
-        <div style={{ marginTop: 'auto' }}>
-          {/* Verso (resposta) - não espelhado, apenas exibido normalmente */}
           <div
-            data-testid="preview-back"
             style={{
               fontSize: '1.25rem',
               fontWeight: '600',
+              textAlign: 'center',
               wordBreak: 'break-word',
             }}
+            data-testid="preview-text"
           >
-            {back || 'Resposta'}
+            {showFront ? (front || 'Pergunta') : (back || 'Resposta')}
           </div>
+          {(showFront ? frontUrl : backUrl) && (
+            <img
+              src={(showFront ? frontUrl : backUrl) ?? undefined}
+              alt="prévia"
+              style={{
+                maxWidth: '200px',
+                maxHeight: '200px',
+                borderRadius: tokens.radius.md,
+              }}
+            />
+          )}
         </div>
-        <p
+        <button
+          type="button"
+          onClick={() => setShowFront((f) => !f)}
           style={{
-            fontSize: tokens.typography.fontSize.xs,
-            color: tokens.colors.muted,
+            background: 'transparent',
+            border: 'none',
+            color: tokens.colors.primary,
+            fontSize: tokens.typography.fontSize.sm,
+            fontWeight: '600',
+            cursor: 'pointer',
+            padding: 0,
           }}
         >
-          Clique no card para virar
-        </p>
-      </Card>
+          {showFront ? 'Mostrar resposta' : 'Mostrar pergunta'}
+        </button>
+      </section>
     </div>
   );
 }
@@ -462,7 +426,6 @@ export function NewCardPage() {
         if (!created) {
           throw new Error('Não foi possível salvar o cartão.');
         }
-        // Após salvar, volta para o baralho de origem
         navigate(`/decks/${input.deck_id}`);
       }}
     />
