@@ -165,7 +165,9 @@ export const zIndex = {
 } as const;
 
 export const breakpoints = {
-  sm: '640px',
+  mobile: '767px',   /* até 767px: estilos base mobile */
+  tablet: '768px',   /* 768px a 1023px: @media (min-width: 768px) */
+  desktop: '1024px', /* 1024px em diante: @media (min-width: 1024px) */
 } as const;
 
 /**
