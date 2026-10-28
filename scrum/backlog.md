@@ -151,7 +151,7 @@
 | B-303 | Texto espelhado no verso do card | Como **estudante**, quero **ler o verso do card sem espelhamento** para que **possa avaliar a resposta** | Frente e verso legíveis sem espelhamento em Chrome/Firefox/Safari; animação 3D funcional; `prefers-reduced-motion` respeitado (troca simples sem rotação); prévia do novo card sem faces sobrepostas/invertidas | M | P0 | ✅ Feito |
 | B-304 | Títulos e textos com contraste insuficiente | Como **usuário**, quero **ler todos os textos com clareza** para que **possa usar o app em qualquer tema** | Nenhum texto abaixo de 4,5:1 (normal) ou 3:1 (grande/ícones); cores vêm dos tokens do tema (sem hex fixo); verificado nos cinco temas | M | P1 | ✅ Feito |
 | B-305 | Cabeçalho da revisão sobreposto e seta duplicada | Como **estudante**, quero **ver o cabeçalho da revisão sem sobreposição** para que **possa navegar com clareza** | Botão de voltar com uma seta; título e botão sem sobreposição de 320px a desktop; um único indicador de progresso (barra + "1 de N") | M | P1 | ✅ Feito |
-| B-306 | "0 diasdesde" sem espaço e sem plural | Como **usuário**, quero **ler a frase do streak corretamente** para que **entenda meu progresso** | Texto: "Hoje você já revisou" (0 dias), "1 dia desde sua última revisão", "N dias desde sua última revisão"; teste unitário da função de formatação | P | P1 | ⬜ Pendente |
+| B-306 | "0 diasdesde" sem espaço e sem plural | Como **usuário**, quero **ler a frase do streak corretamente** para que **entenda meu progresso** | Texto: "Hoje você já revisou" (0 dias), "1 dia desde sua última revisão", "N dias desde sua última revisão"; teste unitário da função de formatação | P | P1 | ✅ Feito |
 
 ---
 
