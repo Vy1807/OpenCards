@@ -14,9 +14,9 @@
 | FUN-03 | Migrations aplicadas no Supabase dev | Como **dev**, quero **tabelas criadas via SQL Editor** para que **RLS e schema estejam prontos** | Tabelas: `decks`, `cards`, `review_log`, `profiles`, `kanban_cards`; policies RLS ativas; bucket `card-images` existe | P | Crítica | ✅ Feito |
 | FUN-04 | CI/CD GitHub Actions | Como **equipe**, quero **pipeline `typecheck → lint → test → build`** para que **PRs só mergem se verdes** | Workflow roda em push/PR; falha se qualquer step falha; artifact de build opcional | M | Alta | ✅ Feito |
 | FUN-05 | Vercel Preview Deploy | Como **dev**, quero **deploy automático de PR na Vercel** para que **stakeholders validem visualmente** | Preview URL gerada por PR; variáveis de ambiente configuradas no projeto Vercel | M | Alta | ✅ Feito |
-| NEW-01 | Ambiente Supabase local para testes (Docker) | Como **dev**, quero **Supabase local via Docker** para que **testes de RLS/Auth/Storage rodem sem rate limit externo** | `docker compose up -d supabase` sobe Postgres+Auth+Storage; `scripts/seed-test-users.ts` cria 2 usuários confirmados; `npm run test:integration` usa URL local | G | Crítica | ⬜ Pendente |
-| NEW-02 | Script seed usuários teste (2+ users) | Como **dev**, quero **script automatizado de seed** para que **testes de integração criem usuários A/B instantaneamente** | Script cria 2 usuários confirmados no Supabase local; retorna emails/senhas/tokens; idempotente | M | Alta | ⬜ Pendente |
-| NEW-03 | `npm install` limpo no CI (resolver native bindings) | Como **dev**, quero **CI com install reprodutível** para que **rolldown/undici não falhem por bindings antigos** | `.github/workflows/ci.yml` usa `npm ci` + cache `~/.npm`; `package-lock.json` commitado; Node 20 no runner | M | Alta | ⬜ Pendente |
+|| NEW-01 | Ambiente Supabase local para testes (Docker) | Como **dev**, quero **Supabase local via Docker** para que **testes de RLS/Auth/Storage rodem sem rate limit externo** | `docker compose up -d supabase` sobe Postgres+Auth+Storage; `scripts/seed-test-users.ts` cria 2 usuários confirmados; `npm run test:integration` usa URL local | G | Crítica | ✅ Feito (T-201, T-202) |
+|| NEW-02 | Script seed usuários teste (2+ users) | Como **dev**, quero **script automatizado de seed** para que **testes de integração criem usuários A/B instantaneamente** | Script cria 2 usuários confirmados no Supabase local; retorna emails/senhas/tokens; idempotente | M | Alta | ✅ Feito (T-203) |
+|| NEW-03 | `npm install` limpo no CI (resolver native bindings) | Como **dev**, quero **CI com install reprodutível** para que **rolldown/undici não falhem por bindings antigos** | `.github/workflows/ci.yml` usa `npm ci` + cache `~/.npm`; `package-lock.json` commitado; Node 20 no runner | M | Alta | ✅ Feito (T-205, T-206) |
 
 ---
 
@@ -86,7 +86,7 @@
 | REV-07 | Finalização com anel + confete | Como **estudante**, quero **ver meu aproveitamento no final** para que **sinta conquista** | Tela final: anel giratório `correct/total`; `CheckIcon` acertos, `CloseIcon` erros; % aproveitamento; confete se ≥80% | M | Alta | ✅ Feito |
 | REV-08 | "Revisar erros" no final | Como **estudante**, quero **refazer só os que errei** para que **fixe o conteúdo** | Botão "Revisar erros (N)" filtra `box === 0` do baralho original; reinicia sessão só com esses; desabilitado se `wrong === 0` | M | Alta | ✅ Feito |
 | REV-09 | "Revisar de novo" reinicia tudo | Como **estudante**, quero **recomeçar a mesma sessão** para que **pratique mais** | Botão "Revisar de novo" chama `load()` → recarrega `deckCards`, filtra, embaralha, zera contadores | P | Média | ✅ Feito |
-| REV-10 | Navegação teclado acessível | Como **usuário**, quero **focus visível e ordem lógica** para que **use só teclado** | `tabIndex` nos botões; `focus-visible` ring rosa; `aria-label` nos ícones; ESC volta para baralho | P | Média | ⬜ Pendente |
+|| REV-10 | Navegação teclado acessível | Como **usuário**, quero **focus visível e ordem lógica** para que **use só teclado** | `tabIndex` nos botões; `focus-visible` ring rosa; `aria-label` nos ícones; ESC volta para baralho | P | Média | ✅ Feito (T-212) |
 
 ---
 
@@ -108,10 +108,10 @@
 
 | ID | Título | História | Critérios de Aceite | Est. | Prioridade | Status |
 |----|--------|----------|---------------------|------|------------|--------|
-| QLT-01 | Testes `streak.ts` | Como **dev**, quero **cobertura da função `streak()`** para que **regressão de streak seja pega** | Arquivo `src/shared/lib/streak.test.ts`; casos: vazio=0, dias consecutivos, gap quebra streak, hoje conta, timezone | P | Alta | 🔴 Falta |
-| QLT-02 | Testes `exportCards.ts` | Como **dev**, quero **cobertura de export/import round-trip** para que **formato JSON não quebre** | Arquivo `src/shared/lib/exportCards.test.ts`; casos: exporta array vazio, exporta N cards, `exportCardsJson` stringifica bonito, round-trip com `parseAndValidateImport` preserva dados | P | Alta | 🔴 Falta |
-| QLT-03 | Snapshots UI atualizados | Como **dev**, quero **snapshots de `Button`, `Card`, `Input`, `Modal`, `StatusPill`, `ProgressBar`, `Select`** para que **regressão visual seja detectada** | `npx vitest run src/components/ui --update` passa; arquivos `.snap` commitados | M | Alta | 🔴 Bloqueado (Node) |
-| QLT-04 | Testes integração rotas | Como **dev**, quero **teste que navega Home → Deck → Review → Edit** para que **rotas não quebrem silenciosamente** | `integration.test.tsx` expandido: cobre todas as rotas de `routes.tsx`; mocks Supabase; `MemoryRouter` | M | Média | ✅ Parcial |
+|| QLT-01 | Testes `streak.ts` | Como **dev**, quero **cobertura da função `streak()`** para que **regressão de streak seja pega** | Arquivo `src/shared/lib/streak.test.ts`; casos: vazio=0, dias consecutivos, gap quebra streak, hoje conta, timezone | P | Alta | ✅ Feito (T-207) |
+|| QLT-02 | Testes `exportCards.ts` | Como **dev**, quero **cobertura de export/import round-trip** para que **formato JSON não quebre** | Arquivo `src/shared/lib/exportCards.test.ts`; casos: exporta array vazio, exporta N cards, `exportCardsJson` stringifica bonito, round-trip com `parseAndValidateImport` preserva dados | P | Alta | ✅ Feito (T-208) |
+|| QLT-03 | Snapshots UI atualizados | Como **dev**, quero **snapshots de `Button`, `Card`, `Input`, `Modal`, `StatusPill`, `ProgressBar`, `Select`, `Spinner`, `ErrorBoundary`** para que **regressão visual seja detectada** | `npx vitest run src/components/ui --update` passa; arquivos `.snap` commitados | M | Alta | 🟡 Pendente (Node 20+) |
+|| QLT-04 | Testes integração rotas | Como **dev**, quero **teste que navega Home → Deck → Review → Edit** para que **rotas não quebrem silenciosamente** | `integration.test.tsx` expandido: cobre todas as rotas de `routes.tsx`; mocks Supabase; `MemoryRouter` | M | Média | ✅ Feito (T-210) |
 
 ---
 
@@ -122,10 +122,10 @@
 | HDN-01 | Error Boundary no App | Como **dev**, quero **capturar erros de render** para que **usuário veja tela amigável, não tela branca** | `<ErrorBoundary fallback={<ErrorFallback />}>` envolve `{routes()}`; loga erro no console; botão "Tentar novamente" recarrega | M | Alta | ✅ Feito |
 | HDN-02 | CardsProvider realtime guard | Como **dev**, quero **evitar race condition do realtime** para que **estado não pisque ou sobrescreva fetch manual** | `mounted` flag no `useEffect` do realtime (igual `AuthProvider`); ignora payloads se `!mounted` | P | Alta | ✅ Feito |
 | HDN-03 | `card_code` via PG function | Como **dev**, quero **gerar código sequencial no banco** para que **evite race condition em createCard** | `createCard` chama `supabase.rpc('next_card_code', {deck_id_param})` em vez de `SELECT MAX`; remove lógica client-side | P | Média | ✅ Feito |
-| HDN-04 | Contagem de cards via relacionamento | Como **dev**, quero **obter contagem via `select('..., cards(count)')`** para que **não precise coluna física e nunca fique desatualizada** | Query `getDecks`/`getDeck` usa `select('id, user_id, name, tag, created_at, cards(count)')`; tipo `Deck` tem `cards_count?: number` opcional; realtime não mantém contador manual | P | Baixa | ✅ Feito (abordagem corrigida) |
-| HDN-05 | Kanban ↔ Decks integração | Como **PO**, quero **decidir se Kanban cards vinculam a Decks** para que **arquitetura seja coerente** | Decisão documentada: (a) manter separado, (b) FK `deck_id` em `kanban_cards`; se (b), migration + tipos + UI | M | Média | ⬜ Pendente |
-| HDN-06 | Signed URL expiração curta + refresh | Como **dev**, quero **URLs de imagem expirarem em horas, não 1 ano** para que **segurança melhore** | `uploadImage` cria signed URL 1h; componentes que exibem imagem chamam `createSignedUrl` on-demand (ou cache curto) | M | Baixa | ⬜ Pendente |
-| HDN-07 | Acessibilidade formulários | Como **usuário**, quero **todos inputs com label associado** para que **leitores de tela funcionem** | Auditoria: `htmlFor`/`id` em todos `Input`, `textarea`, `select`; `aria-label` onde design não permite label visível | P | Média | ⬜ Pendente |
+|| HDN-04 | Contagem de cards via relacionamento | Como **dev**, quero **obter contagem via `select('..., cards(count)')`** para que **não precise coluna física e nunca fique desatualizada** | Query `getDecks`/`getDeck` usa `select('id, user_id, name, tag, created_at, cards(count)')`; tipo `Deck` tem `cards_count?: number` opcional; realtime não mantém contador manual | P | Baixa | ✅ Feito (T-215, abordagem corrigida) |
+|| HDN-05 | Kanban ↔ Decks integração | Como **PO**, quero **decidir se Kanban cards vinculam a Decks** para que **arquitetura seja coerente** | Decisão documentada: (a) manter separado, (b) FK `deck_id` em `kanban_cards`; se (b), migration + tipos + UI | M | Média | ✅ Feito (Opção A: manter separado, T-214) |
+|| HDN-06 | Signed URL expiração curta + refresh | Como **dev**, quero **URLs de imagem expirarem em horas, não 1 ano** para que **segurança melhore** | `uploadImage` cria signed URL 1h; componentes que exibem imagem chamam `createSignedUrl` on-demand (ou cache curto) | M | Baixa | ✅ Feito (T-216) |
+|| HDN-07 | Acessibilidade formulários | Como **usuário**, quero **todos inputs com label associado** para que **leitores de tela funcionem** | Auditoria: `htmlFor`/`id` em todos `Input`, `textarea`, `select`; `aria-label` onde design não permite label visível | P | Média | ✅ Feito (T-211) |
 
 ---
 
@@ -133,13 +133,12 @@
 
 | ID | Título | História | Est. | Prioridade |
 |----|--------|----------|------|------------|
-| ICE-01 | Lazy loading rotas | Code-split `Deck`, `DeckEdit`, `Review`, `KanbanPage` com `React.lazy` + `Suspense` | M | Baixa |
-| ICE-02 | PWA + Service Worker | Instalável, offline-first real (workbox) | G | Baixa |
-| ICE-03 | Compartilhamento baralho | Link público read-only de um baralho | M | Baixa |
-| ICE-04 | Cloze deletion | Tipo de card "lacuna" com marcação `{{c1::texto}}` | G | Baixa |
-| ICE-05 | Estatísticas avançadas | Gráfico de retenção, heatmap de atividade, previsão de carga | M | Baixa |
-| ICE-06 | Notificações locais | "Hora de revisar" via Notification API + `review_log` | M | Baixa |
-| NEW-04 | Code-splitting rotas (lazy loading) | Build warning chunk > 500kB → code-split `Deck`, `DeckEdit`, `Review`, `KanbanPage` com `React.lazy` + `Suspense` | M | Média |
+|| ICE-01 | Lazy loading rotas | Code-split `Deck`, `DeckEdit`, `Review`, `KanbanPage` com `React.lazy` + `Suspense` | M | Baixa | ✅ Feito (T-213) |
+|| ICE-02 | PWA + Service Worker | Instalável, offline-first real (workbox) | G | Baixa |
+|| ICE-03 | Compartilhamento baralho | Link público read-only de um baralho | M | Baixa |
+|| ICE-04 | Cloze deletion | Tipo de card "lacuna" com marcação `{{c1::texto}}` | G | Baixa |
+|| ICE-05 | Estatísticas avançadas | Gráfico de retenção, heatmap de atividade, previsão de carga | M | Baixa |
+|| ICE-06 | Notificações locais | "Hora de revisar" via Notification API + `review_log` | M | Baixa |
 
 ---
 
