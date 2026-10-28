@@ -210,24 +210,31 @@ export default function Review() {
           alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: '1rem',
+          gap: '0.5rem',
         }}
       >
         <button
           type="button"
           className="btn"
           onClick={() => navigate(`/decks/${id}`)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}
           aria-label="Voltar para baralhos"
         >
-          <ArrowLeftIcon size={16} style={{ flexShrink: 0 }} /> ← Baralhos
+          <ArrowLeftIcon size={16} style={{ flexShrink: 0 }} /> Baralhos
         </button>
         <h1
           style={{
+            flex: 1,
+            minWidth: 0,
             fontFamily: tokens.typography.fontHeading,
             fontSize: tokens.typography.fontSize.xxl,
             fontWeight: '700',
             color: tokens.colors.ink,
             margin: 0,
+            textAlign: 'center',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}
         >
           Revisão do dia
@@ -238,6 +245,7 @@ export default function Review() {
             fontSize: tokens.typography.fontSize.sm,
             fontWeight: '600',
             color: tokens.colors.primary,
+            flexShrink: 0,
           }}
         >
           {index + 1} / {total}
@@ -260,7 +268,6 @@ export default function Review() {
       >
         Cartão {index + 1} de {total}
       </p>
-
       <div
         style={{
           display: 'flex',
