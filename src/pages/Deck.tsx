@@ -30,8 +30,11 @@ export default function Deck() {
   const [exporting, setExporting] = useState(false)
 
   const load = useCallback(async () => {
-    if (!id) return
     setLoading(true)
+    if (!id) {
+      setLoading(false)
+      return
+    }
     try {
       const deckData = await getDeck(id)
       setDeck(deckData)
