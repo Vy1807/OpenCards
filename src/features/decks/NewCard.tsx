@@ -8,6 +8,7 @@ import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { UploadIcon } from '../../shared/ui/icons';
 import { tokens } from '../../design/tokens';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export type NewCardMode = 'manual' | 'import';
 
@@ -18,6 +19,8 @@ export interface NewCardProps {
   onSave: (input: NewCardInput) => Promise<void>;
   /** Quando true desabilita o botão de salvar (p. ex. durante carregamento). */
   creating?: boolean;
+  /** Baralho pré-selecionado (vindo de query param ?deckId=). */
+  defaultDeckId?: string;
 }
 
 /**
@@ -28,9 +31,9 @@ export interface NewCardProps {
  * que atualiza em tempo real à medida que o usuário digita, com o verso
  * renderizado espelhado via `transform: scaleX(-1)`.
  */
-function NewCard({ decks, onSave, creating = false }: NewCardProps) {
+function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProps) {
   const [mode, setMode] = useState<NewCardMode>('manual');
-  const [deckId, setDeckId] = useState<string>('');
+  const [deckId, setDeckId] = useState<string>(defaultDeckId || '');
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
   const [frontUrl, setFrontUrl] = useState<string | null>(null);
@@ -456,15 +459,21 @@ NewCard.displayName = 'NewCard';
  */
 export function NewCardPage() {
   const { decks, createCard } = useCards();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const defaultDeckId = searchParams.get('deckId') || '';
 
   return (
     <NewCard
       decks={decks}
+      defaultDeckId={defaultDeckId}
       onSave={async (input: NewCardInput) => {
         const created = await createCard(input);
         if (!created) {
           throw new Error('Não foi possível salvar o cartão.');
         }
+        // Após salvar, volta para o baralho de origem
+        navigate(`/decks/${input.deck_id}`);
       }}
     />
   );

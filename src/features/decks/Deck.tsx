@@ -200,7 +200,7 @@ export default function Deck() {
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button
             className="btn"
-            onClick={() => navigate(`/decks/${id}/edit`)}
+            onClick={() => navigate(`/novo-card?deckId=${id}`)}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
