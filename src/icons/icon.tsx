@@ -1,16 +1,16 @@
-import { SVGProps } from 'react'
+import { SVGProps } from 'react';
 
-export type IconSize = 'sm' | 'md' | 'lg'
+export type IconSize = 'sm' | 'md' | 'lg';
 
 const ICON_SIZES: Record<IconSize, number> = {
   sm: 16,
   md: 24,
   lg: 32,
-}
+};
 
 export interface IconProps extends SVGProps<SVGSVGElement> {
-  size?: IconSize | number
-  title?: string
+  size?: IconSize | number;
+  title?: string;
 }
 
 /**
@@ -21,7 +21,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
  * - Ícones decorativos ficam aria-hidden; com `title` expõem role="img" e tooltip
  */
 export function Icon({ children, size = 'md', title, ...props }: IconProps) {
-  const dim = typeof size === 'number' ? size : ICON_SIZES[size]
+  const dim = typeof size === 'number' ? size : ICON_SIZES[size];
 
   return (
     <svg
@@ -40,5 +40,5 @@ export function Icon({ children, size = 'md', title, ...props }: IconProps) {
       {title && <title>{title}</title>}
       {children}
     </svg>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Icon } from './icon'
+import { Icon } from './icon';
 
 export function DownloadIcon(props: Parameters<typeof Icon>[0]) {
   return (
@@ -7,5 +7,5 @@ export function DownloadIcon(props: Parameters<typeof Icon>[0]) {
       <polyline points="7 10 12 15 17 10" />
       <line x1="12" y1="15" x2="12" y2="3" />
     </Icon>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Icon } from './icon'
+import { Icon } from './icon';
 
 export function AlertIcon(props: Parameters<typeof Icon>[0]) {
   return (
@@ -7,5 +7,5 @@ export function AlertIcon(props: Parameters<typeof Icon>[0]) {
       <line x1="12" y1="9" x2="12" y2="13" />
       <line x1="12" y1="17" x2="12.01" y2="17" />
     </Icon>
-  )
+  );
 }

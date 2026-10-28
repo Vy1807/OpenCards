@@ -12,14 +12,53 @@ interface FlashcardProps {
 }
 
 export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
-  const frontImageUrl = card.front_image_path ? `image://${card.front_image_path}` : undefined;
-  const backImageUrl = card.back_image_path ? `image://${card.back_image_path}` : undefined;
-
   return (
     <div className={`flashcard-card ${flipped ? 'flipped' : ''}`} onClick={onFlip}>
       {!flipped && (
-        <div className="flashcard-face front">
-          <div style={{ fontSize: '0.875rem', color: 'var(--muted)', marginBottom: '0.5rem' }}>
+        <div className="flashcard-face front" data-testid="flashcard-verso">
+          <div
+            style={{
+              fontSize: '0.875rem',
+              color: 'var(--muted)',
+              marginBottom: '0.5rem',
+            }}
+          >
+            #{card.card_code} · Verso
+          </div>
+          {/* Verso espelhado (scaleX(-1)): simula o lado de tras do card visto contra a luz,
+             aguardando a animacao de flip 3D. Ex.: "RESPOSTA" aparece como "ATSOPSER". */}
+          <div
+            data-testid="flashcard-verso-texto"
+            style={{
+              transform: 'scaleX(-1)',
+              display: 'inline-block',
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              wordBreak: 'break-word',
+            }}
+          >
+            {card.back_text}
+          </div>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              color: 'var(--muted)',
+              marginTop: '1rem',
+            }}
+          >
+            Clique para revelar a resposta
+          </p>
+        </div>
+      )}
+      {flipped && (
+        <div className="flashcard-face back">
+          <div
+            style={{
+              fontSize: '0.875rem',
+              color: 'var(--muted)',
+              marginBottom: '0.5rem',
+            }}
+          >
             #{card.card_code} · Frente
           </div>
           <div
@@ -33,32 +72,33 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
             {card.front_text}
           </div>
           {card.front_image_path && (
-            <img src={frontImageUrl} alt="frente" className="flashcard-image" />
+            <img
+              src={`image://${card.front_image_path}`}
+              alt="frente"
+              className="flashcard-image"
+            />
           )}
-          <p style={{ fontSize: '0.875rem', color: 'var(--muted)', marginTop: '1rem' }}>
-            Clique para revelar a resposta
-          </p>
-        </div>
-      )}
-      {flipped && (
-        <div className="flashcard-face back">
-          <div style={{ fontSize: '0.875rem', color: 'var(--muted)', marginBottom: '0.5rem' }}>
-            #{card.card_code} · Verso
-          </div>
           <div
             style={{
+              marginTop: '1rem',
               fontSize: '1.25rem',
               fontWeight: '600',
-              marginBottom: card.back_image_path ? '0.5rem' : 0,
+              color: 'var(--ink)',
               wordBreak: 'break-word',
             }}
           >
             {card.back_text}
           </div>
           {card.back_image_path && (
-            <img src={backImageUrl} alt="verso" className="flashcard-image" />
+            <img src={`image://${card.back_image_path}`} alt="verso" className="flashcard-image" />
           )}
-          <p style={{ fontSize: '0.875rem', color: 'var(--muted)', marginTop: '1rem' }}>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              color: 'var(--muted)',
+              marginTop: '1rem',
+            }}
+          >
             Clique para continuar
           </p>
         </div>

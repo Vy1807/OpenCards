@@ -13,22 +13,27 @@ const card = {
 };
 
 describe('Flashcard', () => {
-  it('starts showing the front', () => {
+  it('revela o verso espelhado quando nao virado', () => {
     render(<Flashcard card={card} flipped={false} onFlip={() => {}} />);
-    expect(screen.getByText('Qual é a capital da França?')).toBeInTheDocument();
-    expect(screen.queryByText('Paris')).not.toBeInTheDocument();
-  });
-
-  it('shows the back when flipped', () => {
-    render(<Flashcard card={card} flipped={true} onFlip={() => {}} />);
-    expect(screen.getByText('Paris')).toBeInTheDocument();
+    const verso = screen.getByTestId('flashcard-verso-texto');
+    // verso (resposta) exposto espelhado via transform: scaleX(-1)
+    expect(verso).toHaveStyle({ transform: 'scaleX(-1)' });
+    expect(verso).toHaveTextContent('Paris');
+    // a frente (pergunta) nao fica visível enquanto o card nao for virado
     expect(screen.queryByText('Qual é a capital da França?')).not.toBeInTheDocument();
+    expect(screen.getByText('Clique para revelar a resposta')).toBeInTheDocument();
   });
 
-  it('toggles when clicked', () => {
+  it('mostra frente e verso quando virado', () => {
+    render(<Flashcard card={card} flipped={true} onFlip={() => {}} />);
+    expect(screen.getByText('Qual é a capital da França?')).toBeInTheDocument();
+    expect(screen.getByText('Paris')).toBeInTheDocument();
+  });
+
+  it('alternna ao clicar no card', () => {
     const onFlip = vi.fn();
     render(<Flashcard card={card} flipped={false} onFlip={onFlip} />);
-    fireEvent.click(screen.getByText('Qual é a capital da França?'));
+    fireEvent.click(screen.getByTestId('flashcard-verso'));
     expect(onFlip).toHaveBeenCalledTimes(1);
   });
 });

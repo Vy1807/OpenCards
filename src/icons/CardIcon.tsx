@@ -1,4 +1,4 @@
-import { Icon } from './icon'
+import { Icon } from './icon';
 
 export function CardIcon(props: Parameters<typeof Icon>[0]) {
   return (
@@ -7,5 +7,5 @@ export function CardIcon(props: Parameters<typeof Icon>[0]) {
       <path d="M7 10h10" />
       <path d="M7 14h6" />
     </Icon>
-  )
+  );
 }

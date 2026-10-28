@@ -1,4 +1,4 @@
-import { Icon } from './icon'
+import { Icon } from './icon';
 
 export function LogoutIcon(props: Parameters<typeof Icon>[0]) {
   return (
@@ -7,5 +7,5 @@ export function LogoutIcon(props: Parameters<typeof Icon>[0]) {
       <polyline points="16 17 21 12 16 7" />
       <line x1="21" y1="12" x2="9" y2="12" />
     </Icon>
-  )
+  );
 }
