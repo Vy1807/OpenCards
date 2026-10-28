@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { AuthProvider, CardsProvider } from '../../app/providers';
@@ -52,7 +52,7 @@ describe('Home', () => {
     expect(screen.getAllByText((text) => text === '0 cart' + String.fromCharCode(0xe3, 0x6f, 0x73))).toHaveLength(1);
   });
 
-  it('renders "Novo baralho" button', async () => {
+  it('renders "+ Novo baralho" button that opens the create form', async () => {
     vi.mocked(getDecks).mockResolvedValue([]);
     render(
       <MemoryRouter>
@@ -63,6 +63,18 @@ describe('Home', () => {
         </AuthProvider>
       </MemoryRouter>
     );
+
+    // Aguarda o estado carregado
+    await waitFor(() => {
+      expect(screen.queryByText(/Carregando/)).not.toBeInTheDocument();
+    });
+
+    // Botão de criar está colapsado por padrão
+    expect(screen.getByRole('button', { name: /\+ Novo baralho/ })).toBeInTheDocument();
+    expect(screen.queryByText(/Criar baralho/)).not.toBeInTheDocument();
+
+    // Clicar abre o formulário
+    fireEvent.click(screen.getByRole('button', { name: /\+ Novo baralho/ }));
     expect(await screen.findByText(/Criar baralho/)).toBeInTheDocument();
   });
 });

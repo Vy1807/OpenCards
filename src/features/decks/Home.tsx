@@ -16,11 +16,13 @@ import {
   InfoIcon,
 } from '../../shared/ui/icons';
 import { tokens } from '../../design/tokens';
+import Header from '../../components/ui/Header';
 
 export default function Home() {
   const navigate = useNavigate();
   const { decks, loading, error, fetchDecks, createDeck, clearError } = useDecks();
   const [creating, setCreating] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
   const [name, setName] = useState('');
   const [tag, setTag] = useState('');
   const [search, setSearch] = useState('');
@@ -104,80 +106,76 @@ export default function Home() {
 
   return (
     <div className="page" style={{ maxWidth: '1000px', margin: '0 auto', padding: '1rem' }}>
-      {/* Header */}
-      <header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '1.5rem',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-          }}
-        >
-          <div
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: tokens.radius.lg,
-              background: tokens.colors.err,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: tokens.colors.onErr,
-              fontWeight: '700',
-              fontSize: '1.25rem',
-              fontFamily: tokens.typography.fontBody,
-            }}
-          >
-            +
-          </div>
-          <span
-            style={{
-              fontFamily: tokens.typography.fontHeading,
-              fontSize: tokens.typography.fontSize.xl,
-              fontWeight: '700',
-              color: tokens.colors.ink,
-            }}
-          >
-            + Flashcards
-          </span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: tokens.radius.full,
-              background: tokens.colors.primaryLight,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: tokens.colors.primary,
-              fontWeight: '700',
-            }}
-          >
-            J
-          </div>
-        </div>
-      </header>
+      <Header title="Baralhos" />
 
-      {/* Secao de boas-vindas */}
-      <section style={{ marginBottom: '1.5rem' }}>
-        <div
+      {/* Ação: criar novo baralho */}
+      <div style={{ display: 'flex', gap: tokens.space[2], marginBottom: tokens.space[4] }}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => setOpenCreate(true)}
           style={{
-            width: '100%',
-            height: '34px',
-            marginBottom: '0.75rem',
-            overflow: 'hidden',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            minHeight: '44px',
           }}
         >
-          <svg width="100%" height="34" viewBox="0 0 700 40" preserveAspectRatio="none">
+          <PlusIcon size={16} style={{ verticalAlign: 'middle' }} />
+          {openCreate ? 'Cancelar' : '+ Novo baralho'}
+        </button>
+      </div>
+
+      {/* Formulário colapsado — visível apenas quando openCreate é true */}
+      {openCreate && (
+        <form onSubmit={handleCreate} className="card section" style={{ marginBottom: tokens.space[6] }}>
+          <h2 style={{ margin: '0 0 0.75rem 0', fontSize: tokens.typography.fontSize.lg }}>
+            Novo baralho
+          </h2>
+          <div style={{ display: 'flex', gap: tokens.space[3], flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: '220px' }}>
+              <label className="label">Nome</label>
+              <input
+                className="input"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ex: Cardiologia"
+                required
+              />
+            </div>
+            <div style={{ flex: 1, minWidth: '220px' }}>
+              <label className="label">Tag (opcional)</label>
+              <input
+                className="input"
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+                placeholder="Ex: Anatomia"
+              />
+            </div>
+            <button
+              className="btn btn-primary"
+              type="submit"
+              disabled={creating}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', minHeight: '44px' }}
+            >
+              <PlusIcon size={16} /> {creating ? 'Criando…' : 'Criar baralho'}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {formError && <p style={{ color: tokens.colors.err, marginBottom: tokens.space[4] }}>{formError}</p>}
+
+      {/* Saudação + resumo + "Revisar agora" em bloco de destaque */}
+      <section className="card section" style={{ marginBottom: tokens.space[6], padding: tokens.space[6] }}>
+        <div style={{ marginBottom: tokens.space[3] }}>
+          <svg
+            width="100%"
+            height="24"
+            viewBox="0 0 700 40"
+            preserveAspectRatio="none"
+            style={{ display: 'block' }}
+          >
             <path
               d="M0,20 Q100,0 200,20 T400,20 T600,20 T700,20"
               stroke={tokens.colors.primary}
@@ -201,7 +199,7 @@ export default function Home() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1rem',
+            gap: tokens.space[4],
             flexWrap: 'wrap',
             marginTop: '0.5rem',
           }}
@@ -253,8 +251,8 @@ export default function Home() {
       <div
         style={{
           display: 'flex',
-          gap: '0.5rem',
-          marginBottom: '1rem',
+          gap: tokens.space[3],
+          marginBottom: tokens.space[4],
           flexWrap: 'wrap',
           alignItems: 'center',
         }}
@@ -263,7 +261,7 @@ export default function Home() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
+            gap: tokens.space[2],
             minWidth: '260px',
           }}
         >
@@ -275,7 +273,7 @@ export default function Home() {
             fullWidth
           />
         </div>
-        <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: tokens.space[2], flexWrap: 'wrap' }}>
           {pills.map((p) => {
             const active = filterTag === p || (p === 'Todos' && filterTag === '');
             return (
@@ -286,9 +284,9 @@ export default function Home() {
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.375rem',
+                  gap: tokens.space[2],
                   borderRadius: tokens.radius.full,
-                  border: `1px solid`,
+                  border: '1px solid',
                   padding: '0.25rem 0.75rem',
                   fontSize: tokens.typography.fontSize.sm,
                   fontWeight: tokens.typography.fontWeight.medium,
@@ -297,6 +295,7 @@ export default function Home() {
                   color: active ? tokens.colors.inkInverse : tokens.colors.muted,
                   borderColor: active ? tokens.colors.primary : tokens.colors.line,
                   cursor: 'pointer',
+                  minHeight: '44px',
                 }}
               >
                 {p}
@@ -311,63 +310,34 @@ export default function Home() {
           fontFamily: tokens.typography.fontHeading,
           fontSize: tokens.typography.fontSize.xl,
           color: tokens.colors.ink,
-          margin: '0 0 1rem 0',
+          margin: `0 0 ${tokens.space[4]} 0`,
         }}
       >
         Baralhos
       </h2>
 
-      {formError && <p style={{ color: tokens.colors.err, marginBottom: '1rem' }}>{formError}</p>}
-
-      {/* Formulario Novo baralho */}
-      <form onSubmit={handleCreate} className="card section" style={{ marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: '0 0 0.75rem 0', fontSize: tokens.typography.fontSize.lg }}>
-          Novo baralho
-        </h2>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '220px' }}>
-            <label className="label">Nome</label>
-            <input
-              className="input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ex: Cardiologia"
-              required
-            />
-          </div>
-          <div style={{ flex: 1, minWidth: '220px' }}>
-            <label className="label">Tag (opcional)</label>
-            <input
-              className="input"
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
-              placeholder="Ex: Anatomia"
-            />
-          </div>
-          <button
-            className="btn btn-primary"
-            type="submit"
-            disabled={creating}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            <PlusIcon size={16} /> {creating ? 'Criando…' : 'Criar baralho'}
-          </button>
-        </div>
-      </form>
-
       {/* Grade de baralhos */}
       {filteredDecks.length === 0 ? (
-        <div className="empty-state">
+        <div className="empty-state" style={{ padding: `${tokens.space[8]} ${tokens.space[4]}` }}>
           <InfoIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
           <h3>Nenhum baralho encontrado</h3>
           <p>Crie o seu primeiro baralho acima.</p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setOpenCreate(true)}
+            style={{ marginTop: tokens.space[4], minHeight: '44px' }}
+          >
+            <PlusIcon size={16} style={{ verticalAlign: 'middle' }} />
+            Criar primeiro baralho
+          </button>
         </div>
       ) : (
         <ul
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-            gap: '1rem',
+            gap: tokens.space[4],
             listStyle: 'none',
             padding: 0,
           }}
@@ -403,14 +373,14 @@ export default function Home() {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'flex-start',
-                      marginBottom: '0.5rem',
+                      marginBottom: tokens.space[3],
                     }}
                   >
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem',
+                        gap: tokens.space[2],
                       }}
                     >
                       <DeckIcon size={20} style={{ flexShrink: 0 }} />
@@ -429,8 +399,8 @@ export default function Home() {
                       <span
                         style={{
                           fontSize: tokens.typography.fontSize.xs,
-                          color: tokens.colors.primary,
-                          background: tokens.colors.primaryLight,
+                          color: tokens.colors.onPrimary,
+                          background: tokens.colors.primary,
                           borderRadius: tokens.radius.full,
                           padding: '0.125rem 0.5rem',
                           fontWeight: '600',
@@ -449,7 +419,7 @@ export default function Home() {
                   <ProgressBar
                     value={progress}
                     label={`${progress}% dominado`}
-                    style={{ marginTop: '0.75rem' }}
+                    style={{ marginTop: tokens.space[3] }}
                   />
                   <div
                     style={{
