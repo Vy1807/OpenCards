@@ -27,7 +27,7 @@
 |------|--------|----------|---------------------|--------|
 | T-301 | Atualizar snapshots UI com Node 20+ | QLT-03 | `npx vitest run src/components/ui --update` passa; arquivos `.snap` commitados; inclui `Spinner`, `ErrorBoundary`, `Select` | ✅ DONE |
 | T-302 | Implementar DEK-06: Botão "Adicionar cartão" em `/decks/:id` | DEK-06 | Botão "Adicionar cartão" navega para `/novo-card?deckId=:id`; pré-preenche `deck_id`; após salvar, volta para `/decks/:id` | ✅ DONE |
-| T-303 | Testes `schedule.ts` (Leitner algorithm) | QLT-05 | `src/shared/lib/schedule.test.ts`: `scheduleNext` (todas caixas 0→5), `isDue` (due today, future, past), edge cases | 🟡 TODO |
+| T-303 | Testes `schedule.ts` (Leitner algorithm) | QLT-05 | `src/shared/lib/schedule.test.ts`: `scheduleNext` (todas caixas 0→5), `isDue` (due today, future, past), edge cases | ✅ DONE |
 | T-304 | Testes `shuffle.ts` | QLT-05 | `src/shared/lib/shuffle.test.ts`: array vazio, 1 item, N items (distribuição uniforme), imutabilidade | 🟡 TODO |
 | T-305 | Testes `importCards.ts` | QLT-05 | `src/shared/lib/importCards.test.ts`: parse válido, inválido, campos obrigatórios, round-trip com export | 🟡 TODO |
 | T-306 | Testes `streak.ts` adicionais (edge cases) | QLT-05 | Timezone boundary, ano bissexto, datas futuras ignoradas, múltiplas reviews mesmo dia | 🟡 TODO |
@@ -47,10 +47,9 @@
 
 ```
 TODO                          DOING                        REVIEW                      DONE
-├─ T-303  schedule.test.ts    ├─ (vazio)                   ├─ (vazio)                  ├─ T-301  Snapshots UI
-├─ T-304  shuffle.test.ts     │                            │                           ├─ T-302  DEK-06 Add card
-├─ T-305  importCards.test.ts │                            │                           ├─ (Sprint 3 inicia)
-├─ T-306  streak extra tests  │                            │
+├─ T-304  shuffle.test.ts     ├─ (vazio)                   ├─ (vazio)                  ├─ T-301  Snapshots UI
+├─ T-305  importCards.test.ts │                            │                           ├─ T-302  DEK-06 Add card
+├─ T-306  streak extra tests  │                            │                           ├─ T-303  schedule.test.ts
 ├─ T-307  Revisar agora fix   │                            │
 ├─ T-308  RLS integration     │                            │
 ├─ T-309  Auth integration    │                            │
