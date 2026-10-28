@@ -19,7 +19,12 @@ export default function KanbanPage() {
   const columns = store.columns;
 
   useEffect(() => {
-    return store.subscribe(() => setCards(store.cards));
+    const unsub = store.subscribe(() => setCards(store.cards));
+    // A store hidrata do localStorage síncrona e do Supabase de forma
+    // assíncrona: ler o estado após inscrever garante que o primeiro
+    // render espelhe o estado sincronizado (remoto ou localStorage).
+    setCards(store.cards);
+    return unsub;
   }, [store]);
 
   const handleCardMove = useCallback(

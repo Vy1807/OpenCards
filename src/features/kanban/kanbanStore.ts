@@ -4,6 +4,13 @@
  * Holds cards/columns in memory, persists cards to localStorage
  * (key `opencards:kanban:cards`) so state survives reload, and validates the
  * one-step-forward lifecycle (TO DO -> IN PROGRESS -> TESTING -> DONE).
+ *
+ * Sincronização com o Supabase (best-effort, offline-first):
+ * - Ao criar a store, busca o estado remoto no Supabase e substitui o
+ *   estado local quando disponível; o localStorage é o fallback offline
+ *   e também o cache do estado remoto.
+ * - Toda mudança (criar, mover entre colunas, excluir) é espelhada no
+ *   Supabase quando há conexão; falhas são silenciosas e não bloqueiam a UI.
  */
 
 import {
@@ -18,7 +25,86 @@ import {
   STATUS_TO_COLUMN,
 } from './kanban';
 
+import { supabase } from '../../shared/lib/supabase/client';
+
 const STORAGE_KEY = 'opencards:kanban:cards';
+const SYNC_TABLE = 'kanban_cards';
+
+interface KanbanCardRow {
+  id: string;
+  title: string;
+  status: CardStatus;
+  column_id: ColumnId;
+  position: number;
+  updated_at: string;
+  category: string | null;
+}
+
+function rowToCard(row: KanbanCardRow): Card {
+  return {
+    id: row.id,
+    title: row.title,
+    status: row.status,
+    columnId: row.column_id,
+    position: row.position,
+    updatedAt: row.updated_at,
+    ...(row.category ? { category: row.category } : {}),
+  };
+}
+
+function cardToRow(card: Card): KanbanCardRow {
+  return {
+    id: card.id,
+    title: card.title,
+    status: card.status,
+    column_id: card.columnId,
+    position: card.position,
+    updated_at: card.updatedAt,
+    category: card.category ?? null,
+  };
+}
+
+/**
+ * Busca o estado remoto dos cartões no Supabase. Retorna `null` quando o
+ * backend está indisponível (sem conexão, erro de rede, etc.) para que o
+ * caller mantenha o estado local (localStorage) como fallback offline.
+ */
+async function fetchRemoteCards(): Promise<Card[] | null> {
+  try {
+    const { data, error } = await supabase
+      .from(SYNC_TABLE)
+      .select('*')
+      .order('position', { ascending: true });
+    if (error) return null;
+    return (data || []).map(rowToCard);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Envia todos os cartões para o Supabase (best-effort). Falhas são
+ * silenciosas: o localStorage já foi atualizado e continua sendo a fonte
+ * de verdade local enquanto o backend está offline.
+ */
+async function pushRemoteCards(cards: Card[]): Promise<void> {
+  try {
+    await supabase.from(SYNC_TABLE).upsert(cards.map(cardToRow));
+  } catch {
+    // offline / backend indisponível: ignora.
+  }
+}
+
+/**
+ * Remove um cartão do Supabase (best-effort).
+ */
+async function removeRemoteCard(cardId: string): Promise<void> {
+  try {
+    await supabase.from(SYNC_TABLE).delete().eq('id', cardId);
+  } catch {
+    // offline / backend indisponível: ignora.
+  }
+}
 
 const COLUMN_ID_TO_STATUS: Record<ColumnId, CardStatus> = {
   todo: 'TODO',
@@ -93,6 +179,9 @@ export function createKanbanStore({
   const persist = (event?: CardMovedEvent) => {
     writeStoredCards(currentCards);
     notify(event);
+    // Sincronização best-effort com o Supabase quando online; falhas são
+    // silenciosas e não bloqueiam a UI nem invalidam o estado local.
+    void pushRemoteCards(currentCards);
   };
 
   const findCard = (cardId: string): Card | undefined => currentCards.find((c) => c.id === cardId);
@@ -173,6 +262,18 @@ export function createKanbanStore({
     return moveCard(cardId, STATUS_TO_COLUMN[to], cardsIn(STATUS_TO_COLUMN[to]).length);
   };
 
+  // Inicialização: sincroniza com o Supabase quando disponível; o
+  // localStorage serve de cache e de fallback quando o backend está
+  // indisponível. A substituição do estado é assíncrona para não bloquear
+  // a criação síncrona da store nem a primeira renderização da UI.
+  (async () => {
+    const remoteCards = await fetchRemoteCards();
+    if (remoteCards === null) return; // indisponível: mantém o estado local
+    currentCards = remoteCards;
+    writeStoredCards(currentCards);
+    notify();
+  })();
+
   return {
     get cards() {
       return currentCards;
@@ -207,6 +308,7 @@ export function createKanbanStore({
       if (!exists) return false;
       currentCards = currentCards.filter((c) => c.id !== cardId);
       persist();
+      void removeRemoteCard(cardId);
       return true;
     },
     subscribe(listener) {
