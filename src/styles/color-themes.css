@@ -11,22 +11,22 @@
 /* default theme: slate */
 :root {
   --color-primary: #334155;
-  --color-secondary: #64748B;
-  --color-background: #FFFFFF;
-  --color-surface: #F1F5F9;
-  --color-text: #0F172A;
-  --color-accent: #0EA5E9;
-  --color-text-on-primary: #FFFFFF;
+  --color-secondary: #64748b;
+  --color-background: #ffffff;
+  --color-surface: #f1f5f9;
+  --color-text: #0f172a;
+  --color-accent: #0ea5e9;
+  --color-text-on-primary: #ffffff;
 }
 
 .theme-slate {
   --color-primary: #334155;
-  --color-secondary: #64748B;
-  --color-background: #FFFFFF;
-  --color-surface: #F1F5F9;
-  --color-text: #0F172A;
-  --color-accent: #0EA5E9;
-  --color-text-on-primary: #FFFFFF;
+  --color-secondary: #64748b;
+  --color-background: #ffffff;
+  --color-surface: #f1f5f9;
+  --color-text: #0f172a;
+  --color-accent: #0ea5e9;
+  --color-text-on-primary: #ffffff;
 
   /* legacy component variables re-colored to slate */
   --bg: var(--color-background);
@@ -39,13 +39,13 @@
 }
 
 .theme-cobalt {
-  --color-primary: #1D4ED8;
-  --color-secondary: #3B82F6;
-  --color-background: #FFFFFF;
-  --color-surface: #EFF6FF;
-  --color-text: #0F172A;
-  --color-accent: #2563EB;
-  --color-text-on-primary: #FFFFFF;
+  --color-primary: #1d4ed8;
+  --color-secondary: #3b82f6;
+  --color-background: #ffffff;
+  --color-surface: #eff6ff;
+  --color-text: #0f172a;
+  --color-accent: #2563eb;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -58,12 +58,12 @@
 
 .theme-emerald {
   --color-primary: #047857;
-  --color-secondary: #10B981;
-  --color-background: #FFFFFF;
-  --color-surface: #ECFDF5;
-  --color-text: #0F172A;
+  --color-secondary: #10b981;
+  --color-background: #ffffff;
+  --color-surface: #ecfdf5;
+  --color-text: #0f172a;
   --color-accent: #059669;
-  --color-text-on-primary: #FFFFFF;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -75,13 +75,13 @@
 }
 
 .theme-amber {
-  --color-primary: #B45309;
-  --color-secondary: #F59E0B;
-  --color-background: #FFFFFF;
-  --color-surface: #FFFBEB;
-  --color-text: #0F172A;
-  --color-accent: #D97706;
-  --color-text-on-primary: #FFFFFF;
+  --color-primary: #b45309;
+  --color-secondary: #f59e0b;
+  --color-background: #ffffff;
+  --color-surface: #fffbeb;
+  --color-text: #0f172a;
+  --color-accent: #d97706;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -93,13 +93,13 @@
 }
 
 .theme-rose {
-  --color-primary: #BE123C;
-  --color-secondary: #FB7185;
-  --color-background: #FFFFFF;
-  --color-surface: #FFF1F2;
-  --color-text: #0F172A;
-  --color-accent: #E11D48;
-  --color-text-on-primary: #FFFFFF;
+  --color-primary: #be123c;
+  --color-secondary: #fb7185;
+  --color-background: #ffffff;
+  --color-surface: #fff1f2;
+  --color-text: #0f172a;
+  --color-accent: #e11d48;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -111,13 +111,13 @@
 }
 
 .theme-indigo {
-  --color-primary: #3730A3;
-  --color-secondary: #818CF8;
-  --color-background: #FFFFFF;
-  --color-surface: #EEF2FF;
-  --color-text: #0F172A;
-  --color-accent: #6366F1;
-  --color-text-on-primary: #FFFFFF;
+  --color-primary: #3730a3;
+  --color-secondary: #818cf8;
+  --color-background: #ffffff;
+  --color-surface: #eef2ff;
+  --color-text: #0f172a;
+  --color-accent: #6366f1;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -129,13 +129,13 @@
 }
 
 .theme-teal {
-  --color-primary: #0F766E;
-  --color-secondary: #14B8A6;
-  --color-background: #FFFFFF;
-  --color-surface: #CCFBF1;
-  --color-text: #0F172A;
-  --color-accent: #0D9488;
-  --color-text-on-primary: #FFFFFF;
+  --color-primary: #0f766e;
+  --color-secondary: #14b8a6;
+  --color-background: #ffffff;
+  --color-surface: #ccfbf1;
+  --color-text: #0f172a;
+  --color-accent: #0d9488;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -147,13 +147,13 @@
 }
 
 .theme-violet {
-  --color-primary: #6D28D9;
-  --color-secondary: #8B5CF6;
-  --color-background: #FFFFFF;
-  --color-surface: #F5F3FF;
-  --color-text: #0F172A;
-  --color-accent: #7C3AED;
-  --color-text-on-primary: #FFFFFF;
+  --color-primary: #6d28d9;
+  --color-secondary: #8b5cf6;
+  --color-background: #ffffff;
+  --color-surface: #f5f3ff;
+  --color-text: #0f172a;
+  --color-accent: #7c3aed;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -166,12 +166,12 @@
 
 .theme-zinc {
   --color-primary: #404040;
-  --color-secondary: #71717A;
-  --color-background: #FFFFFF;
-  --color-surface: #F9FAFB;
-  --color-text: #0F172A;
-  --color-accent: #A1A1AA;
-  --color-text-on-primary: #FFFFFF;
+  --color-secondary: #71717a;
+  --color-background: #ffffff;
+  --color-surface: #f9fafb;
+  --color-text: #0f172a;
+  --color-accent: #a1a1aa;
+  --color-text-on-primary: #ffffff;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -183,13 +183,13 @@
 }
 
 .theme-abyss {
-  --color-primary: #38BDF8;
-  --color-secondary: #64748B;
-  --color-background: #0F172A;
-  --color-surface: #1E293B;
-  --color-text: #F8FAFC;
-  --color-accent: #22D3EE;
-  --color-text-on-primary: #0F172A;
+  --color-primary: #38bdf8;
+  --color-secondary: #64748b;
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #f8fafc;
+  --color-accent: #22d3ee;
+  --color-text-on-primary: #0f172a;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);

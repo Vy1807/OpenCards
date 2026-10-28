@@ -12,7 +12,7 @@
  * viabiliza testes de regressão visual por snapshot.
  */
 
-export type ColorScheme = 'light' | 'dark'
+export type ColorScheme = 'light' | 'dark';
 
 /** Paleta do modo claro (espelha :root em src/styles/tokens.css). */
 export const colors = {
@@ -45,7 +45,7 @@ export const colors = {
 
   // desabilitado
   disabledOpacity: 0.55,
-}
+};
 
 export const colorSchemes: Record<ColorScheme, typeof colors> = {
   light: colors,
@@ -65,12 +65,11 @@ export const colorSchemes: Record<ColorScheme, typeof colors> = {
     primaryLightStronger: '#5A2A40',
     disabledOpacity: 0.45,
   },
-}
+};
 
 export const typography = {
   fontHeading: "'Fraunces', Georgia, serif",
-  fontBody:
-    "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  fontBody: "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   fontSize: {
     xs: '0.75rem', // 12px
     sm: '0.875rem', // 14px
@@ -91,7 +90,7 @@ export const typography = {
     semibold: 600,
     bold: 700,
   },
-} as const
+} as const;
 
 export const spacing = {
   0: '0px',
@@ -105,40 +104,40 @@ export const spacing = {
   10: '40px',
   12: '48px',
   16: '64px',
-} as const
+} as const;
 
 export const radius = {
   sm: '12px',
   md: '16px',
   lg: '24px',
   full: '9999px',
-} as const
+} as const;
 
 export const shadows = {
   sm: '0 4px 12px rgba(224, 82, 127, 0.06)',
   md: '0 8px 24px rgba(224, 82, 127, 0.10)',
   lg: '0 16px 40px rgba(224, 82, 127, 0.12)',
   inset: 'inset 0 1px 2px rgba(0, 0, 0, 0.04)',
-} as const
+} as const;
 
 export const transitions = {
   fast: '0.2s ease',
   spring: '0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
   modal: '0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-} as const
+} as const;
 
-export const touchTarget = '44px'
+export const touchTarget = '44px';
 
 export const zIndex = {
   dropdown: 50,
   modalBackdrop: 100,
   modal: 110,
   toast: 200,
-} as const
+} as const;
 
 export const breakpoints = {
   sm: '640px',
-} as const
+} as const;
 
 /**
  * Bundle consumido pelos componentes base. `scheme` alterna a paleta
@@ -146,16 +145,16 @@ export const breakpoints = {
  * até que os componentes leiam o esquema ativo do DOM.
  */
 export interface DesignTokens {
-  colors: typeof colors
-  colorSchemes: typeof colorSchemes
-  typography: typeof typography
-  spacing: typeof spacing
-  radius: typeof radius
-  shadows: typeof shadows
-  transitions: typeof transitions
-  touchTarget: string
-  zIndex: typeof zIndex
-  breakpoints: typeof breakpoints
+  colors: typeof colors;
+  colorSchemes: typeof colorSchemes;
+  typography: typeof typography;
+  spacing: typeof spacing;
+  radius: typeof radius;
+  shadows: typeof shadows;
+  transitions: typeof transitions;
+  touchTarget: string;
+  zIndex: typeof zIndex;
+  breakpoints: typeof breakpoints;
 }
 
 export const tokens: DesignTokens = {
@@ -169,4 +168,4 @@ export const tokens: DesignTokens = {
   touchTarget,
   zIndex,
   breakpoints,
-}
+};

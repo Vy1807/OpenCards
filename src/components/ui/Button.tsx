@@ -1,16 +1,18 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-import { tokens } from '../../design/tokens'
+import { tokens } from '../../design/tokens';
 
-export type ButtonVariant = 'solid' | 'outline' | 'ghost'
-export type ButtonSize = 'sm' | 'md'
+export type ButtonVariant = 'solid' | 'outline' | 'ghost';
+export type ButtonSize = 'sm' | 'md';
 
-export interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size' | 'color'> {
-  variant?: ButtonVariant
-  size?: ButtonSize
-  fullWidth?: boolean
-  children: ReactNode
+export interface ButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'size' | 'color'
+> {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  fullWidth?: boolean;
+  children: ReactNode;
 }
 
 const SIZE: Record<
@@ -29,7 +31,7 @@ const SIZE: Record<
     fontSize: tokens.typography.fontSize.base,
     minHeight: tokens.touchTarget,
   },
-}
+};
 
 const VARIANT: Record<ButtonVariant, React.CSSProperties> = {
   solid: {
@@ -47,7 +49,7 @@ const VARIANT: Record<ButtonVariant, React.CSSProperties> = {
     color: tokens.colors.muted,
     border: 'none',
   },
-}
+};
 
 export default function Button({
   variant = 'solid',
@@ -59,8 +61,8 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-  const s = SIZE[size]
-  const v = VARIANT[variant]
+  const s = SIZE[size];
+  const v = VARIANT[variant];
 
   return (
     <button
@@ -92,7 +94,7 @@ export default function Button({
     >
       {children}
     </button>
-  )
+  );
 }
 
-Button.displayName = 'Button'
+Button.displayName = 'Button';

@@ -1,13 +1,13 @@
-import { useId } from 'react'
-import type { InputHTMLAttributes } from 'react'
+import { useId } from 'react';
+import type { InputHTMLAttributes } from 'react';
 
-import { tokens } from '../../design/tokens'
+import { tokens } from '../../design/tokens';
 
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  label?: string
-  error?: string
-  helper?: string
-  fullWidth?: boolean
+  label?: string;
+  error?: string;
+  helper?: string;
+  fullWidth?: boolean;
 }
 
 export default function Input({
@@ -21,8 +21,8 @@ export default function Input({
   id,
   ...props
 }: InputProps) {
-  const generatedId = useId()
-  const inputId = id || generatedId
+  const generatedId = useId();
+  const inputId = id || generatedId;
 
   return (
     <div
@@ -61,8 +61,7 @@ export default function Input({
           color: tokens.colors.ink,
           fontFamily: tokens.typography.fontBody,
           fontSize: tokens.typography.fontSize.base,
-          transition:
-            'border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
+          transition: 'border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
           outline: 'none',
           ...style,
         }}
@@ -91,7 +90,7 @@ export default function Input({
         </span>
       )}
     </div>
-  )
+  );
 }
 
-Input.displayName = 'Input'
+Input.displayName = 'Input';
