@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { createKanbanStore } from './kanbanStore';
-import { type Card } from './kanban';
+import { type Card, type CardMovedEvent } from './kanban';
 
 // Polyfill de localStorage para rodar também em ambiente 'node' (sem DOM).
 // Sob jsdom (CI) o valor nativo é mantido.
@@ -32,12 +32,7 @@ describe('KanbanStore', () => {
 
   it('inicia com as quatro colunas padrão e nenhum cartão', () => {
     const store = createKanbanStore();
-    expect(store.columns.map((c) => c.id)).toEqual([
-      'todo',
-      'in-progress',
-      'testing',
-      'done',
-    ]);
+    expect(store.columns.map((c) => c.id)).toEqual(['todo', 'in-progress', 'testing', 'done']);
     expect(store.cards).toEqual([]);
   });
 
@@ -118,9 +113,7 @@ describe('KanbanStore', () => {
     const c1 = store.addCard({ title: 'A', columnId: 'todo' });
     const c2 = store.addCard({ title: 'B', columnId: 'todo' }); // position 1
 
-    const result = ok(
-      store.moveCard(c1.id, 'done', 0) as { ok: true; card: Card }
-    );
+    const result = ok(store.moveCard(c1.id, 'done', 0) as { ok: true; card: Card });
     expect(result.status).toBe('DONE');
     expect(result.columnId).toBe('done');
     expect(result.position).toBe(0);
@@ -182,5 +175,74 @@ describe('KanbanStore', () => {
     unsub();
     store.addCard({ title: 'C2', columnId: 'todo' });
     expect(calls).toEqual(['change']);
+  });
+
+  it('moveCard rejeita saltos de etapa e reversões do ciclo de vida', () => {
+    const store = createKanbanStore();
+    const todoCard = store.addCard({ title: 'A', columnId: 'todo' });
+    const doneCard = store.addCard({ title: 'B', columnId: 'done' });
+
+    const skip = store.moveCard(todoCard.id, 'testing', 0) as {
+      ok: false;
+      error: string;
+    };
+    expect(skip.ok).toBe(false);
+    expect(skip.error).toContain('Invalid transition');
+
+    const rollback = store.moveCard(doneCard.id, 'todo', 0) as {
+      ok: false;
+      error: string;
+    };
+    expect(rollback.ok).toBe(false);
+    expect(rollback.error).toContain('Invalid transition');
+
+    // Estado inalterado após as rejeições.
+    expect(store.cards.find((c) => c.id === todoCard.id)?.status).toBe('TODO');
+    expect(store.cards.find((c) => c.id === doneCard.id)?.status).toBe('DONE');
+  });
+
+  it('moveCard avança um estágio e aceita reposicionamento dentro da mesma coluna', () => {
+    const store = createKanbanStore();
+    const c1 = store.addCard({ title: 'A', columnId: 'todo' });
+    const c2 = store.addCard({ title: 'B', columnId: 'todo' });
+
+    const advanced = ok(store.moveCard(c1.id, 'in-progress', 0) as { ok: true; card: Card });
+    expect(advanced.status).toBe('IN_PROGRESS');
+    expect(advanced.columnId).toBe('in-progress');
+
+    const reordered = ok(store.moveCard(c2.id, 'todo', 0) as { ok: true; card: Card });
+    expect(reordered.status).toBe('TODO');
+    const todo = store.cards.filter((c) => c.columnId === 'todo');
+    expect(todo.map((c) => c.id)).toEqual([c2.id]);
+    expect(todo[0].position).toBe(0);
+  });
+
+  it('subscribe recebe CardMovedEvent com cardId, from, to, position e at', () => {
+    const store = createKanbanStore();
+    const events: CardMovedEvent[] = [];
+    store.subscribe((event) => {
+      if (event) events.push(event);
+    });
+
+    const card = store.addCard({ title: 'C1', columnId: 'todo' });
+    store.moveNext(card.id); // TODO → IN_PROGRESS
+    store.moveNext(card.id); // IN_PROGRESS → TESTING
+
+    expect(events).toHaveLength(2);
+    expect(events[0]).toMatchObject({
+      cardId: card.id,
+      from: 'todo',
+      to: 'in-progress',
+      position: 0,
+    });
+    expect(events[1]).toMatchObject({
+      cardId: card.id,
+      from: 'in-progress',
+      to: 'testing',
+      position: 0,
+    });
+    for (const event of events) {
+      expect(event.at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    }
   });
 });

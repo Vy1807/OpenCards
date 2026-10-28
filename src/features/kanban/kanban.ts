@@ -62,10 +62,16 @@ export interface Column {
 
 export interface CardMovedEvent {
   cardId: string;
-  from: string;
+  /** Coluna de origem do movimento. */
+  from: ColumnId;
+  /** Coluna de destino do movimento. */
   to: ColumnId;
+  /** Nova posição do cartão dentro da coluna destino. */
   position: number;
+  /** Momento do movimento (ISO 8601). */
   at: string;
+  /** Ator que iniciou o movimento (preenchido pela camada de UI quando conhecido). */
+  by?: string;
 }
 
 export function defaultColumns(): Column[] {

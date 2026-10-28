@@ -9,6 +9,7 @@
 import {
   type Card,
   type CardStatus,
+  type CardMovedEvent,
   type Column,
   type ColumnId,
   defaultColumns,
@@ -50,12 +51,10 @@ export interface KanbanStore {
     toColumnId: ColumnId,
     position: number
   ) => { ok: true; card: Card } | { ok: false; error: string };
-  moveNext: (
-    cardId: string
-  ) => { ok: true; card: Card } | { ok: false; error: string };
+  moveNext: (cardId: string) => { ok: true; card: Card } | { ok: false; error: string };
   canTransition: (cardId: string, to: CardStatus) => boolean;
   deleteCard: (cardId: string) => boolean;
-  subscribe: (listener: () => void) => () => void;
+  subscribe: (listener: (event?: CardMovedEvent) => void) => () => void;
   destroy: () => void;
 }
 
@@ -85,24 +84,21 @@ export function createKanbanStore({
 }: { cards?: Card[]; columns?: Column[] } = {}): KanbanStore {
   let currentCards = readStoredCards() ?? initialCards;
   const currentColumns = initialColumns ?? defaultColumns();
-  const listeners = new Set<() => void>();
+  const listeners = new Set<(event?: CardMovedEvent) => void>();
 
-  const notify = () => {
-    for (const listener of [...listeners]) listener();
+  const notify = (event?: CardMovedEvent) => {
+    for (const listener of [...listeners]) listener(event);
   };
 
-  const persist = () => {
+  const persist = (event?: CardMovedEvent) => {
     writeStoredCards(currentCards);
-    notify();
+    notify(event);
   };
 
-  const findCard = (cardId: string): Card | undefined =>
-    currentCards.find((c) => c.id === cardId);
+  const findCard = (cardId: string): Card | undefined => currentCards.find((c) => c.id === cardId);
 
   const cardsIn = (columnId: ColumnId): Card[] =>
-    currentCards
-      .filter((c) => c.columnId === columnId)
-      .sort((a, b) => a.position - b.position);
+    currentCards.filter((c) => c.columnId === columnId).sort((a, b) => a.position - b.position);
 
   const moveCard = (
     cardId: string,
@@ -116,12 +112,25 @@ export function createKanbanStore({
     if (!currentColumns.some((c) => c.id === toColumnId)) {
       return { ok: false, error: 'Target column not found' };
     }
-    const targetCount = currentCards.filter((c) => c.columnId === toColumnId && c.id !== cardId).length;
+    const targetStatus = COLUMN_ID_TO_STATUS[toColumnId];
+    // Ciclo de vida autônomo: avança um estágio por vez
+    // (TODO → IN_PROGRESS → TESTING → DONE). Saltos e reversões são
+    // rejeitados; reposicionamento dentro da mesma coluna (mesmo status) é
+    // permitido.
+    if (targetStatus !== card.status && !canTransition(card.status, targetStatus)) {
+      return {
+        ok: false,
+        error: `Invalid transition from ${card.status} to ${targetStatus}: advance one stage at a time (TODO → IN_PROGRESS → TESTING → DONE).`,
+      };
+    }
+    const targetCount = currentCards.filter(
+      (c) => c.columnId === toColumnId && c.id !== cardId
+    ).length;
     const pos = Math.min(Math.max(position, 0), targetCount);
     const updated: Card = {
       ...card,
       columnId: toColumnId,
-      status: COLUMN_ID_TO_STATUS[toColumnId],
+      status: targetStatus,
       position: pos,
       updatedAt: nowISO(),
     };
@@ -143,13 +152,15 @@ export function createKanbanStore({
     });
 
     currentCards = next;
-    persist();
+    const event: CardMovedEvent | undefined =
+      toColumnId !== card.columnId || pos !== card.position
+        ? { cardId, from: card.columnId, to: toColumnId, position: pos, at: nowISO() }
+        : undefined;
+    persist(event);
     return { ok: true, card: { ...updated, position: pos } };
   };
 
-  const moveNext = (
-    cardId: string
-  ): { ok: true; card: Card } | { ok: false; error: string } => {
+  const moveNext = (cardId: string): { ok: true; card: Card } | { ok: false; error: string } => {
     const card = findCard(cardId);
     if (!card) {
       return { ok: false, error: 'Card not found' };
