@@ -285,7 +285,7 @@ export default function Review() {
         <button
           className="btn"
           onClick={() => handleAnswer(false)}
-          disabled={answering || flipped}
+          disabled={answering || !flipped}
           tabIndex={0}
           aria-label="Difícil - Errei"
           style={{
@@ -302,7 +302,7 @@ export default function Review() {
         <button
           className="btn btn-primary"
           onClick={() => handleAnswer(true)}
-          disabled={answering || flipped}
+          disabled={answering || !flipped}
           tabIndex={0}
           aria-label="Bom - Acertei"
           style={{ flex: 1, minHeight: '56px', fontSize: '1.1rem' }}
@@ -312,7 +312,7 @@ export default function Review() {
         <button
           className="btn"
           onClick={() => handleAnswer(true)}
-          disabled={answering || flipped}
+          disabled={answering || !flipped}
           tabIndex={0}
           aria-label="Fácil - Acertei fácil"
           style={{

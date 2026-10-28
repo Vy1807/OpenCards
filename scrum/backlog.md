@@ -1,6 +1,6 @@
 # Backlog do Produto — OpenCards
 
-**Origem**: `scrum/visao.md`  
+**Origem**: `scrum/visao.md`
 **Formato**: ID | Título | História de Usuário | Critérios de Aceite | Estimativa | Prioridade | Status
 
 ---
@@ -84,7 +84,7 @@
 | REV-05 | Avaliação: Errei (←) / Acertei (→) / Fácil (→→) | Como **estudante**, quero **responder com setas** para que **flua rápido** | ← → `handleAnswer(false)`; → → `handleAnswer(true)`; botão "Fácil" também `true` mas com estilo diferente; `answerCard` chama `scheduleNext` no servidor | M | Alta | ✅ Feito |
 | REV-06 | Progresso ECG + contador | Como **estudante**, quero **ver barra de progresso e "X de Y"** para que **saiba onde estou** | `ProgressBar` avança a cada resposta; label "X de Y respondido"; texto "Cartão X de Y" | P | Alta | ✅ Feito |
 | REV-07 | Finalização com anel + confete | Como **estudante**, quero **ver meu aproveitamento no final** para que **sinta conquista** | Tela final: anel giratório `correct/total`; `CheckIcon` acertos, `CloseIcon` erros; % aproveitamento; confete se ≥80% | M | Alta | ✅ Feito |
-| REV-08 | "Revisar erros" no final | Como **estudante**, quero **refazer só os que errei** para que **fixe o conteúdo** | Botão "Revisar erros (N)" filtra `box === 0` do baralho original; reinicia sessão só com esses; desabilitado se `wrong === 0` | M | Alta | ✅ Feito |
+| REV-08 | "Revisar erros" no final | Como **estudante**, quero **refazer só o que errei** para que **fixe o conteúdo** | Botão "Revisar erros (N)" filtra `box === 0` do baralho original; reinicia sessão só com esses; desabilitado se `wrong === 0` | M | Alta | ✅ Feito |
 | REV-09 | "Revisar de novo" reinicia tudo | Como **estudante**, quero **recomeçar a mesma sessão** para que **pratique mais** | Botão "Revisar de novo" chama `load()` → recarrega `deckCards`, filtra, embaralha, zera contadores | P | Média | ✅ Feito |
 || REV-10 | Navegação teclado acessível | Como **usuário**, quero **focus visível e ordem lógica** para que **use só teclado** | `tabIndex` nos botões; `focus-visible` ring rosa; `aria-label` nos ícones; ESC volta para baralho | P | Média | ✅ Feito (T-212) |
 
@@ -131,14 +131,65 @@
 
 ## Épico 10 — Melhorias Futuras (Icebox)
 
-| ID | Título | História | Est. | Prioridade |
-|----|--------|----------|------|------------|
+| ID | Título | História | Est. | Prioridade | Status |
+|----|--------|----------|------|------------|--------|
 || ICE-01 | Lazy loading rotas | Code-split `Deck`, `DeckEdit`, `Review`, `KanbanPage` com `React.lazy` + `Suspense` | M | Baixa | ✅ Feito (T-213) |
-|| ICE-02 | PWA + Service Worker | Instalável, offline-first real (workbox) | G | Baixa |
-|| ICE-03 | Compartilhamento baralho | Link público read-only de um baralho | M | Baixa |
-|| ICE-04 | Cloze deletion | Tipo de card "lacuna" com marcação `{{c1::texto}}` | G | Baixa |
-|| ICE-05 | Estatísticas avançadas | Gráfico de retenção, heatmap de atividade, previsão de carga | M | Baixa |
-|| ICE-06 | Notificações locais | "Hora de revisar" via Notification API + `review_log` | M | Baixa |
+|| ICE-02 | PWA + Service Worker | Instalável, offline-first real (workbox) | G | Baixa | |
+|| ICE-03 | Compartilhamento baralho | Link público read-only de um baralho | M | Baixa | |
+|| ICE-04 | Cloze deletion | Tipo de card "lacuna" com marcação `{{c1::texto}}` | G | Baixa | |
+|| ICE-05 | Estatísticas avançadas | Gráfico de retenção, heatmap de atividade, previsão de carga | M | Baixa | |
+|| ICE-06 | Notificações locais | "Hora de revisar" via Notification API + `review_log` | M | Baixa | |
+
+---
+
+## Épico A — Bugs (Revisão, UX, Contraste) — Sprint 3
+
+| ID | Título | História | Critérios de Aceite | Est. | Prioridade | Status |
+|----|--------|----------|---------------------|------|------------|--------|
+| B-301 | Revisão: mostrar a pergunta primeiro, resposta só depois de virar | Como **estudante**, quero **ver só a pergunta ao abrir o card na revisão** para que **avalie depois de ver a resposta** | Todo card começa na frente (pergunta) com rótulo "Pergunta"; clique/Enter/Espaço viram para o verso; Difícil/Bom/Fácil desabilitados até virar; botão "Mostrar resposta" vira "Voltar à pergunta" após virar; próximo card começa na frente; teste automatizado cobre estado inicial, virar por clique, virar por teclado, avaliação bloqueada antes de virar | M | P0 | ⬜ Pendente |
+| B-302 | Botão "Editar" piscando | Como **usuário**, quero **o botão Editar parar de piscar** para que **possa editar sem interrupção** | React Profiler sem renders contínuos com tela parada; causa raiz registrada em `scrum/decisoes.md`; teste que falha se renderizar mais de N vezes em 2s sem interação | M | P0 | ⬜ Pendente |
+| B-303 | Texto espelhado no verso do card | Como **estudante**, quero **ler o verso do card sem espelhamento** para que **possa avaliar a resposta** | Frente e verso legíveis sem espelhamento em Chrome/Firefox/Safari; animação 3D funcional; `prefers-reduced-motion` respeitado (troca simples); prévia do novo card sem faces sobrepostas/invertidas | M | P0 | ⬜ Pendente |
+| B-304 | Títulos e textos com contraste insuficiente | Como **usuário**, quero **ler todos os textos com clareza** para que **possa usar o app em qualquer tema** | Nenhum texto abaixo de 4,5:1 (normal) ou 3:1 (grande/ícones); cores vêm dos tokens do tema (sem hex fixo); verificado nos cinco temas | M | P1 | ⬜ Pendente |
+| B-305 | Cabeçalho da revisão sobreposto e seta duplicada | Como **estudante**, quero **ver o cabeçalho da revisão sem sobreposição** para que **possa navegar com clareza** | Botão de voltar com uma seta; título e botão sem sobreposição de 320px a desktop; um único indicador de progresso (barra + "1 de N") | M | P1 | ⬜ Pendente |
+| B-306 | "0 diasdesde" sem espaço e sem plural | Como **usuário**, quero **ler a frase do streak corretamente** para que **entenda meu progresso** | Texto: "Hoje você já revisou" (0 dias), "1 dia desde sua última revisão", "N dias desde sua última revisão"; teste unitário da função de formatação | P | P1 | ⬜ Pendente |
+
+---
+
+## Épico B — Temas e Design System — Sprint 3
+
+| ID | Título | História | Critérios de Aceite | Est. | Prioridade | Status |
+|----|--------|----------|---------------------|------|------------|--------|
+| T-310 | Sistema de tokens de design | Como **dev**, quero **todas as cores vindas de variáveis CSS** para que **não haja cores fixas em componentes** | Cores em `:root[data-theme="..."]`; tokens: `--bg`, `--surface`, `--surface-2`, `--border`, `--text`, `--text-muted`, `--primary`, `--on-primary`, `--secondary`, `--on-secondary`, `--success`, `--warning`, `--danger`, `--focus-ring`; espaçamento, raio, sombra, fonte como tokens; temas antigos removidos | G | P0 | ⬜ Pendente |
+| T-311 | Cinco novos temas | Como **usuário**, quero **escolher entre cinco temas de cor** para que **personalize o app** | Temas: rosa-menta (#F7A8B8/#98D8AA/#4A4E69), azul-laranja (#2A6F97/#FF9F1C/#F8F9FA), roxo-amarelo (#6C5CE7/#FDCB6E/#2D3436), verde-coral (#2E7D32/#FF6B6B/#EFECE6), dark-neon (#1E1B2E/#00F5D4/#2A2640); rosa-menta padrão; funciona em todas as telas; mapeamento de botões de avaliação documentado; troca sem recarregar/piscar | G | P0 | ⬜ Pendente |
+| T-312 | Seletor de tema e migração do valor salvo | Como **usuário**, quero **escolher o tema em um menu** para que **não ocupe espaço fixo na barra** | Seletor sai da barra fixa para menu com ícone de paleta + prévia; chave `selected-theme` no localStorage guarda um dos 5 IDs; migração: valor antigo/desconhecido → `rosa-menta` sem erro; teste cobre válido, ausente e antigo | M | P1 | ⬜ Pendente |
+| T-313 | Garantia de contraste (AA) em todos os temas | Como **usuário**, quero **ler texto com contraste suficiente em todo tema** para que **não tenha dificuldade de leitura** | Script/teste calcula contraste pares texto/fundo e falha se < 4,5:1 (3:1 grande/ícones); relatório em `scrum/decisoes.md`; foco visível com `--focus-ring` ≥ 3:1 | M | P1 | ⬜ Pendente |
+
+---
+
+## Épico C — Refatoração de UI/UX — Sprint 3
+
+| ID | Título | História | Critérios de Aceite | Est. | Prioridade | Status |
+|----|--------|----------|---------------------|------|------------|--------|
+| U-320 | Escala de espaçamento e container centralizado | Como **dev**, quero **uma escala de espaçamento em tokens** para que **o app tenha espaçamento consistente** | Escala 4/8px (`--space-1` a `--space-8`); nenhum valor solto de margem/padding; container max ~720px, margem 16px mobile; espaço entre blocos ≥ 24px, itens relacionados ≥ 12px, botões lado a lado ≥ 12px; alvos de toque ≥ 44×44px | M | P0 | ⬜ Pendente |
+| U-321 | Cabeçalho e navegação consistentes | Como **usuário**, quero **um cabeçalho único em todas as telas** para que **navegue de forma previsível** | Cabeçalho: logo/nome esquerda, avatar com menu (Tema, Sair) direita; "Sair" e seletor no menu do avatar; todas as telas internas têm "Voltar" + título; avatar com nome/inicial do usuário | M | P1 | ⬜ Pendente |
+| U-322 | Home: formulário colapsado e card de baralho redesenhado | Como **estudante**, quero **o formulário "Novo baralho" fechado por padrão** para que **veja a lista sem rolagem desnecessária** | Botão "+ Novo baralho" abre painel/modal com Nome e Tag; saudação + resumo + "Revisar agora" em bloco de destaque; card de baralho com cores do tema (sem branco fixo): nome, tag, total, pendentes (badge), barra de progresso com rótulo; busca e filtro alinhados; estado vazio com botão de criação | G | P1 | ⬜ Pendente |
+| U-323 | Tela do baralho: hierarquia de ações | Como **estudante**, quero **ver a ação principal destacada** para que **sabia o que fazer primeiro** | Hierarquia: Revisar (primário, largura total), Adicionar cartão (secundário), Editar + Exportar JSON (terciários, ícone+texto ou menu ⋯); espaço claro entre título, stats e ações; lista de cartões com pergunta + prévia resposta, editar/excluir por item; botão "Voltar" para Baralhos | M | P1 | ⬜ Pendente |
+| U-324 | Layout da tela de revisão | Como **estudante**, quero **a tela de revisão clara e sem sobreposição** para que **possa estudar com foco** | Cabeçalho com "Voltar", título e contador "1 de N" sem sobreposição (ver B-305); card grande centralizado com altura mínima confortável; cartões longos rolam dentro do card; botões de avaliação mostram próximo intervalo abaixo (<1 dia, 3 dias, 7 dias); dica de teclado coerente com controles (ver M-330) | M | P1 | ⬜ Pendente |
+| U-325 | Formulário de novo card | Como **estudante**, quero **criar um card com formulário centralizado** para que **possa digitar respostas longas** | Mesma largura e alinhamento central das demais telas; Pergunta e Resposta em textarea com altura que cresce + contador opcional; prévia do card no tema atual com alternância Frente/Verso (não ambas ao mesmo tempo); botões: Salvar card (primário), Salvar e criar outro (secundário), Cancelar (texto); primário desabilitado só se faltar Pergunta ou Resposta com mensagem; "Anexar imagem" com ícone claro e miniatura + remover; abas "Criar manualmente"/"Importar JSON" com estado ativo evidente | G | P1 | ⬜ Pendente |
+| U-326 | Mobile first | Como **usuário**, quero **usar o app no celular** para que **possa estudar em qualquer lugar** | Todas as telas usáveis em 360px; botões de avaliação dentro do alcance do polegar; sem rolagem horizontal; teclado virtual não cobre botão de salvar | M | P1 | ⬜ Pendente |
+
+---
+
+## Épico D — Melhorias adicionais — Sprint 3
+
+| ID | Título | História | Critérios de Aceite | Est. | Prioridade | Status |
+|----|--------|----------|---------------------|------|------------|--------|
+| M-330 | Atalhos de teclado na revisão | Como **estudante**, quero **usar atalhos de teclado na revisão** para que **estude mais rápido** | Espaço/Enter: virar; 1=Difícil, 2=Bom, 3=Fácil (só depois de virar); Esc: voltar ao baralho; dica atualizada e escondida em telas sensíveis ao toque | M | P2 | ⬜ Pendente |
+| M-331 | Resumo ao fim da sessão de revisão | Como **estudante**, quero **ver um resumo ao concluir** para que **saiba meu aproveitamento** | Mostrar cards revisados, distribuição Difícil/Bom/Fácil, próxima revisão; botões "Voltar aos baralhos" e "Revisar de novo os difíceis" | M | P2 | ⬜ Pendente |
+| M-332 | Desfazer última avaliação | Como **estudante**, quero **desfazer a última avaliação** para que **corrija um engano** | Aviso temporário "Avaliado como X. Desfazer" por alguns segundos; restaura card e agendamento anteriores | M | P2 | ⬜ Pendente |
+| M-333 | Confirmação ao excluir, estados vazios, carregamento e avisos | Como **usuário**, quero **confirmação antes de excluir** para que **não apague por engano** | Excluir cartão/baralho pede confirmação em diálogo com nome do item + desfazer por alguns segundos; estados vazios e carregamento (esqueletos) em Home, baralho, revisão; erros mostram mensagem clara + "Tentar de novo"; toasts para criado/salvo/importado/erro de rede | M | P2 | ⬜ Pendente |
+| M-334 | Acessibilidade (foco, rótulos, movimento reduzido) | Como **usuário**, quero **navegar com teclado e leitor de tela** para que **possa usar o app sem mouse** | Foco visível em todos os controles; ordem de tabulação lógica; `aria-live` anuncia resposta ao virar; rótulos em todos campos e botões de ícone; `prefers-reduced-motion` respeitado em animações | M | P2 | ⬜ Pendente |
+| M-335 | Testes E2E com Playwright | Como **equipe**, quero **testes E2E cobrindo fluxos críticos** para que **tenha confiança no deploy** | Cobrir: login, criar baralho, abrir baralho, criar card, revisão (frente → virar → avaliar), importar JSON, troca de tema (persistido), viewport mobile; usuário de teste via `TEST_EMAIL` e `TEST_PASSWORD` | G | P2 | ⬜ Pendente |
 
 ---
 

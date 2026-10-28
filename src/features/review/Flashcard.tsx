@@ -20,7 +20,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
   return (
     <div className={`flashcard-card ${flipped ? 'flipped' : ''}`} onClick={onFlip}>
       {!flipped && (
-        <div className="flashcard-face front" data-testid="flashcard-verso">
+        <div className="flashcard-face front" data-testid="flashcard-frente">
           <div
             style={{
               fontSize: '0.875rem',
@@ -28,22 +28,26 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
               marginBottom: '0.5rem',
             }}
           >
-            #{card.card_code} · Verso
+            #{card.card_code} · Pergunta
           </div>
-          {/* Verso espelhado (scaleX(-1)): simula o lado de tras do card visto contra a luz,
-             aguardando a animacao de flip 3D. Ex.: "RESPOSTA" aparece como "ATSOPSER". */}
           <div
-            data-testid="flashcard-verso-texto"
+            data-testid="flashcard-frente-texto"
             style={{
-              transform: 'scaleX(-1)',
-              display: 'inline-block',
               fontSize: '1.25rem',
               fontWeight: '600',
               wordBreak: 'break-word',
             }}
           >
-            {card.back_text}
+            {card.front_text}
           </div>
+          {frontImageUrl && (
+            <img
+              src={frontImageUrl}
+              alt="frente"
+              className="flashcard-image"
+              style={{ marginTop: '1rem' }}
+            />
+          )}
           <p
             style={{
               fontSize: '0.875rem',
@@ -56,7 +60,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
         </div>
       )}
       {flipped && (
-        <div className="flashcard-face back">
+        <div className="flashcard-face back" data-testid="flashcard-verso">
           <div
             style={{
               fontSize: '0.875rem',
@@ -64,38 +68,25 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
               marginBottom: '0.5rem',
             }}
           >
-            #{card.card_code} · Frente
+            #{card.card_code} · Resposta
           </div>
           <div
+            data-testid="flashcard-verso-texto"
             style={{
               fontSize: '1.25rem',
               fontWeight: '600',
-              marginBottom: frontImageUrl ? '0.5rem' : 0,
-              wordBreak: 'break-word',
-            }}
-          >
-            {card.front_text}
-          </div>
-          {frontImageUrl && (
-            <img
-              src={frontImageUrl}
-              alt="frente"
-              className="flashcard-image"
-            />
-          )}
-          <div
-            style={{
-              marginTop: '1rem',
-              fontSize: '1.25rem',
-              fontWeight: '600',
-              color: 'var(--ink)',
+              marginBottom: backImageUrl ? '0.5rem' : 0,
               wordBreak: 'break-word',
             }}
           >
             {card.back_text}
           </div>
           {backImageUrl && (
-            <img src={backImageUrl} alt="verso" className="flashcard-image" />
+            <img
+              src={backImageUrl}
+              alt="verso"
+              className="flashcard-image"
+            />
           )}
           <p
             style={{
