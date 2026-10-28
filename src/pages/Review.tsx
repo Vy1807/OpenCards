@@ -6,6 +6,7 @@ import { getCards, answerCard, type Card } from '../lib/api'
 import { isDue } from '../lib/schedule'
 import Flashcard from '../components/Flashcard'
 import Confetti from '../components/Confetti'
+import { CheckIcon, CloseIcon, ArrowRightIcon, ArrowLeftIcon } from '../icons'
 
 type Params = { id: string }
 
@@ -169,10 +170,10 @@ export default function Review() {
             <span style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--ink)' }}>{correct}/{total}</span>
           </div>
           <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>
-            ✅ Acertos: <strong>{correct}</strong>
+            <CheckIcon size={20} title="Acertos" /> Acertos: <strong>{correct}</strong>
           </p>
           <p style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>
-            ❌ Erros: <strong>{wrong}</strong>
+            <CloseIcon size={20} title="Erros" /> Erros: <strong>{wrong}</strong>
           </p>
           <p style={{ color: 'var(--muted)', marginBottom: '1rem' }}>
             Aproveitamento: <strong>{pct}%</strong>
@@ -250,7 +251,7 @@ export default function Review() {
           disabled={answering || flipped}
           style={{ flex: 1, minHeight: '56px', fontSize: '1.1rem' }}
         >
-          → ✓ Acertei
+          <ArrowRightIcon size={16} /> <CheckIcon size={16} /> Acertei
         </button>
         <button
           className="btn btn-danger"
@@ -258,7 +259,7 @@ export default function Review() {
           disabled={answering || flipped}
           style={{ flex: 1, minHeight: '56px', fontSize: '1.1rem' }}
         >
-          ← ✗ Errei
+          <ArrowLeftIcon size={16} /> <CloseIcon size={16} /> Errei
         </button>
       </div>
 
@@ -273,7 +274,7 @@ export default function Review() {
         </button>
       </div>
       <p style={{ marginTop: '0.5rem', color: 'var(--muted)', fontSize: '0.875rem', textAlign: 'center' }}>
-        Espaço/Enter: virar → seta direita: acertei ← seta esquerda: errei
+        Espaço/Enter: virar <ArrowRightIcon size={14} style={{ margin: '0 0.25rem' }} /> acertei <ArrowLeftIcon size={14} style={{ margin: '0 0.25rem' }} /> errei
       </p>
     </div>
   )

@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getDecks, createDeck, type Deck } from '../lib/api'
 import { streak } from '../lib/streak'
+import { DeckIcon, PlusIcon, SearchIcon, FilterIcon, ChevronDownIcon, RefreshIcon, InfoIcon, AlertIcon } from '../icons'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -78,9 +79,16 @@ export default function Home() {
   if (error) {
     return (
       <div className="page error-state">
+        <AlertIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
         <h3>Erro ao carregar</h3>
         <p>{error}</p>
-        <button className="btn btn-primary" onClick={load}>Tentar de novo</button>
+        <button
+          className="btn btn-primary"
+          onClick={load}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+        >
+          <RefreshIcon size={16} /> Tentar de novo
+        </button>
       </div>
     )
   }
@@ -121,36 +129,48 @@ export default function Home() {
               placeholder="Ex: #estudo"
             />
           </div>
-          <button className="btn btn-primary" type="submit" disabled={creating}>
-            {creating ? 'Criando…' : 'Criar baralho'}
+          <button
+            className="btn btn-primary"
+            type="submit"
+            disabled={creating}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            <PlusIcon size={16} /> {creating ? 'Criando…' : 'Criar baralho'}
           </button>
         </div>
       </form>
 
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
         <label className="label">Buscar por nome</label>
-        <input
-          className="input"
-          style={{ minWidth: '220px' }}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar baralhos…"
-        />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '220px' }}>
+          <SearchIcon size={18} style={{ flexShrink: 0, verticalAlign: 'middle' }} />
+          <input
+            className="input"
+            style={{ minWidth: '220px' }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar baralhos…"
+          />
+        </div>
         {allTags.length > 0 && (
           <>
-            <label className="label">Filtrar por tag</label>
-            <select
-              className="input"
-              value={filterTag}
-              onChange={(e) => setFilterTag(e.target.value)}
-            >
-              <option value="">Todas as tags</option>
-              {allTags.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <FilterIcon size={16} style={{ flexShrink: 0, verticalAlign: 'middle' }} />
+              <label className="label">Filtrar por tag</label>
+              <select
+                className="input"
+                value={filterTag}
+                onChange={(e) => setFilterTag(e.target.value)}
+              >
+                <option value="">Todas as tags</option>
+                {allTags.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+              <ChevronDownIcon size={16} style={{ flexShrink: 0, verticalAlign: 'middle', marginLeft: '0.25rem' }} />
+            </div>
           </>
         )}
       </div>
@@ -158,6 +178,7 @@ export default function Home() {
       <h2>Baralhos</h2>
       {filteredDecks.length === 0 ? (
         <div className="empty-state">
+          <InfoIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
           <h3>Nenhum baralho encontrado</h3>
           <p>Crie o seu primeiro baralho acima.</p>
         </div>
@@ -172,7 +193,10 @@ export default function Home() {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h3 style={{ marginBottom: '0.25rem' }}>{deck.name}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                    <DeckIcon size={20} style={{ flexShrink: 0 }} />
+                    <h3 style={{ margin: 0 }}>{deck.name}</h3>
+                  </div>
                   {deck.tag && (
                     <span style={{ fontSize: '0.875rem', color: 'var(--muted)', marginRight: '0.5rem' }}>
                       {deck.tag}

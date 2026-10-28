@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getDeck, getCurrentUser, updateDeck, deleteDeck, getCards, createCard, updateCard, deleteCard, upsertCard } from '../lib/api'
 import { uploadImage } from '../lib/api'
 import { parseAndValidateImport } from '../lib/importCards'
+import { TrashIcon, UploadIcon, CloseIcon, InfoIcon, AlertIcon, RefreshIcon } from '../icons'
 
 type Params = { id: string }
 
@@ -93,16 +94,30 @@ export default function DeckEdit() {
   if (error && !deck) {
     return (
       <div className="page error-state">
+        <AlertIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
         <h3>Erro ao carregar</h3>
         <p>{error}</p>
-        <button className="btn btn-primary" onClick={load}>Tentar de novo</button>
+        <button
+          className="btn btn-primary"
+          onClick={load}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+        >
+          <RefreshIcon size={16} /> Tentar de novo
+        </button>
       </div>
     )
   }
   if (!deck) return (
     <div className="page error-state">
+      <AlertIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
       <h3>Baralho não encontrado.</h3>
-      <button className="btn" onClick={() => navigate('/')}>Voltar ao início</button>
+      <button
+        className="btn"
+        onClick={() => navigate('/')}
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+      >
+        <RefreshIcon size={16} /> Voltar ao início
+      </button>
     </div>
   )
 
@@ -132,9 +147,9 @@ export default function DeckEdit() {
           className="btn btn-danger"
           type="button"
           onClick={handleDeleteDeck}
-          style={{ marginTop: '0.75rem' }}
+          style={{ marginTop: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          Excluir baralho
+          <TrashIcon size={16} style={{ verticalAlign: 'middle' }} /> Excluir baralho
         </button>
       </form>
 
@@ -146,10 +161,16 @@ export default function DeckEdit() {
           onClick={() => {
             setImportOpen(true)
           }}
-          style={{ marginBottom: '0.5rem' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}
         >
-          Importar cartões (JSON)
+          <UploadIcon size={16} style={{ verticalAlign: 'middle' }} /> Importar cartões (JSON)
         </button>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+        <InfoIcon size={18} style={{ flexShrink: 0 }} />
+        <span style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>
+          Dica: use a importação de JSON para adicionar vários cartões de uma vez.
+        </span>
       </div>
 
       {importOpen && (
@@ -178,9 +199,9 @@ export default function DeckEdit() {
                   className="btn btn-danger"
                   type="button"
                   onClick={() => handleDeleteCard(card.id)}
-                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.875rem', minHeight: 'auto' }}
+                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.875rem', minHeight: 'auto', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
                 >
-                  Excluir
+                  <TrashIcon size={16} style={{ verticalAlign: 'middle' }} /> Excluir
                 </button>
               </div>
               <div style={{ marginBottom: '0.5rem' }}>
@@ -305,6 +326,7 @@ function CardForm({ deckId, onCardAdded }: { deckId: string; onCardAdded: () => 
         {frontImage && (
           <div style={{ marginTop: '0.5rem' }}>
             <label className="label">Imagem da frente</label>
+            <UploadIcon size={16} style={{ verticalAlign: 'middle', marginLeft: '0.5rem', display: 'inline-block' }} />
             <img src={imageUrls.front || ''} alt="frente" className="flashcard-image" style={{ maxWidth: '200px', display: 'block' }} />
             <input type="file" accept="image/*" className="input" onChange={(e) => setFrontImage(e.target.files?.[0] || null)} style={{ marginTop: '0.25rem' }} />
           </div>
@@ -324,6 +346,7 @@ function CardForm({ deckId, onCardAdded }: { deckId: string; onCardAdded: () => 
         {backImage && (
           <div style={{ marginTop: '0.5rem' }}>
             <label className="label">Imagem do verso</label>
+            <UploadIcon size={16} style={{ verticalAlign: 'middle', marginLeft: '0.5rem', display: 'inline-block' }} />
             <img src={imageUrls.back || ''} alt="verso" className="flashcard-image" style={{ maxWidth: '200px', display: 'block' }} />
             <input type="file" accept="image/*" className="input" onChange={(e) => setBackImage(e.target.files?.[0] || null)} style={{ marginTop: '0.25rem' }} />
           </div>
@@ -382,8 +405,9 @@ function ImportCardForm({ deckId, onClose, onImported }: { deckId: string; onClo
     return (
       <form onSubmit={handleParse} className="card section">
         <h3>Importar cartões</h3>
-        <p style={{ fontSize: '0.875rem', color: 'var(--muted)', marginBottom: '0.75rem' }}>
-          Formato: <code>{'[{' + '\"id\": \"CARD-001\", \"question\": \"...\", \"answer\": \"...\"' + '}]'}</code>
+        <p style={{ fontSize: '0.875rem', color: 'var(--muted)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <InfoIcon size={16} style={{ flexShrink: 0 }} />
+          Formato: <code>{'[{' + '\\\"id\\": \\\"CARD-001\\\", \\\"question\\": \\\"...\\\", \\\"answer\\": \\\"...\\\"' + '}]'}</code>
         </p>
         <textarea
           className="input"
@@ -421,8 +445,8 @@ function ImportCardForm({ deckId, onClose, onImported }: { deckId: string; onClo
       )}
 
       <div style={{ display: 'flex', gap: '0.5rem' }}>
-        <button className="btn" onClick={onClose}>
-          Cancelar
+        <button className="btn" onClick={onClose} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+          <CloseIcon size={16} style={{ verticalAlign: 'middle' }} /> Cancelar
         </button>
         <button
           className="btn btn-primary"

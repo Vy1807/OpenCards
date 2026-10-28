@@ -38,7 +38,9 @@ export default function Login() {
 
   return (
     <div className="page" style={{ maxWidth: '400px' }}>
-      <h1>{mode === 'login' ? 'Entrar' : 'Criar conta'}</h1>
+      <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <UserIcon size={28} style={{ flexShrink: 0 }} /> {mode === 'login' ? 'Entrar' : 'Criar conta'}
+      </h1>
       {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem' }}>{error}</p>}
       <form onSubmit={handleSubmit} className="card section">
         <div style={{ marginBottom: '1rem' }}>

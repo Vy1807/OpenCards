@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getDeck, getDeckStats, getCards, type Deck } from '../lib/api'
 import { exportCards } from '../lib/exportCards'
+import { DownloadIcon, PencilIcon, PlusIcon, TrashIcon, InfoIcon, AlertIcon } from '../icons'
 
 type Params = { id: string }
 
@@ -87,7 +88,12 @@ export default function Deck() {
   }
 
   if (loading) return <div className="page loading-state"><h3>Carregando baralho…</h3></div>
-  if (!deck) return <div className="page error-state"><h3>Baralho não encontrado.</h3></div>
+  if (!deck) return (
+    <div className="page error-state">
+      <AlertIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
+      <h3>Baralho não encontrado.</h3>
+    </div>
+  )
 
   const hasCards = cards.length > 0
   const total = stats?.total ?? 0
@@ -155,8 +161,9 @@ export default function Deck() {
             className="btn"
             onClick={() => navigate(`/decks/${id}/edit`)}
             style={{ minHeight: '48px', width: '100%' }}
+            title="Editar baralho"
           >
-            Editar
+            <PencilIcon size={18} style={{ verticalAlign: 'middle' }} /> Editar
           </button>
           <button
             className="btn"
@@ -164,6 +171,7 @@ export default function Deck() {
             disabled={exporting || !hasCards}
             style={{ minHeight: '48px', width: '100%' }}
           >
+            <DownloadIcon size={18} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />
             {exporting ? 'Exportando…' : 'Exportar JSON'}
           </button>
         </div>
@@ -171,9 +179,9 @@ export default function Deck() {
           <button
             className="btn"
             onClick={() => navigate(`/decks/${id}/edit`)}
-            style={{ flex: 1, minHeight: '44px' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', flex: 1, minHeight: '44px' }}
           >
-            Adicionar cartão
+            <PlusIcon size={16} style={{ verticalAlign: 'middle' }} /> Adicionar cartão
           </button>
         </div>
       </div>
@@ -181,6 +189,7 @@ export default function Deck() {
       <h2 style={{ marginTop: '2rem' }}>Cartões ({cards.length})</h2>
       {cards.length === 0 ? (
         <div className="empty-state">
+          <InfoIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
           <h3>Nenhum cartão ainda</h3>
           <p>Adicione um na tela de edição.</p>
         </div>
@@ -195,9 +204,9 @@ export default function Deck() {
                 </div>
                 <button
                   className="btn btn-danger"
-                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.875rem', minHeight: 'auto' }}
+                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.875rem', minHeight: 'auto', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
                 >
-                  Excluir
+                  <TrashIcon size={16} style={{ verticalAlign: 'middle' }} /> Excluir
                 </button>
               </div>
             </li>
