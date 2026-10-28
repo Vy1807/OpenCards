@@ -123,6 +123,18 @@ export const spacing = {
   16: '64px',
 } as const;
 
+/* Escala de espaçamento 4/8px (U-320) — espelha --space-1 a --space-8 em tokens.css. */
+export const space = {
+  1: '4px',
+  2: '8px',
+  3: '12px',
+  4: '16px',
+  5: '20px',
+  6: '24px',
+  7: '28px',
+  8: '32px',
+} as const;
+
 export const radius = {
   sm: '12px',
   md: '16px',
@@ -166,6 +178,7 @@ export interface DesignTokens {
   colorSchemes: typeof colorSchemes;
   typography: typeof typography;
   spacing: typeof spacing;
+  space: typeof space;
   radius: typeof radius;
   shadows: typeof shadows;
   transitions: typeof transitions;
@@ -179,6 +192,7 @@ export const tokens: DesignTokens = {
   colorSchemes,
   typography,
   spacing,
+  space,
   radius,
   shadows,
   transitions,
