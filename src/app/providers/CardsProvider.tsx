@@ -76,6 +76,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       setDecks(await apiGetDecks());
+      setLoading(false);
     } catch (err) {
       setFailure(err);
     }
@@ -87,6 +88,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       setError(null);
       try {
         setDeck(await apiGetDeck(id));
+        setLoading(false);
       } catch (err) {
         setFailure(err);
       }
@@ -100,6 +102,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       setError(null);
       try {
         setCards(await apiGetCards(deckId));
+        setLoading(false);
       } catch (err) {
         setFailure(err);
       }
@@ -126,6 +129,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       try {
         const created = await apiCreateDeck(name, tag);
         setDecks((current) => [created, ...current]);
+        setLoading(false);
         return created;
       } catch (err) {
         setFailure(err);
@@ -143,6 +147,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
         const updated = await apiUpdateDeck(id, updates);
         setDecks((current) => current.map((d) => (d.id === id ? updated : d)));
         setDeck((current) => (current?.id === id ? updated : current));
+        setLoading(false);
         return updated;
       } catch (err) {
         setFailure(err);
@@ -160,6 +165,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
         await apiDeleteDeck(id);
         setDecks((current) => current.filter((d) => d.id !== id));
         setDeck((current) => (current?.id === id ? null : current));
+        setLoading(false);
         return true;
       } catch (err) {
         setFailure(err);
@@ -176,6 +182,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       try {
         const created = await apiCreateCard(input);
         setCards((current) => [...current, created]);
+        setLoading(false);
         return created;
       } catch (err) {
         setFailure(err);
@@ -192,6 +199,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       try {
         const updated = await apiUpdateCard(id, updates);
         setCards((current) => current.map((c) => (c.id === id ? updated : c)));
+        setLoading(false);
         return updated;
       } catch (err) {
         setFailure(err);
@@ -208,6 +216,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       try {
         await apiDeleteCard(id);
         setCards((current) => current.filter((c) => c.id !== id));
+        setLoading(false);
         return true;
       } catch (err) {
         setFailure(err);
@@ -229,6 +238,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
             ? current.map((c) => (c.id === created.id ? created : c))
             : [...current, created];
         });
+        setLoading(false);
         return created;
       } catch (err) {
         setFailure(err);
@@ -245,6 +255,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       try {
         const updated = await apiAnswerCard(cardId, correct);
         setCards((current) => current.map((c) => (c.id === cardId ? updated : c)));
+        setLoading(false);
         return updated;
       } catch (err) {
         setFailure(err);
@@ -264,7 +275,9 @@ export function CardsProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       try {
-        return await apiUploadImage(file, user.id, folder);
+        const url = await apiUploadImage(file, user.id, folder);
+        setLoading(false);
+        return url;
       } catch (err) {
         setFailure(err);
         return null;
