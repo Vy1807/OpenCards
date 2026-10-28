@@ -423,18 +423,16 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
           />
         )}
         <div style={{ marginTop: 'auto' }}>
-          {/* Verso espelhado: simula o lado de trás do cartão visto contra a luz. */}
-          <div style={{ transform: 'scaleX(-1)', display: 'inline-block' }}>
-            <div
-              data-testid="preview-back"
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                wordBreak: 'break-word',
-              }}
-            >
-              {back || 'Resposta'}
-            </div>
+          {/* Verso (resposta) - não espelhado, apenas exibido normalmente */}
+          <div
+            data-testid="preview-back"
+            style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              wordBreak: 'break-word',
+            }}
+          >
+            {back || 'Resposta'}
           </div>
         </div>
         <p

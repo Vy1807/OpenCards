@@ -12,28 +12,37 @@ const card = {
   back_image_path: null,
 };
 
-describe('Flashcard', () => {
-  it('revela o verso espelhado quando nao virado', () => {
-    render(<Flashcard card={card} flipped={false} onFlip={() => {}} />);
-    const verso = screen.getByTestId('flashcard-verso-texto');
-    // verso (resposta) exposto espelhado via transform: scaleX(-1)
-    expect(verso).toHaveStyle({ transform: 'scaleX(-1)' });
-    expect(verso).toHaveTextContent('Paris');
-    // a frente (pergunta) nao fica visível enquanto o card nao for virado
-    expect(screen.queryByText('Qual é a capital da França?')).not.toBeInTheDocument();
+describe('Flashcard — B-303: texto não espelhado', () => {
+  it('começa na frente mostrando a pergunta (não espelhada)', () => {
+    render(<Flashcard card={card} flipped={false} onFlip={vi.fn()} />);
+
+    expect(screen.getByText('Qual é a capital da França?')).toBeInTheDocument();
+    expect(screen.queryByText('Paris')).not.toBeInTheDocument();
     expect(screen.getByText('Clique para revelar a resposta')).toBeInTheDocument();
   });
 
-  it('mostra frente e verso quando virado', () => {
-    render(<Flashcard card={card} flipped={true} onFlip={() => {}} />);
-    expect(screen.getByText('Qual é a capital da França?')).toBeInTheDocument();
+  it('quando virado, mostra a resposta (não espelhada)', () => {
+    render(<Flashcard card={card} flipped={true} onFlip={vi.fn()} />);
+
     expect(screen.getByText('Paris')).toBeInTheDocument();
+    expect(screen.queryByText('Qual é a capital da França?')).not.toBeInTheDocument();
+    expect(screen.getByText('Clique para continuar')).toBeInTheDocument();
+  });
+
+  it('texto não tem transform scaleX(-1) (não espelhado)', () => {
+    const { container } = render(<Flashcard card={card} flipped={false} onFlip={vi.fn()} />);
+    const textoFrente = container.querySelector('[data-testid="flashcard-frente-texto"]');
+    expect(textoFrente).not.toHaveStyle({ transform: 'scaleX(-1)' });
+
+    const { container: containerFlipped } = render(<Flashcard card={card} flipped={true} onFlip={vi.fn()} />);
+    const textoVerso = containerFlipped.querySelector('[data-testid="flashcard-verso-texto"]');
+    expect(textoVerso).not.toHaveStyle({ transform: 'scaleX(-1)' });
   });
 
   it('alternna ao clicar no card', () => {
     const onFlip = vi.fn();
     render(<Flashcard card={card} flipped={false} onFlip={onFlip} />);
-    fireEvent.click(screen.getByTestId('flashcard-verso'));
+    fireEvent.click(screen.getByTestId('flashcard-frente'));
     expect(onFlip).toHaveBeenCalledTimes(1);
   });
 });
