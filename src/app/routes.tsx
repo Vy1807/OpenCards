@@ -6,11 +6,13 @@ import Home from '../features/decks/Home';
 import Deck from '../features/decks/Deck';
 import DeckEdit from '../features/decks/DeckEdit';
 import Review from '../features/review/Review';
+import Cadastro from '../features/auth/Cadastro';
 
 export function routes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/cadastro" element={<Cadastro />} />
       <Route path="/" element={<Home />} />
       <Route element={<ProtectedRoute />}>
         <Route path="/decks/:id" element={<Deck />} />
