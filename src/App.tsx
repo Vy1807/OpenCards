@@ -7,11 +7,13 @@ import Home from './pages/Home'
 import Deck from './pages/Deck'
 import DeckEdit from './pages/DeckEdit'
 import Review from './pages/Review'
+import ThemeSwitcher from './components/ThemeSwitcher'
 
 export function ProtectedRoute({ children }: { children?: React.ReactNode }) {
   const [session, setSession] = React.useState<{ user: { id: string } | null } | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [initialized, setInitialized] = React.useState(false)
+  const location = useLocation()
 
   React.useEffect(() => {
     let mounted = true
@@ -21,6 +23,15 @@ export function ProtectedRoute({ children }: { children?: React.ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!mounted) return
       setSession({ user: session?.user ?? null })
+      setLoading(false)
+      setInitialized(true)
+    }).catch(() => {
+      // Falha ao verificar a sessão (rede indisponível ou credenciais inválidas):
+      // não deixa o app travado em loading para sempre nem dispara
+      // rejection não tratada no console. Com sessão nula, as rotas protegidas
+      // ainda redirecionam para /login.
+      if (!mounted) return
+      setSession({ user: null })
       setLoading(false)
       setInitialized(true)
     })
@@ -47,7 +58,7 @@ export function ProtectedRoute({ children }: { children?: React.ReactNode }) {
 
   // Só redireciona se NÃO inicializou OU se inicializou sem usuário
   if (!initialized || !session?.user) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 
   return <>{children}</>
@@ -56,16 +67,19 @@ export function ProtectedRoute({ children }: { children?: React.ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route element={<ProtectedRoute />}>
+      <div className="app">
+        <ThemeSwitcher />
+        <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
-          <Route path="/decks/:id" element={<Deck />} />
-          <Route path="/decks/:id/edit" element={<DeckEdit />} />
-          <Route path="/decks/:id/review" element={<Review />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/decks/:id" element={<Deck />} />
+            <Route path="/decks/:id/edit" element={<DeckEdit />} />
+            <Route path="/decks/:id/review" element={<Review />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   )
 }

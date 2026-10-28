@@ -1,0 +1,201 @@
+/* 10 functional color themes — adopted from the design-token task (t_4595a428).
+ *
+ * Each `.theme-<key>` sets the --color-* design tokens AND the legacy component
+ * variables (--bg, --surface, --ink, --muted, --line, --rose-500/600) so the
+ * whole interface re-colors when the theme switcher swaps the class on <html>.
+ *
+ * Usage (theme switcher task t_a2e834c1):
+ *   document.documentElement.classList swaps between theme-slate .. theme-abyss
+ *   and the choice is persisted in localStorage (key: selected-theme).
+ */
+/* default theme: slate */
+:root {
+  --color-primary: #334155;
+  --color-secondary: #64748B;
+  --color-background: #FFFFFF;
+  --color-surface: #F1F5F9;
+  --color-text: #0F172A;
+  --color-accent: #0EA5E9;
+  --color-text-on-primary: #FFFFFF;
+}
+
+.theme-slate {
+  --color-primary: #334155;
+  --color-secondary: #64748B;
+  --color-background: #FFFFFF;
+  --color-surface: #F1F5F9;
+  --color-text: #0F172A;
+  --color-accent: #0EA5E9;
+  --color-text-on-primary: #FFFFFF;
+
+  /* legacy component variables re-colored to slate */
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-cobalt {
+  --color-primary: #1D4ED8;
+  --color-secondary: #3B82F6;
+  --color-background: #FFFFFF;
+  --color-surface: #EFF6FF;
+  --color-text: #0F172A;
+  --color-accent: #2563EB;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-emerald {
+  --color-primary: #047857;
+  --color-secondary: #10B981;
+  --color-background: #FFFFFF;
+  --color-surface: #ECFDF5;
+  --color-text: #0F172A;
+  --color-accent: #059669;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-amber {
+  --color-primary: #B45309;
+  --color-secondary: #F59E0B;
+  --color-background: #FFFFFF;
+  --color-surface: #FFFBEB;
+  --color-text: #0F172A;
+  --color-accent: #D97706;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-rose {
+  --color-primary: #BE123C;
+  --color-secondary: #FB7185;
+  --color-background: #FFFFFF;
+  --color-surface: #FFF1F2;
+  --color-text: #0F172A;
+  --color-accent: #E11D48;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-indigo {
+  --color-primary: #3730A3;
+  --color-secondary: #818CF8;
+  --color-background: #FFFFFF;
+  --color-surface: #EEF2FF;
+  --color-text: #0F172A;
+  --color-accent: #6366F1;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-teal {
+  --color-primary: #0F766E;
+  --color-secondary: #14B8A6;
+  --color-background: #FFFFFF;
+  --color-surface: #CCFBF1;
+  --color-text: #0F172A;
+  --color-accent: #0D9488;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-violet {
+  --color-primary: #6D28D9;
+  --color-secondary: #8B5CF6;
+  --color-background: #FFFFFF;
+  --color-surface: #F5F3FF;
+  --color-text: #0F172A;
+  --color-accent: #7C3AED;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-zinc {
+  --color-primary: #404040;
+  --color-secondary: #71717A;
+  --color-background: #FFFFFF;
+  --color-surface: #F9FAFB;
+  --color-text: #0F172A;
+  --color-accent: #A1A1AA;
+  --color-text-on-primary: #FFFFFF;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
+
+.theme-abyss {
+  --color-primary: #38BDF8;
+  --color-secondary: #64748B;
+  --color-background: #0F172A;
+  --color-surface: #1E293B;
+  --color-text: #F8FAFC;
+  --color-accent: #22D3EE;
+  --color-text-on-primary: #0F172A;
+
+  --bg: var(--color-background);
+  --surface: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: var(--color-secondary);
+  --line: var(--color-secondary);
+  --rose-500: var(--color-primary);
+  --rose-600: var(--color-primary);
+}
