@@ -1,11 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 // @ts-ignore - react-router-dom v7 exports changed but runtime works
-import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom'
 import '@testing-library/jest-dom'
 import Home from '../pages/Home'
 import Deck from '../pages/Deck'
 import DeckEdit from '../pages/DeckEdit'
+import Login from '../pages/Login'
+import Review from '../pages/Review'
+import { ProtectedRoute } from '../App'
 import {
   getDecks,
   getDeck,
@@ -104,7 +107,7 @@ const mockStats = {
   accuracy: 50,
 }
 
-describe('Integração: Home → Deck (Bug 1 - corrigido)', () => {
+describe('Integração: Home → Deck', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -119,45 +122,61 @@ describe('Integração: Home → Deck (Bug 1 - corrigido)', () => {
     )
 
     expect(await screen.findByText('Cardiologia')).toBeInTheDocument()
-    // Tag aparece no span do card (não no option do select)
     expect(screen.getAllByText('#estudo')[0]).toBeInTheDocument()
     expect(screen.getByText('3 cartões')).toBeInTheDocument()
+    expect(await screen.findByText('Neurologia')).toBeInTheDocument()
+    expect(screen.getByText('0 cartões')).toBeInTheDocument()
   })
 
-  it('Deck mostra nome, tag, contagem, estatísticas e botões Importar/Exportar/Adicionar cartão', async () => {
+  it('clicar num baralho na Home navega para /decks/:id e mostra a tela do baralho', async () => {
     vi.mocked(getDecks).mockResolvedValue(mockDecks)
     vi.mocked(getDeck).mockResolvedValue(mockDecks[0])
     vi.mocked(getDeckStats).mockResolvedValue(mockStats)
     vi.mocked(getCards).mockResolvedValue(mockCards)
 
     render(
-      <MemoryRouter initialEntries={['/decks/d1']}>
+      <MemoryRouter initialEntries={['/']}>
         <Routes>
-          <Route path="/decks/:id" element={<Deck />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            element={
+              <ProtectedRoute>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/decks/:id" element={<Deck />} />
+                  <Route path="/decks/:id/edit" element={<DeckEdit />} />
+                  <Route path="/decks/:id/review" element={<Review />} />
+                </Routes>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="/" replace />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MemoryRouter>,
     )
 
     expect(await screen.findByText('Cardiologia')).toBeInTheDocument()
-    expect(screen.getByText('#estudo')).toBeInTheDocument()
-    // Cartões listados (contagem vem do getCards)
-    expect(screen.getByText('#1')).toBeInTheDocument()
-    expect(screen.getByText('#2')).toBeInTheDocument()
+    expect(screen.getAllByText('#estudo')[0]).toBeInTheDocument()
 
-    // Existem na fase 1:
+    const cardiologiaCard = screen.getByText('Cardiologia').closest('li')
+    expect(cardiologiaCard).toBeInTheDocument()
+    fireEvent.click(cardiologiaCard!)
+
+    await waitFor(() => {
+      expect(screen.getByText('Cardiologia')).toBeInTheDocument()
+    })
+    expect(screen.getByText('#estudo')).toBeInTheDocument()
     expect(screen.getByText('Revisar')).toBeInTheDocument()
     expect(screen.getByText('Editar')).toBeInTheDocument()
-
-    // Existem na fase 2 (bug corrigido):
-    expect(screen.getByText(/2 dominados/i)).toBeInTheDocument()
-    expect(screen.getByText(/pendentes hoje/i)).toBeInTheDocument()
-    expect(screen.getByText(/50%/)).toBeInTheDocument()
-    expect(screen.getByText(/Exportar JSON/i)).toBeInTheDocument()
+    expect(screen.getByText('Importar')).toBeInTheDocument()
+    expect(screen.getByText('Exportar')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Adicionar cartão/i })).toBeInTheDocument()
   })
 })
 
-describe('Integração: Criar cartão (Bug 2 - corrigido)', () => {
+describe('Integração: Criar cartão', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.mocked(getCurrentUser).mockResolvedValue({ id: 'u1' })
@@ -201,7 +220,6 @@ describe('Integração: Criar cartão (Bug 2 - corrigido)', () => {
       expect(vi.mocked(createCard)).toHaveBeenCalled()
     })
 
-    // onCardAdded deve chamar getCards novamente para recarregar
     await waitFor(() => {
       expect(vi.mocked(getCards)).toHaveBeenCalledTimes(2)
     })

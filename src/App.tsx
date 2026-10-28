@@ -8,13 +8,22 @@ import Deck from './pages/Deck'
 import DeckEdit from './pages/DeckEdit'
 import Review from './pages/Review'
 
-function ProtectedRoute({ children }: { children: React.ReactElement }) {
+export function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const [session, setSession] = React.useState<{ user: { id: string } | null } | null>(null)
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     let mounted = true
 
+    // Carrega a sessão inicial
+    // @ts-ignore - getSession exists at runtime but types may be outdated
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return
+      setSession({ user: session?.user ?? null })
+      setLoading(false)
+    })
+
+    // Escuta mudanças de autenticação
     // @ts-ignore - onAuthStateChange exists at runtime but types may be outdated
     const { data: authChannel } = supabase.auth.onAuthStateChange((_event: string, session: { user: { id: string } } | null) => {
       if (!mounted) return
