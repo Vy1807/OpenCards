@@ -5,11 +5,11 @@ import ThemeSwitcher, { THEMES } from './ThemeSwitcher';
 
 beforeEach(() => {
   localStorage.removeItem('selected-theme');
-  document.documentElement.className = '';
+  document.documentElement.removeAttribute('data-theme');
 });
 
 describe('ThemeSwitcher', () => {
-  it('renders a select with all 10 themes, defaulting to slate', () => {
+  it('renders a select with all 8 themes, defaulting to slate', () => {
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' });
     expect(select).toBeInTheDocument();
@@ -20,38 +20,35 @@ describe('ThemeSwitcher', () => {
     }
   });
 
-  it('switches the <html> theme class in real time and persists the choice', () => {
+  it('switches the <html> data-theme in real time and persists the choice', () => {
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' }) as HTMLSelectElement;
 
-    expect(document.documentElement.classList.contains('theme-slate')).toBe(true);
+    expect(document.documentElement.getAttribute('data-theme')).toBe('slate');
 
     fireEvent.change(select, { target: { value: 'cobalt' } });
-    expect(document.documentElement.classList.contains('theme-cobalt')).toBe(true);
-    expect(document.documentElement.classList.contains('theme-slate')).toBe(false);
+    expect(document.documentElement.getAttribute('data-theme')).toBe('cobalt');
+    expect(document.documentElement.getAttribute('data-theme')).not.toBe('slate');
     expect(localStorage.getItem('selected-theme')).toBe('cobalt');
 
-    fireEvent.change(select, { target: { value: 'abyss' } });
-    expect(document.documentElement.classList.contains('theme-abyss')).toBe(true);
-    expect(document.documentElement.classList.contains('theme-cobalt')).toBe(false);
-    expect(localStorage.getItem('selected-theme')).toBe('abyss');
+    fireEvent.change(select, { target: { value: 'zinc' } });
+    expect(document.documentElement.getAttribute('data-theme')).toBe('zinc');
+    expect(document.documentElement.getAttribute('data-theme')).not.toBe('cobalt');
+    expect(localStorage.getItem('selected-theme')).toBe('zinc');
   });
 
   it('restores the persisted theme on mount', () => {
-    localStorage.setItem('selected-theme', 'emerald');
+    localStorage.setItem('selected-theme', 'rose');
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' }) as HTMLSelectElement;
-    expect(select.value).toBe('emerald');
-    expect(document.documentElement.classList.contains('theme-emerald')).toBe(true);
+    expect(select.value).toBe('rose');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('rose');
   });
 
-  it('only emits theme-* classes for the active theme', () => {
+  it('only sets data-theme for the active theme', () => {
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' }) as HTMLSelectElement;
     fireEvent.change(select, { target: { value: 'zinc' } });
-    const themeClasses = Array.from(document.documentElement.classList).filter((c) =>
-      c.startsWith('theme-')
-    );
-    expect(themeClasses).toEqual(['theme-zinc']);
+    expect(document.documentElement.getAttribute('data-theme')).toBe('zinc');
   });
 });

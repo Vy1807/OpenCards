@@ -1,15 +1,15 @@
-/* 10 functional color themes — adopted from the design-token task (t_4595a428).
+/* 8 functional color themes — adopted from the design-token task (T-310/T-311).
  *
- * Each `.theme-<key>` sets the --color-* design tokens AND the legacy component
+ * Each [data-theme="<key>"] sets the --color-* design tokens AND the legacy component
  * variables (--bg, --surface, --ink, --muted, --line, --rose-500/600) so the
- * whole interface re-colors when the theme switcher swaps the class on <html>.
+ * whole interface re-colors when the theme switcher swaps data-theme on <html>.
  *
- * Usage (theme switcher task t_a2e834c1):
- *   document.documentElement.classList swaps between theme-slate .. theme-abyss
+ * Usage (theme switcher task):
+ *   document.documentElement.dataset.theme swaps between slate .. zinc
  *   and the choice is persisted in localStorage (key: selected-theme).
  */
 /* default theme: slate */
-:root {
+:root[data-theme="slate"] {
   --color-primary: #334155;
   --color-secondary: #64748b;
   --color-background: #ffffff;
@@ -19,7 +19,7 @@
   --color-text-on-primary: #ffffff;
 }
 
-.theme-slate {
+[data-theme="slate"] {
   --color-primary: #334155;
   --color-secondary: #64748b;
   --color-background: #ffffff;
@@ -38,7 +38,7 @@
   --rose-600: var(--color-primary);
 }
 
-.theme-cobalt {
+[data-theme="cobalt"] {
   --color-primary: #1d4ed8;
   --color-secondary: #3b82f6;
   --color-background: #ffffff;
@@ -56,25 +56,7 @@
   --rose-600: var(--color-primary);
 }
 
-.theme-emerald {
-  --color-primary: #047857;
-  --color-secondary: #10b981;
-  --color-background: #ffffff;
-  --color-surface: #ecfdf5;
-  --color-text: #0f172a;
-  --color-accent: #059669;
-  --color-text-on-primary: #ffffff;
-
-  --bg: var(--color-background);
-  --surface: var(--color-surface);
-  --ink: var(--color-text);
-  --muted: var(--color-secondary);
-  --line: var(--color-secondary);
-  --rose-500: var(--color-primary);
-  --rose-600: var(--color-primary);
-}
-
-.theme-amber {
+[data-theme="amber"] {
   --color-primary: #b45309;
   --color-secondary: #f59e0b;
   --color-background: #ffffff;
@@ -92,7 +74,7 @@
   --rose-600: var(--color-primary);
 }
 
-.theme-rose {
+[data-theme="rose"] {
   --color-primary: #be123c;
   --color-secondary: #fb7185;
   --color-background: #ffffff;
@@ -110,7 +92,7 @@
   --rose-600: var(--color-primary);
 }
 
-.theme-indigo {
+[data-theme="indigo"] {
   --color-primary: #3730a3;
   --color-secondary: #818cf8;
   --color-background: #ffffff;
@@ -128,7 +110,7 @@
   --rose-600: var(--color-primary);
 }
 
-.theme-teal {
+[data-theme="teal"] {
   --color-primary: #0f766e;
   --color-secondary: #14b8a6;
   --color-background: #ffffff;
@@ -146,7 +128,7 @@
   --rose-600: var(--color-primary);
 }
 
-.theme-violet {
+[data-theme="violet"] {
   --color-primary: #6d28d9;
   --color-secondary: #8b5cf6;
   --color-background: #ffffff;
@@ -164,7 +146,7 @@
   --rose-600: var(--color-primary);
 }
 
-.theme-zinc {
+[data-theme="zinc"] {
   --color-primary: #404040;
   --color-secondary: #71717a;
   --color-background: #ffffff;
@@ -172,24 +154,6 @@
   --color-text: #0f172a;
   --color-accent: #a1a1aa;
   --color-text-on-primary: #ffffff;
-
-  --bg: var(--color-background);
-  --surface: var(--color-surface);
-  --ink: var(--color-text);
-  --muted: var(--color-secondary);
-  --line: var(--color-secondary);
-  --rose-500: var(--color-primary);
-  --rose-600: var(--color-primary);
-}
-
-.theme-abyss {
-  --color-primary: #38bdf8;
-  --color-secondary: #64748b;
-  --color-background: #0f172a;
-  --color-surface: #1e293b;
-  --color-text: #f8fafc;
-  --color-accent: #22d3ee;
-  --color-text-on-primary: #0f172a;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);

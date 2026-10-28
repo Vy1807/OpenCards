@@ -48,6 +48,13 @@ export const colors = {
   onOk: '#FFFFFF',    // texto sobre fundo de sucesso
   onPrimary: '#FFFFFF', // texto sobre fundo primário
 
+  // tokens adicionais do sistema de design (T-310)
+  surface2: '#F4ECF0',   // superfície secundária
+  secondary: '#6B7280',   // cor secundária
+  onSecondary: '#FFFFFF', // texto sobre cor secundária
+  warning: '#F59E0B',     // aviso / atenção
+  focusRing: '#0EA5E9',   // anel de foco de teclado
+
   // desabilitado
   disabledOpacity: 0.55,
 };
@@ -69,6 +76,11 @@ export const colorSchemes: Record<ColorScheme, typeof colors> = {
     primaryLight: '#3A1F2B',
     primaryLightStronger: '#5A2A40',
     disabledOpacity: 0.45,
+    surface2: '#2A1D24',
+    secondary: '#9CA3AF',
+    onSecondary: '#1E1419',
+    warning: '#FBBF24',
+    focusRing: '#38BDF8',
   },
 };
 

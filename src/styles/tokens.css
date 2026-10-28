@@ -35,6 +35,13 @@
   --on-err: #2b2024;      /* texto sobre fundo de erro */
   --on-ok: #ffffff;       /* texto sobre fundo de sucesso */
   --on-primary: #ffffff;  /* texto sobre fundo primário */
+
+  /* tokens adicionais do sistema de design (T-310) */
+  --surface-2: #f4ecf0;   /* superfície secundária */
+  --secondary: #6b7280;   /* cor secundária */
+  --on-secondary: #ffffff; /* texto sobre cor secundária */
+  --warning: #f59e0b;     /* aviso / atenção */
+  --focus-ring: #0ea5e9;  /* anel de foco de teclado */
 }
 
 /* modo escuro automático */
@@ -56,6 +63,13 @@
     --on-err: #f5e8ec;      /* texto sobre fundo de erro */
     --on-ok: #1e1419;       /* texto sobre fundo de sucesso */
     --on-primary: #1e1419;  /* texto sobre fundo primário */
+
+    /* tokens adicionais do sistema de design (T-310) */
+    --surface-2: #2a1d24;   /* superfície secundária */
+    --secondary: #9ca3af;   /* cor secundária */
+    --on-secondary: #1e1419; /* texto sobre cor secundária */
+    --warning: #fbbf24;     /* aviso / atenção */
+    --focus-ring: #38bdf8;  /* anel de foco de teclado */
   }
 }
 

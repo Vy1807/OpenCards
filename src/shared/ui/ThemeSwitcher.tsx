@@ -1,21 +1,19 @@
 import { useState, useCallback, useEffect } from 'react';
 
-/* The 10 color themes delivered by the design-token task (t_4595a428).
- * Keys map 1:1 to the `.theme-<key>` classes in src/styles/color-themes.css.
+/* The 8 color themes delivered by the design-token task (T-310/T-311).
+ * Keys map 1:1 to the [data-theme="<key>"] selectors in src/styles/color-themes.css.
  */
 export type Theme = { key: string; name: string };
 
 export const THEMES: Theme[] = [
   { key: 'slate', name: 'Slate' },
   { key: 'cobalt', name: 'Cobalt' },
-  { key: 'emerald', name: 'Emerald' },
   { key: 'amber', name: 'Amber' },
   { key: 'rose', name: 'Rose' },
   { key: 'indigo', name: 'Indigo' },
   { key: 'teal', name: 'Teal' },
   { key: 'violet', name: 'Violet' },
   { key: 'zinc', name: 'Zinc' },
-  { key: 'abyss', name: 'Abyss (dark mode)' },
 ];
 
 const THEME_STORAGE_KEY = 'selected-theme';
@@ -25,12 +23,10 @@ function isThemeKey(value: string | null): value is (typeof THEMES)[number]['key
   return value !== null && THEMES.some((t) => t.key === value);
 }
 
-/* Replaces every theme-* class on <html> with the active one. */
+/* Aplica o atributo data-theme no <html> com o tema ativo. */
 function applyTheme(theme: (typeof THEMES)[number]['key']): void {
   const root = document.documentElement;
-  const toRemove = Array.from(root.classList).filter((c) => c.startsWith('theme-'));
-  toRemove.forEach((c) => root.classList.remove(c));
-  root.classList.add(`theme-${theme}`);
+  root.setAttribute('data-theme', theme);
 }
 
 export default function ThemeSwitcher() {
