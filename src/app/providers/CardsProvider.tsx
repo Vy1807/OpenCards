@@ -124,6 +124,11 @@ export function CardsProvider({ children }: { children: ReactNode }) {
 
   const createDeck = useCallback(
     async (name: string, tag: string | null) => {
+      if (!user) {
+        setError('Usuário não autenticado');
+        setLoading(false);
+        return null;
+      }
       setLoading(true);
       setError(null);
       try {
@@ -136,7 +141,7 @@ export function CardsProvider({ children }: { children: ReactNode }) {
         return null;
       }
     },
-    [setFailure]
+    [user, setFailure]
   );
 
   const updateDeck = useCallback(
