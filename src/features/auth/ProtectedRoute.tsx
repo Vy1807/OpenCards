@@ -1,6 +1,5 @@
 // @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
-import { Navigate, useLocation } from 'react-router-dom';
-import type { ReactNode } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from './useAuth';
 
 /**
@@ -8,8 +7,11 @@ import { useAuth } from './useAuth';
  * resolvida e há usuário autenticado. Enquanto carrega, não renderiza nada
  * (evita piscar conteúdo protegido). Sem usuário, redireciona para /login
  * guardando a rota de destino em `state.from`.
+ *
+ * Os rotas filhas são renderizadas via <Outlet /> (react-router não passa
+ * elementos filhas como props.children do componente da rota).
  */
-export function ProtectedRoute({ children }: { children?: ReactNode }) {
+export function ProtectedRoute() {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -17,5 +19,5 @@ export function ProtectedRoute({ children }: { children?: ReactNode }) {
   if (!user) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
-  return <>{children}</>;
+  return <Outlet />;
 }

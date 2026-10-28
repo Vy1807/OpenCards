@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 // @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
 import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import '@testing-library/jest-dom';
+import { AuthProvider, CardsProvider } from '../app/providers';
 import Home from '../features/decks/Home';
 import Deck from '../features/decks/Deck';
 import DeckEdit from '../features/decks/DeckEdit';
@@ -11,6 +12,20 @@ import Review from '../features/review/Review';
 import { ProtectedRoute } from '../features/auth/ProtectedRoute';
 import { getDecks, getDeck, getDeckStats, getCards, createCard } from '../entities/card/api/cards';
 import { getCurrentUser } from '../entities/user/api/auth';
+
+// Mock do cliente Supabase usado pelo CardsProvider para inscrições em tempo
+// real. Os testes exercitam a camada de dados via entidades (já mockadas
+// abaixo); aqui apenas evitamos que o provider tente abrir um canal Realtime
+// contra uma URL inválida durante os testes.
+vi.mock('../../shared/lib/supabase/client', () => ({
+  supabase: {
+    channel: vi.fn(() => ({
+      on: vi.fn().mockReturnThis(),
+      subscribe: vi.fn(),
+    })),
+    removeChannel: vi.fn(),
+  },
+}));
 
 vi.mock('../entities/card/api/cards', () => ({
   getDecks: vi.fn(),
@@ -83,16 +98,20 @@ const mockStats = {
 const renderApp = (initialEntries: string[] = ['/']) =>
   render(
     <MemoryRouter initialEntries={initialEntries}>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/decks/:id" element={<Deck />} />
-          <Route path="/decks/:id/edit" element={<DeckEdit />} />
-          <Route path="/decks/:id/review" element={<Review />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <AuthProvider>
+        <CardsProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Home />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/decks/:id" element={<Deck />} />
+              <Route path="/decks/:id/edit" element={<DeckEdit />} />
+              <Route path="/decks/:id/review" element={<Review />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </CardsProvider>
+      </AuthProvider>
     </MemoryRouter>
   );
 

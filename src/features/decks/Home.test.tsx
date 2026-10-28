@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 // @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
+import { AuthProvider, CardsProvider } from '../../app/providers';
 import Home from './Home';
 import { getDecks } from '../../entities/card/api/cards';
 
@@ -37,7 +38,11 @@ describe('Home', () => {
 
     render(
       <MemoryRouter>
-        <Home />
+        <AuthProvider>
+          <CardsProvider>
+            <Home />
+          </CardsProvider>
+        </AuthProvider>
       </MemoryRouter>
     );
 
@@ -52,7 +57,11 @@ describe('Home', () => {
     vi.mocked(getDecks).mockResolvedValue([]);
     render(
       <MemoryRouter>
-        <Home />
+        <AuthProvider>
+          <CardsProvider>
+            <Home />
+          </CardsProvider>
+        </AuthProvider>
       </MemoryRouter>
     );
     expect(await screen.findByText(/Criar baralho/)).toBeInTheDocument();
