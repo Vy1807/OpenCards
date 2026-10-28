@@ -29,5 +29,10 @@ export default tseslint.config(
         sourceType: 'module',
       },
     },
+    settings: {
+      react: {
+        version: '19.3',
+      },
+    },
   },
 )

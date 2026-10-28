@@ -1,21 +1,21 @@
-import type { ReactNode } from 'react'
-import { useEffect, useId } from 'react'
+import type { ReactNode } from 'react';
+import { useEffect, useId } from 'react';
 
-import { CloseIcon } from '../../icons'
-import { tokens } from '../../design/tokens'
+import { CloseIcon } from '../../shared/ui/icons';
+import { tokens } from '../../design/tokens';
 
 export interface ModalProps {
   /** Quando true o modal fica visível. */
-  isOpen: boolean
+  isOpen: boolean;
   /** Chamado ao fechar (ESC, clique no backdrop ou botão de fechar). */
-  onClose: () => void
+  onClose: () => void;
   /** Título exibido no cabeçalho (opcional). */
-  title?: ReactNode
+  title?: ReactNode;
   /** Oculta o botão de fechar do cabeçalho. */
-  hideClose?: boolean
-  children: ReactNode
-  className?: string
-  style?: React.CSSProperties
+  hideClose?: boolean;
+  children: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function Modal({
@@ -27,18 +27,18 @@ export default function Modal({
   className = '',
   style,
 }: ModalProps) {
-  const modalId = useId()
+  const modalId = useId();
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) return;
     const onKeydown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', onKeydown)
-    return () => window.removeEventListener('keydown', onKeydown)
-  }, [isOpen, onClose])
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeydown);
+    return () => window.removeEventListener('keydown', onKeydown);
+  }, [isOpen, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div
@@ -48,7 +48,7 @@ export default function Modal({
       aria-modal="true"
       aria-labelledby={title ? `${modalId}-title` : undefined}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose()
+        if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className="ui-modal__panel" style={{ padding: tokens.spacing[10] }}>
@@ -92,8 +92,7 @@ export default function Modal({
                 background: tokens.colors.surface,
                 color: tokens.colors.muted,
                 cursor: 'pointer',
-                transition:
-                  'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease',
+                transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease',
                 padding: 0,
               }}
             >
@@ -104,7 +103,7 @@ export default function Modal({
         <div style={{ outline: 'none' }}>{children}</div>
       </div>
     </div>
-  )
+  );
 }
 
-Modal.displayName = 'Modal'
+Modal.displayName = 'Modal';

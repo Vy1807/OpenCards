@@ -14,6 +14,12 @@ build/
 .env.test.local
 .env.production.local
 
+# Coverage
+coverage/
+
+# Build output (committed dist/ is a local artifact)
+dist/
+
 # IDE
 .idea/
 .vscode/

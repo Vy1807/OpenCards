@@ -23,24 +23,37 @@ App web de flashcards para estudo de medicina. Frontend React hospedado na Verce
 
 ## Estrutura
 
-```
+```text
 src/
-  lib/supabase.ts       # client Supabase a partir de VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
-  lib/api.ts            # TODA chamada ao Supabase passa por aqui (mockável)
-  lib/shuffle.ts        # Fisher-Yates puro
-  lib/importCards.ts    # parse/validação do JSON de importação
-  lib/exportCards.ts    # exporta cartões no mesmo formato do import
-  lib/schedule.ts       # scheduleNext(box, correct, now) — função pura (Leitner)
-  lib/streak.ts         # cálculo de sequência de dias a partir do review_log
-  pages/                # Login, Home, Deck, DeckEdit, Review
-  components/           # Flashcard, ImageField, EcgProgress, Confetti, EmptyState...
-  styles/tokens.css     # paleta, tipografia, raios, sombras, durações
+  app/              # raiz da aplicação: ponto de entrada, roteador e provedores de estado
+    App.tsx         # BrowserRouter + AuthProvider + CardsProvider + rotas
+    main.tsx        # ponto de entrada Vite
+    providers/      # AuthProvider (sessão) e CardsProvider (baralhos/cartões)
+    routes.tsx      # definição de rotas, incluindo ProtectedRoute
+  entities/         # entidades de negócio: tipos e camada de dados (sem dependência de UI)
+    user/
+      model/        # User, AuthStateChangeEvent
+      api/          # signIn, signUp, signOut, getSession, getCurrentUser, onAuthStateChange
+    card/
+      model/        # Deck, Card, NewCardInput, DeckStats
+      api/          # CRUD de baralhos/cartões, estatísticas, resposta do cartão, upload de imagem
+  features/         # funcionalidades voltadas ao usuário (páginas e hooks tipados)
+    auth/           # Login, ProtectedRoute, hook useAuth
+    decks/          # Home, Deck, DeckEdit, hooks useDecks e useDeck
+    review/         # Review, Flashcard, Confetti
+  shared/           # código reutilizável entre features
+    ui/             # ThemeSwitcher e ícones padronizados
+    lib/            # cliente Supabase e puros: schedule, shuffle, streak, export/import cards
+  styles/           # tokens.css, color-themes.css, index.css
+  test/             # setup e tipos globais do Vitest
 supabase/migrations/0001_init.sql
 supabase/migrations/0002_phase2.sql
 vercel.json             # rewrite de SPA: tudo para /index.html
 .env.example
 README.md
 ```
+
+O estado global fica em Context providers (`AuthProvider` e `CardsProvider` em `src/app/providers/`), consumido por hooks tipados (`useAuth`, `useDecks`, `useDeck`, `useCards`) nas features. Toda interação com o Supabase camada pelas APIs em `entities/*/api/`. TypeScript `strict` se mantém ativo e o código morto foi removido (exportações não usadas e tipos duplicados).
 
 ## Rotas
 
