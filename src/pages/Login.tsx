@@ -1,10 +1,13 @@
 import { useState } from 'react'
 // @ts-ignore - react-router-dom v7 exports changed but runtime works
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { UserIcon } from '../icons'
 
 export default function Login() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [mode, setMode] = useState<'login' | 'signup'>('login')
@@ -25,7 +28,7 @@ export default function Login() {
         const { error: err } = await supabase.auth.signUp({ email, password })
         if (err) throw err
       }
-      navigate('/')
+      navigate(from)
     } catch (err: any) {
       setError(err.message || 'Erro de autenticação.')
     } finally {
