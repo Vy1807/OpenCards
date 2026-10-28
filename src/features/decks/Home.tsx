@@ -4,16 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import { useDecks } from './useDecks';
 import { streak } from '../../shared/lib/streak';
 import StatusPill from '../../components/ui/StatusPill';
+import ProgressBar from '../../components/ui/ProgressBar';
+import Card from '../../components/ui/Card';
+import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
 import {
   DeckIcon,
   PlusIcon,
   SearchIcon,
-  FilterIcon,
-  ChevronDownIcon,
+  AlertIcon,
   RefreshIcon,
   InfoIcon,
-  AlertIcon,
 } from '../../shared/ui/icons';
+import { tokens } from '../../design/tokens';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -33,18 +36,21 @@ export default function Home() {
     () => [...new Set(decks.map((d) => d.tag).filter(Boolean))] as string[],
     [decks]
   );
+  const pills = ['Todos', ...allTags];
 
   const filteredDecks = useMemo(() => {
     const s = search.toLowerCase();
     const t = filterTag;
     return decks.filter((d) => {
       const matchName = d.name.toLowerCase().includes(s);
-      const matchTag = t ? d.tag === t : true;
+      const matchTag = t === '' || t === 'Todos' ? true : d.tag === t;
       return matchName && matchTag;
     });
   }, [decks, search, filterTag]);
 
   const currentStreak = streak([], new Date());
+  const totalCards = filteredDecks.reduce((acc, d) => acc + (d.cards_count ?? 0), 0);
+  const firstDeckId = filteredDecks[0]?.id;
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +65,7 @@ export default function Home() {
       if (!created) return;
       setName('');
       setTag('');
-      navigate(`/decks/${created.id}`);
+      if (created.id) navigate(`/decks/${created.id}`);
     } catch {
       setFormError('Não foi possível criar o baralho.');
     } finally {
@@ -95,27 +101,229 @@ export default function Home() {
   }
 
   return (
-    <div className="page">
-      <div
-        style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start' }}
+    <div className="page" style={{ maxWidth: '1000px', margin: '0 auto', padding: '1rem' }}>
+      {/* Header */}
+      <header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '1.5rem',
+        }}
       >
-        <h1>Meus Baralhos</h1>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
-          <span className="badge">
-            {filteredDecks.length} baralho{filteredDecks.length !== 1 ? 's' : ''}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+          }}
+        >
+          <div
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: tokens.radius.lg,
+              background: tokens.colors.err,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              fontWeight: '700',
+              fontSize: '1.25rem',
+              fontFamily: tokens.typography.fontBody,
+            }}
+          >
+            +
+          </div>
+          <span
+            style={{
+              fontFamily: tokens.typography.fontHeading,
+              fontSize: tokens.typography.fontSize.xl,
+              fontWeight: '700',
+              color: tokens.colors.ink,
+            }}
+          >
+            + Flashcards
           </span>
-          <span className="badge badge-neutral">
-            {currentStreak} dia{currentStreak !== 1 ? 's' : ''} de estudo
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: tokens.radius.full,
+              background: tokens.colors.primaryLight,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: tokens.colors.primary,
+              fontWeight: '700',
+            }}
+          >
+            J
+          </div>
+        </div>
+      </header>
+
+      {/* Secao de boas-vindas */}
+      <section style={{ marginBottom: '1.5rem' }}>
+        <div
+          style={{
+            width: '100%',
+            height: '34px',
+            marginBottom: '0.75rem',
+            overflow: 'hidden',
+          }}
+        >
+          <svg width="100%" height="34" viewBox="0 0 700 40" preserveAspectRatio="none">
+            <path
+              d="M0,20 Q100,0 200,20 T400,20 T600,20 T700,20"
+              stroke={tokens.colors.primary}
+              strokeWidth="3"
+              fill="none"
+            />
+          </svg>
+        </div>
+        <h1
+          style={{
+            fontFamily: tokens.typography.fontHeading,
+            fontSize: tokens.typography.fontSize.xxl,
+            fontWeight: '700',
+            color: tokens.colors.ink,
+            margin: '0 0 0.75rem 0',
+          }}
+        >
+          Bem-vinda de volta
+        </h1>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            flexWrap: 'wrap',
+            marginTop: '0.5rem',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: tokens.typography.fontBody,
+              fontSize: tokens.typography.fontSize.sm,
+              color: tokens.colors.muted,
+            }}
+          >
+            {currentStreak} dias
+            <span
+              style={{
+                color: tokens.colors.primary,
+                fontWeight: '600',
+              }}
+            >
+              desde sua última revisão
+            </span>
           </span>
+          {totalCards > 0 && (
+            <>
+              <Button
+                variant="solid"
+                onClick={() => {
+                  if (firstDeckId) navigate(`/decks/${firstDeckId}/review`);
+                }}
+                disabled={!firstDeckId}
+              >
+                Revisar agora →
+              </Button>
+              <span
+                style={{
+                  fontFamily: tokens.typography.fontBody,
+                  fontSize: tokens.typography.fontSize.sm,
+                  color: tokens.colors.primary,
+                  fontWeight: '600',
+                }}
+              >
+                {totalCards} card{totalCards !== 1 ? 's' : ''} esperando por você hoje
+              </span>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* Barra de busca e filtros em pill */}
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.5rem',
+          marginBottom: '1rem',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            minWidth: '260px',
+          }}
+        >
+          <SearchIcon size={18} style={{ flexShrink: 0 }} />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Pesquise por tema…"
+            fullWidth
+          />
+        </div>
+        <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+          {pills.map((p) => {
+            const active = filterTag === p || (p === 'Todos' && filterTag === '');
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setFilterTag(p === 'Todos' ? '' : p)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.375rem',
+                  borderRadius: tokens.radius.full,
+                  border: `1px solid`,
+                  padding: '0.25rem 0.75rem',
+                  fontSize: tokens.typography.fontSize.sm,
+                  fontWeight: tokens.typography.fontWeight.medium,
+                  fontFamily: tokens.typography.fontBody,
+                  background: active ? tokens.colors.primary : 'transparent',
+                  color: active ? tokens.colors.inkInverse : tokens.colors.muted,
+                  borderColor: active ? tokens.colors.primary : tokens.colors.line,
+                  cursor: 'pointer',
+                }}
+              >
+                {p}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {formError && <p style={{ color: 'var(--err)', marginBottom: '1rem' }}>{formError}</p>}
+      <h2
+        style={{
+          fontFamily: tokens.typography.fontHeading,
+          fontSize: tokens.typography.fontSize.xl,
+          color: tokens.colors.ink,
+          margin: '0 0 1rem 0',
+        }}
+      >
+        Baralhos
+      </h2>
 
-      <form onSubmit={handleCreate} className="card section">
-        <h2>Novo baralho</h2>
+      {formError && <p style={{ color: tokens.colors.err, marginBottom: '1rem' }}>{formError}</p>}
+
+      {/* Formulario Novo baralho */}
+      <form onSubmit={handleCreate} className="card section" style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ margin: '0 0 0.75rem 0', fontSize: tokens.typography.fontSize.lg }}>
+          Novo baralho
+        </h2>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '200px' }}>
+          <div style={{ flex: 1, minWidth: '220px' }}>
             <label className="label">Nome</label>
             <input
               className="input"
@@ -125,13 +333,13 @@ export default function Home() {
               required
             />
           </div>
-          <div style={{ flex: 1, minWidth: '200px' }}>
+          <div style={{ flex: 1, minWidth: '220px' }}>
             <label className="label">Tag (opcional)</label>
             <input
               className="input"
               value={tag}
               onChange={(e) => setTag(e.target.value)}
-              placeholder="Ex: #estudo"
+              placeholder="Ex: Anatomia"
             />
           </div>
           <button
@@ -145,53 +353,7 @@ export default function Home() {
         </div>
       </form>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: '0.5rem',
-          marginBottom: '1rem',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-        }}
-      >
-        <label className="label">Buscar por nome</label>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '220px' }}>
-          <SearchIcon size={18} style={{ flexShrink: 0, verticalAlign: 'middle' }} />
-          <input
-            className="input"
-            style={{ minWidth: '220px' }}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar baralhos…"
-          />
-        </div>
-        {allTags.length > 0 && (
-          <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FilterIcon size={16} style={{ flexShrink: 0, verticalAlign: 'middle' }} />
-              <label className="label">Filtrar por tag</label>
-              <select
-                className="input"
-                value={filterTag}
-                onChange={(e) => setFilterTag(e.target.value)}
-              >
-                <option value="">Todas as tags</option>
-                {allTags.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <ChevronDownIcon
-                size={16}
-                style={{ flexShrink: 0, verticalAlign: 'middle', marginLeft: '0.25rem' }}
-              />
-            </div>
-          </>
-        )}
-      </div>
-
-      <h2>Baralhos</h2>
+      {/* Grade de baralhos */}
       {filteredDecks.length === 0 ? (
         <div className="empty-state">
           <InfoIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
@@ -199,51 +361,100 @@ export default function Home() {
           <p>Crie o seu primeiro baralho acima.</p>
         </div>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {filteredDecks.map((deck) => (
-            <li
-              key={deck.id}
-              className="card deck-link section"
-              style={{ cursor: 'pointer', textDecoration: 'none' }}
-              onClick={() => navigate(`/decks/${deck.id}`)}
-            >
-              <div
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <div>
+        <ul
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+            gap: '1rem',
+            listStyle: 'none',
+            padding: 0,
+          }}
+        >
+          {filteredDecks.map((deck) => {
+            const total = deck.cards_count ?? 0;
+            const progress = total > 0 ? Math.round((0 / total) * 100) : 0;
+            return (
+              <li key={deck.id} style={{ cursor: 'pointer' }}>
+                <Card
+                  padded="lg"
+                  shadowed
+                  style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                >
                   <div
                     style={{
                       display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      marginBottom: '0.25rem',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      marginBottom: '0.5rem',
                     }}
                   >
-                    <DeckIcon size={20} style={{ flexShrink: 0 }} />
-                    <h3 style={{ margin: 0 }}>{deck.name}</h3>
-                  </div>
-                  {deck.tag && (
-                    <span
-                      style={{ fontSize: '0.875rem', color: 'var(--muted)', marginRight: '0.5rem' }}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                      }}
                     >
-                      {deck.tag}
-                    </span>
-                  )}
-                  <span className="badge badge-neutral">
-                    {`${deck.cards_count ?? 0} cartão${deck.cards_count !== 1 ? 's' : ''}`}
+                      <DeckIcon size={20} style={{ flexShrink: 0 }} />
+                      <h3
+                        style={{
+                          margin: 0,
+                          fontFamily: tokens.typography.fontHeading,
+                          fontSize: tokens.typography.fontSize.lg,
+                          color: tokens.colors.ink,
+                        }}
+                      >
+                        {deck.name}
+                      </h3>
+                    </div>
+                    {deck.tag && (
+                      <span
+                        style={{
+                          fontSize: tokens.typography.fontSize.xs,
+                          color: tokens.colors.primary,
+                          background: tokens.colors.primaryLight,
+                          borderRadius: tokens.radius.full,
+                          padding: '0.125rem 0.5rem',
+                          fontWeight: '600',
+                        }}
+                      >
+                        {deck.tag}
+                      </span>
+                    )}
+                  </div>
+                  <span
+                    className="badge badge-neutral"
+                    style={{ fontSize: tokens.typography.fontSize.sm }}
+                  >
+                    {`${total} cartão${total !== 1 ? 's' : ''}`}
                   </span>
-                  {deck.cards_count === 0 ? (
-                    <StatusPill variant="uptodate" />
-                  ) : (
-                    <StatusPill variant="due" count={deck.cards_count} />
-                  )}
-                </div>
-                <span style={{ fontWeight: '600', color: 'var(--rose-600)' }}>
-                  {`${deck.cards_count ?? 0} ${deck.cards_count === 1 ? 'cartão' : 'cartões'}`}
-                </span>
-              </div>
-            </li>
-          ))}
+                  <ProgressBar
+                    value={progress}
+                    label={`${progress}% dominado`}
+                    style={{ marginTop: '0.75rem' }}
+                  />
+                  <div
+                    style={{
+                      marginTop: 'auto',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <StatusPill variant={total === 0 ? 'uptodate' : 'due'} count={total} />
+                    <span
+                      style={{
+                        fontSize: tokens.typography.fontSize.xs,
+                        color: tokens.colors.muted,
+                      }}
+                    >
+                      Clique para abrir
+                    </span>
+                  </div>
+                </Card>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

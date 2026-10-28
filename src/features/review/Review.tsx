@@ -8,30 +8,22 @@ import type { Card } from '../../entities/card/model/card';
 import Flashcard from './Flashcard';
 import Confetti from './Confetti';
 import { CheckIcon, CloseIcon, ArrowRightIcon, ArrowLeftIcon } from '../../shared/ui/icons';
+import ProgressBar from '../../components/ui/ProgressBar';
+import { tokens } from '../../design/tokens';
 
 type Params = { id: string };
-
-type Mode = 'due' | 'all' | 'missed';
-
-const MODE_LABELS: Record<Mode, string> = {
-  due: 'Pendentes hoje',
-  all: 'Todos',
-  missed: 'Só os que errei',
-};
 
 export default function Review() {
   const navigate = useNavigate();
   const { id } = useParams<Params>();
   const { cards: deckCards, refresh, answerCard } = useDeck(id);
   const [cards, setCards] = useState<Card[]>([]);
-  const [mode, setMode] = useState<Mode>('due');
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
   const [finished, setFinished] = useState(false);
   const [answering, setAnswering] = useState(false);
-  const [slideDir, setSlideDir] = useState<'none' | 'correct' | 'wrong'>('none');
   const [reviewLoading, setReviewLoading] = useState(false);
 
   const load = useCallback(async () => {
@@ -40,12 +32,7 @@ export default function Review() {
     try {
       await refresh();
       const now = new Date();
-      let filtered = deckCards;
-      if (mode === 'due') {
-        filtered = deckCards.filter((c) => isDue(c.due_at ?? now.toISOString(), now));
-      } else if (mode === 'missed') {
-        filtered = deckCards.filter((c) => (c.box ?? 0) === 0);
-      }
+      const filtered = deckCards.filter((c) => isDue(c.due_at ?? now.toISOString(), now));
       const shuffled = shuffle(filtered);
       setCards(shuffled);
       setIndex(0);
@@ -53,17 +40,16 @@ export default function Review() {
       setCorrect(0);
       setWrong(0);
       setFinished(false);
-      setSlideDir('none');
     } catch {
       // erro ao carregar — já está no contexto
     } finally {
       setReviewLoading(false);
     }
-  }, [id, mode, deckCards, refresh]);
+  }, [id, deckCards, refresh]);
 
   useEffect(() => {
     load();
-  }, [load, id, mode]);
+  }, [load, id]);
 
   const handleFlip = () => setFlipped((f) => !f);
 
@@ -75,18 +61,16 @@ export default function Review() {
       if (isCorrect) setCorrect((c) => c + 1);
       else setWrong((w) => w + 1);
 
-      setSlideDir(isCorrect ? 'correct' : 'wrong');
-
       await new Promise((r) => setTimeout(r, 400));
 
       try {
+        // aciona scheduleNext (intervalos Leitner 0/1/3/7/14/30) no servidor
         await answerCard(card.id, isCorrect);
       } catch {
         // erro ao salvar, continua mesmo assim
       }
 
       setFlipped(false);
-      setSlideDir('none');
       setAnswering(false);
 
       if (index + 1 >= cards.length) {
@@ -114,23 +98,15 @@ export default function Review() {
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [cards.length, finished, answering, mode, handleAnswer]);
+  }, [cards.length, finished, answering, handleAnswer]);
 
   const handleRestart = () => {
     load();
   };
 
-  const handleReviewWrong = () => {
-    const wrongCards = cards.filter((c) => (c.box ?? 0) === 0);
-    if (wrongCards.length === 0) return;
-    setCards(shuffle(wrongCards));
-    setIndex(0);
-    setFlipped(false);
-    setCorrect(0);
-    setWrong(0);
-    setFinished(false);
-    setSlideDir('none');
-  };
+  const total = cards.length;
+  const done = correct + wrong;
+  const progress = total > 0 ? Math.round((done / total) * 100) : 0;
 
   if (reviewLoading)
     return (
@@ -151,11 +127,6 @@ export default function Review() {
   }
 
   const card = cards[index];
-  const total = cards.length;
-  const done = correct + wrong;
-  const progress = total > 0 ? Math.round((done / total) * 100) : 0;
-
-  const modeEntries: [Mode, string][] = Object.entries(MODE_LABELS) as [Mode, string][];
 
   if (finished) {
     const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
@@ -166,7 +137,7 @@ export default function Review() {
         <h1>Revisão concluída!</h1>
         <div className="card section" style={{ textAlign: 'center' }}>
           <div className="ring" style={{ transform: `rotate(${-45 + ringDeg}deg)` }}>
-            <span style={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--ink)' }}>
+            <span style={{ fontSize: '1.5rem', fontWeight: '700', color: tokens.colors.ink }}>
               {correct}/{total}
             </span>
           </div>
@@ -176,7 +147,7 @@ export default function Review() {
           <p style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>
             <CloseIcon size={20} title="Erros" /> Erros: <strong>{wrong}</strong>
           </p>
-          <p style={{ color: 'var(--muted)', marginBottom: '1rem' }}>
+          <p style={{ color: tokens.colors.muted, marginBottom: '1rem' }}>
             Aproveitamento: <strong>{pct}%</strong>
           </p>
           {confetti && <Confetti />}
@@ -188,7 +159,20 @@ export default function Review() {
               marginBottom: '1rem',
             }}
           >
-            <button className="btn btn-primary" onClick={handleReviewWrong} disabled={wrong === 0}>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                const wrongCards = cards.filter((c) => (c.box ?? 0) === 0);
+                if (wrongCards.length === 0) return;
+                setCards(shuffle(wrongCards));
+                setIndex(0);
+                setFlipped(false);
+                setCorrect(0);
+                setWrong(0);
+                setFinished(false);
+              }}
+              disabled={wrong === 0}
+            >
               {wrong > 0 ? `Revisar erros (${wrong})` : 'Revisar erros'}
             </button>
             <button className="btn" onClick={handleRestart}>
@@ -209,86 +193,132 @@ export default function Review() {
 
   return (
     <div className="page">
-      <header style={{ marginBottom: '1rem' }}>
-        <h1>Revisão</h1>
-        <p style={{ color: 'var(--muted)', marginBottom: '0.75rem' }}>
-          Cartão {index + 1} de {total}
-        </p>
-        <div className="ecg-progress">
-          <div className="ecg-progress__fill" style={{ width: `${progress}%` }} />
-        </div>
+      {/* Header de foco */}
+      <header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '1rem',
+        }}
+      >
+        <button
+          type="button"
+          className="btn"
+          onClick={() => navigate(`/decks/${id}`)}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+        >
+          <ArrowLeftIcon size={16} style={{ flexShrink: 0 }} /> ← Baralhos
+        </button>
+        <h1
+          style={{
+            fontFamily: tokens.typography.fontHeading,
+            fontSize: tokens.typography.fontSize.xxl,
+            fontWeight: '700',
+            color: tokens.colors.ink,
+            margin: 0,
+          }}
+        >
+          Revisão do dia
+        </h1>
+        <span
+          style={{
+            fontFamily: tokens.typography.fontBody,
+            fontSize: tokens.typography.fontSize.sm,
+            fontWeight: '600',
+            color: tokens.colors.primary,
+          }}
+        >
+          {index + 1} / {total}
+        </span>
       </header>
+
+      {/* Barra de progresso ECG (avanca a cada card respondido) */}
+      <ProgressBar
+        value={progress}
+        label={`${done} de ${total} respondido`}
+        style={{ marginBottom: '1rem' }}
+      />
+      <p
+        style={{
+          fontSize: tokens.typography.fontSize.xs,
+          color: tokens.colors.muted,
+          textAlign: 'center',
+          marginBottom: '1rem',
+        }}
+      >
+        Cartão {index + 1} de {total}
+      </p>
 
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.5rem',
           alignItems: 'center',
+          gap: '0.5rem',
           marginBottom: '1rem',
         }}
       >
-        <label style={{ fontSize: '0.875rem', color: 'var(--muted)', marginBottom: '0.25rem' }}>
-          Modo de revisão
-        </label>
-        <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
-          {modeEntries.map(([m, label]) => (
-            <button
-              key={m}
-              className={`btn ${mode === m ? 'btn-primary' : ''}`}
-              onClick={() => setMode(m)}
-              style={{
-                minHeight: 'auto',
-                padding: '0.4rem 0.8rem',
-                fontSize: '0.875rem',
-                background: mode === m ? 'var(--rose-500)' : 'var(--surface)',
-                color: mode === m ? '#ffffff' : 'var(--ink)',
-                borderColor: mode === m ? 'var(--rose-500)' : 'var(--line)',
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="flashcard-flipper" style={{ marginBottom: '1.5rem', position: 'relative' }}>
-        <div
+        <Flashcard card={card} flipped={flipped} onFlip={handleFlip} />
+        <p
           style={{
-            transform:
-              slideDir === 'correct'
-                ? 'translateX(120px) rotate(8deg)'
-                : slideDir === 'wrong'
-                  ? 'translateX(-120px) rotate(-8deg)'
-                  : 'none',
-            opacity: slideDir === 'none' ? 1 : 0,
-            transition: slideDir === 'none' ? 'none' : 'transform 0.4s ease, opacity 0.4s ease',
+            fontSize: tokens.typography.fontSize.xs,
+            color: tokens.colors.muted,
           }}
         >
-          <Flashcard card={card} flipped={flipped} onFlip={handleFlip} />
-        </div>
+          Vire o card para ver a resposta e avaliar
+        </p>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', width: '100%', marginBottom: '1rem' }}>
+        <button
+          className="btn"
+          onClick={() => handleAnswer(false)}
+          disabled={answering || flipped}
+          style={{
+            flex: 1,
+            minHeight: '56px',
+            fontSize: '1.1rem',
+            background: 'transparent',
+            color: tokens.colors.err,
+            border: `1px solid ${tokens.colors.err}`,
+          }}
+        >
+          <ArrowLeftIcon size={16} /> Difícil
+        </button>
         <button
           className="btn btn-primary"
           onClick={() => handleAnswer(true)}
           disabled={answering || flipped}
           style={{ flex: 1, minHeight: '56px', fontSize: '1.1rem' }}
         >
-          <ArrowRightIcon size={16} /> <CheckIcon size={16} /> Acertei
+          Bom <CheckIcon size={16} style={{ verticalAlign: 'middle' }} />
         </button>
         <button
-          className="btn btn-danger"
-          onClick={() => handleAnswer(false)}
+          className="btn"
+          onClick={() => handleAnswer(true)}
           disabled={answering || flipped}
-          style={{ flex: 1, minHeight: '56px', fontSize: '1.1rem' }}
+          style={{
+            flex: 1,
+            minHeight: '56px',
+            fontSize: '1.1rem',
+            background: 'transparent',
+            color: tokens.colors.ok,
+            border: `1px solid ${tokens.colors.ok}`,
+          }}
         >
-          <ArrowLeftIcon size={16} /> <CloseIcon size={16} /> Errei
+          Fácil <ArrowRightIcon size={16} style={{ verticalAlign: 'middle' }} />
         </button>
       </div>
 
-      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+      <div
+        style={{
+          marginTop: '1rem',
+          display: 'flex',
+          gap: '0.5rem',
+          justifyContent: 'center',
+        }}
+      >
         <button
           className="btn"
           onClick={handleFlip}
@@ -301,13 +331,14 @@ export default function Review() {
       <p
         style={{
           marginTop: '0.5rem',
-          color: 'var(--muted)',
+          color: tokens.colors.muted,
           fontSize: '0.875rem',
           textAlign: 'center',
         }}
       >
-        Espaço/Enter: virar <ArrowRightIcon size={14} style={{ margin: '0 0.25rem' }} /> acertei{' '}
-        <ArrowLeftIcon size={14} style={{ margin: '0 0.25rem' }} /> errei
+        Espaço/Enter: virar <ArrowRightIcon size={14} style={{ margin: '0 0.25rem' }} />
+        acertei <ArrowLeftIcon size={14} style={{ margin: '0 0.25rem' }} />
+        errei
       </p>
     </div>
   );
