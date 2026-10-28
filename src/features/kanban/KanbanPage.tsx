@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AlertIcon } from '../../shared/ui/icons';
+import Header from '../../components/ui/Header';
 import { tokens } from '../../design/tokens';
 
 import Board from './components/Board';
@@ -8,7 +8,6 @@ import { createKanbanStore } from './kanbanStore';
 import { defaultColumns, type Card, type ColumnId } from './kanban';
 
 export default function KanbanPage() {
-  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
 
@@ -62,16 +61,7 @@ export default function KanbanPage() {
 
   return (
     <section style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1rem' }}>
-      <header style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          style={{ cursor: 'pointer', padding: '0.25rem 0.75rem' }}
-        >
-          ← Baralhos
-        </button>
-        <h2 style={{ margin: 0, fontSize: '1.5rem' }}>Quadro Kanban</h2>
-      </header>
+      <Header title="Quadro Kanban" showBack backTo="/" />
       {error && (
         <div
           style={{

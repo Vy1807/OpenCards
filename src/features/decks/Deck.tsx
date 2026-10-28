@@ -3,13 +3,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDeck } from './useDeck';
 import { exportCards } from '../../shared/lib/exportCards';
 import {
+  AlertIcon,
   DownloadIcon,
+  InfoIcon,
   PencilIcon,
   PlusIcon,
   TrashIcon,
-  InfoIcon,
-  AlertIcon,
 } from '../../shared/ui/icons';
+import Header from '../../components/ui/Header';
 
 type Params = { id: string };
 
@@ -92,9 +93,8 @@ export default function Deck() {
 
   return (
     <div className="page">
+      <Header title={deck.name} showBack backTo="/" />
       <header style={{ marginBottom: '1.5rem' }}>
-        <h1>{deck.name}</h1>
-        {deck.tag && <p style={{ color: 'var(--muted)', marginBottom: '0.5rem' }}>{deck.tag}</p>}
         <div className="card section">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>

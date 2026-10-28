@@ -16,6 +16,7 @@ import {
   AlertIcon,
   RefreshIcon,
 } from '../../shared/ui/icons';
+import Header from '../../components/ui/Header';
 
 type Params = { id: string };
 
@@ -140,6 +141,7 @@ export default function DeckEdit() {
 
   return (
     <div className="page">
+      <Header title="Editar baralho" showBack backTo={`/decks/${id}`} />
       <header style={{ marginBottom: '1.5rem' }}>
         <h1>Editar baralho</h1>
       </header>

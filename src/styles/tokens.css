@@ -417,4 +417,110 @@ h3 {
     padding: var(--space-6) var(--space-4);
     margin: 0 var(--space-4);
   }
+
+  .header {
+    padding: var(--space-4);
+  }
+
+  .header__actions {
+    gap: var(--space-2);
+  }
+}
+
+/* Cabeçalho único — U-321 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-4);
+  border-bottom: var(--border);
+  background: var(--surface);
+  gap: var(--space-4);
+}
+
+.header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.header__brand-name {
+  font-size: 1.25rem;
+}
+
+.header__title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: var(--ink);
+}
+
+.header__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.user-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.user-menu__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.user-menu__name {
+  font-size: 0.875rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.user-menu__dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-2);
+  min-width: 140px;
+  z-index: 50;
+}
+
+.user-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--ink);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s;
+}
+
+.user-menu__item:hover {
+  background: var(--surface-2);
 }

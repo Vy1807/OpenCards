@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useCards } from '../../app/providers';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import Select from '../../components/ui/Select';
-import { UploadIcon, ArrowLeftIcon, AlertIcon, CheckIcon } from '../../shared/ui/icons';
+import { UploadIcon, AlertIcon, CheckIcon } from '../../shared/ui/icons';
+import Header from '../../components/ui/Header';
 import { parseAndValidateImport, type ImportCard } from '../../shared/lib/importCards';
 import { tokens } from '../../design/tokens';
 
@@ -21,7 +21,6 @@ export type SimpleImportError = { index: number; reason: string };
  * - Importacao chama upsertCard por item valido e exibe toast de resultado.
  */
 export default function Import() {
-  const navigate = useNavigate();
   const { decks, upsertCard, fetchDecks } = useCards();
   const [deckId, setDeckId] = useState<string>('');
   const [input, setInput] = useState('');
@@ -118,24 +117,7 @@ export default function Import() {
 
   return (
     <div className="page" style={{ maxWidth: '720px', margin: '0 auto', padding: '1rem' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          marginBottom: '1rem',
-        }}
-      >
-        <button
-          type="button"
-          className="btn"
-          onClick={() => navigate('/')}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-        >
-          <ArrowLeftIcon size={18} style={{ flexShrink: 0 }} /> ← Baralhos
-        </button>
-      </div>
-
+      <Header title="Importar cartões" showBack backTo="/" />
       {toast && (
         <div
           style={{

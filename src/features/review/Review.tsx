@@ -7,6 +7,7 @@ import type { Card } from '../../entities/card/model/card';
 import Flashcard from './Flashcard';
 import Confetti from './Confetti';
 import { CheckIcon, CloseIcon, ArrowRightIcon, ArrowLeftIcon } from '../../shared/ui/icons';
+import Header from '../../components/ui/Header';
 import ProgressBar from '../../components/ui/ProgressBar';
 import { tokens } from '../../design/tokens';
 
@@ -203,54 +204,7 @@ export default function Review() {
 
   return (
     <div className="page">
-      {/* Header de foco */}
-      <header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '1rem',
-          gap: '0.5rem',
-        }}
-      >
-        <button
-          type="button"
-          className="btn"
-          onClick={() => navigate(`/decks/${id}`)}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}
-          aria-label="Voltar para baralhos"
-        >
-          <ArrowLeftIcon size={16} style={{ flexShrink: 0 }} /> Baralhos
-        </button>
-        <h1
-          style={{
-            flex: 1,
-            minWidth: 0,
-            fontFamily: tokens.typography.fontHeading,
-            fontSize: tokens.typography.fontSize.xxl,
-            fontWeight: '700',
-            color: tokens.colors.ink,
-            margin: 0,
-            textAlign: 'center',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Revisão do dia
-        </h1>
-        <span
-          style={{
-            fontFamily: tokens.typography.fontBody,
-            fontSize: tokens.typography.fontSize.sm,
-            fontWeight: '600',
-            color: tokens.colors.primary,
-            flexShrink: 0,
-          }}
-        >
-          {index + 1} / {total}
-        </span>
-      </header>
+      <Header title="Revisão do dia" showBack backTo={`/decks/${id}`} />
 
       {/* Barra de progresso ECG (avanca a cada card respondido) */}
       <ProgressBar

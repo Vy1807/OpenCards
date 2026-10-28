@@ -7,6 +7,7 @@ import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import { UploadIcon } from '../../shared/ui/icons';
+import Header from '../../components/ui/Header';
 import { tokens } from '../../design/tokens';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -181,17 +182,8 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
         gap: '1rem',
       }}
     >
+      <Header title="Novo card" showBack backTo="/" />
       <div>
-        <h1
-          style={{
-            fontFamily: tokens.typography.fontHeading,
-            fontSize: tokens.typography.fontSize.xxl,
-            margin: 0,
-            color: tokens.colors.ink,
-          }}
-        >
-          Novo card
-        </h1>
         <p
           style={{
             fontSize: tokens.typography.fontSize.sm,
