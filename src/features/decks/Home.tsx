@@ -331,10 +331,8 @@ export default function Home() {
         </div>
       ) : (
         <ul
+          className="home-degrades-grid"
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-            gap: tokens.space[4],
             listStyle: 'none',
             padding: 0,
           }}
