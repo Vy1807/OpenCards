@@ -1,0 +1,141 @@
+_format_version: "1.1"
+
+services:
+  - name: auth
+    url: http://auth:9999
+    routes:
+      - name: auth
+        paths:
+          - /auth
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - Authorization
+            - Content-Type
+          exposed_headers:
+            - X-Request-Id
+          credentials: true
+          max_age: 3600
+
+  - name: storage
+    url: http://storage:5000
+    routes:
+      - name: storage
+        paths:
+          - /storage
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - Authorization
+            - Content-Type
+          exposed_headers:
+            - X-Request-Id
+          credentials: true
+          max_age: 3600
+
+  - name: rest
+    url: http://postgrest:3000
+    routes:
+      - name: rest
+        paths:
+          - /rest
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - Authorization
+            - Content-Type
+            - Prefer
+            - Range
+          exposed_headers:
+            - Content-Range
+            - X-Request-Id
+          credentials: true
+          max_age: 3600
+
+  - name: realtime
+    url: http://realtime:4000
+    routes:
+      - name: realtime
+        paths:
+          - /realtime
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - Authorization
+            - Content-Type
+          exposed_headers:
+            - X-Request-Id
+          credentials: true
+          max_age: 3600
+
+consumers:
+  - username: studio
+    custom_id: studio
+    keyauth_credentials:
+      - key: studio-key
+
+plugins:
+  - name: key-auth
+    route: auth
+    config:
+      key_names:
+        - apikey
+      hide_credentials: true
+  - name: key-auth
+    route: storage
+    config:
+      key_names:
+        - apikey
+      hide_credentials: true
+  - name: key-auth
+    route: rest
+    config:
+      key_names:
+        - apikey
+      hide_credentials: true
+  - name: key-auth
+    route: realtime
+    config:
+      key_names:
+        - apikey
+      hide_credentials: true

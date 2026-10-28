@@ -373,7 +373,23 @@ export default function Home() {
             const total = deck.cards_count ?? 0;
             const progress = total > 0 ? Math.round((0 / total) * 100) : 0;
             return (
-              <li key={deck.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/decks/${deck.id}`)}>
+              <li
+                key={deck.id}
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/decks/${deck.id}`);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(`/decks/${deck.id}`);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-label={`Abrir baralho ${deck.name}`}
+              >
                 <Card
                   padded="lg"
                   shadowed

@@ -141,16 +141,24 @@ export async function answerCard(
 export async function createCard(input: NewCardInput): Promise<Card> {
   let cardCode = input.card_code;
   if (!cardCode || cardCode.trim() === '') {
-    const { data: existing } = await supabase
-      .from('cards')
-      .select('card_code')
-      .eq('deck_id', input.deck_id)
-      .order('card_code', { ascending: false })
-      .limit(1);
-    if (existing && existing.length > 0 && existing[0].card_code) {
-      cardCode = (parseInt(existing[0].card_code, 10) + 1).toString();
+    const { data: rpcData, error: rpcError } = await supabase.rpc('next_card_code', {
+      deck_id_param: input.deck_id,
+    });
+    if (rpcError) {
+      // Fallback if function doesn't exist (e.g., migration not applied)
+      const { data: existing } = await supabase
+        .from('cards')
+        .select('card_code')
+        .eq('deck_id', input.deck_id)
+        .order('card_code', { ascending: false })
+        .limit(1);
+      if (existing && existing.length > 0 && existing[0].card_code) {
+        cardCode = (parseInt(existing[0].card_code, 10) + 1).toString();
+      } else {
+        cardCode = '1';
+      }
     } else {
-      cardCode = '1';
+      cardCode = rpcData;
     }
   }
 
@@ -205,7 +213,7 @@ export async function uploadImage(
 
   const { data: signedUrlData } = await supabase.storage
     .from('card-images')
-    .createSignedUrl(path, 60 * 60 * 24 * 365);
+    .createSignedUrl(path, 60 * 60); // 1 hora
 
   if (!signedUrlData?.signedUrl) throw new Error('Failed to create signed URL');
   return signedUrlData.signedUrl;

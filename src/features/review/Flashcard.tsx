@@ -1,3 +1,5 @@
+import { useImageUrl } from '../../shared/lib/useImageUrl';
+
 interface FlashcardProps {
   card: {
     id: string;
@@ -12,6 +14,9 @@ interface FlashcardProps {
 }
 
 export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
+  const frontImageUrl = useImageUrl(card.front_image_path);
+  const backImageUrl = useImageUrl(card.back_image_path);
+
   return (
     <div className={`flashcard-card ${flipped ? 'flipped' : ''}`} onClick={onFlip}>
       {!flipped && (
@@ -65,15 +70,15 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
             style={{
               fontSize: '1.25rem',
               fontWeight: '600',
-              marginBottom: card.front_image_path ? '0.5rem' : 0,
+              marginBottom: frontImageUrl ? '0.5rem' : 0,
               wordBreak: 'break-word',
             }}
           >
             {card.front_text}
           </div>
-          {card.front_image_path && (
+          {frontImageUrl && (
             <img
-              src={`image://${card.front_image_path}`}
+              src={frontImageUrl}
               alt="frente"
               className="flashcard-image"
             />
@@ -89,8 +94,8 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
           >
             {card.back_text}
           </div>
-          {card.back_image_path && (
-            <img src={`image://${card.back_image_path}`} alt="verso" className="flashcard-image" />
+          {backImageUrl && (
+            <img src={backImageUrl} alt="verso" className="flashcard-image" />
           )}
           <p
             style={{

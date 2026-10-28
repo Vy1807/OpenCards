@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { signIn, signUp } from '../../entities/user/api/auth';
 import { UserIcon } from '../../shared/ui/icons';
+import Input from '../../components/ui/Input';
+import Button from '../../components/ui/Button';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -39,34 +41,32 @@ export default function Login() {
       </h1>
       {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem' }}>{error}</p>}
       <form onSubmit={handleSubmit} className="card section">
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label">E-mail</label>
-          <input
-            className="input"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label">Senha</label>
-          <input
-            className="input"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button
-          className="btn btn-primary"
+        <Input
+          label="E-mail"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          fullWidth
+          error={error && mode === 'login' ? error : undefined}
+        />
+        <Input
+          label="Senha"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          fullWidth
+        />
+        <Button
+          variant="solid"
           type="submit"
           disabled={loading}
-          style={{ minHeight: '44px', width: '100%' }}
+          fullWidth
+          style={{ minHeight: '44px' }}
         >
           {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : 'Criar conta'}
-        </button>
+        </Button>
       </form>
       <p style={{ marginTop: '1rem', fontSize: '0.875rem', textAlign: 'center' }}>
         {mode === 'login' ? 'Não tem uma conta? ' : 'Já tem uma conta? '}

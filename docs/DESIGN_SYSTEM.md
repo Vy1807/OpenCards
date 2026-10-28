@@ -1,7 +1,7 @@
 # OpenCards — Sistema de Design
 
 Documentação de uso dos tokens de design e dos componentes base (`src/components/ui`):
-**Button**, **Input**, **Card** e **Modal**. Público-alvo: desenvolvedores front-end que
+**Button**, **Input**, **Card**, **Modal**, **Spinner** e **ErrorBoundary**. Público-alvo: desenvolvedores front-end que
 estão implementando ou atualizando telas do app.
 
 > Versão da documentação: alinhada com `src/design/tokens.ts` e `src/styles/tokens.css`.
@@ -67,7 +67,7 @@ Todos exportados pelo barrel `src/components/ui/index.ts` e importados com camin
 relativos (não há alias `@/` configurado):
 
 ```tsx
-import { Button, Input, Card, Modal } from '../components/ui'
+import { Button, Input, Card, Modal, Spinner, ErrorBoundary } from '../components/ui'
 ```
 
 ### Button
@@ -132,6 +132,66 @@ const [open, setOpen] = useState(false)
 </Modal>
 ```
 
+### Spinner
+
+Indicador de carregamento animado (spinner circular). Usado em estados de
+loading assíncrono (ex.: `ProtectedRoute` durante verificação de sessão).
+
+Props:
+- `size`: `'sm'` (20px) | `'md'` (32px) | `'lg'` (48px) — padrão `'md'`
+- `color`: cor do traço (padrão `tokens.colors.primary`)
+- `ariaLabel`: label para screen readers (padrão `"Carregando…"`)
+
+```tsx
+import { Spinner } from '../components/ui'
+
+// Centralizado em container flex
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+  <Spinner size="lg" ariaLabel="Verificando sessão…" />
+</div>
+```
+
+Regras visuais:
+- Animação CSS `ui-spinner-rotate` (1s linear infinite)
+- Respeita `prefers-reduced-motion` (para a animação via `ui.css`)
+- Tamanhos baseados no design system (`tokens.touchTarget` referência)
+- Cor do traço usa token `colors.primary` por padrão
+- Track (fundo) com opacidade 25%
+
+### ErrorBoundary
+
+Componente de classe React que captura erros de renderização na sub-árvore
+e exibe uma UI de fallback amigável. **Não captura** erros em:
+- Event handlers (use `try/catch` neles)
+- Código assíncrono (`setTimeout`, `Promise`)
+- Server-side rendering
+- O próprio `ErrorBoundary`
+
+Props:
+- `fallback`: ReactNode opcional — UI customizada de erro (se omitido, usa fallback padrão)
+
+```tsx
+import { ErrorBoundary } from '../components/ui'
+
+// Envolve rotas ou seções críticas
+<ErrorBoundary>
+  <AppRoutes />
+</ErrorBoundary>
+
+// Ou com fallback customizado
+<ErrorBoundary fallback={<MeuErroCustomizado />}>
+  <ComponenteArriscado />
+</ErrorBoundary>
+```
+
+Fallback padrão inclui:
+- Ícone `AlertIcon` (rosa/erro)
+- Título "Algo deu errado"
+- Mensagem explicativa
+- Botão "Tentar novamente" → `window.location.reload()`
+- Estilos usando `tokens` (cores, tipografia, espaçamento, raios)
+- Log automático no console (`console.error`) para debugging
+
 ---
 
 ## 3. Regras de uso (UI/UX)
@@ -187,7 +247,7 @@ prontos: basta rodar os comandos acima num ambiente com Node 20+.
 | `src/design/tokens.ts` | Tokens consumidos por código JS/TS (componentes base) |
 | `src/styles/tokens.css` | Mesmos valores como variáveis CSS (modo claro + escuro) |
 | `src/styles/color-themes.css` | 10 temas de cor (`theme-slate` … `theme-abyss`) |
-| `src/components/ui/ui.css` | Estados que não podem ser inline (`:hover`, `:focus-visible`, `[disabled]`, modal) |
+| `src/components/ui/ui.css` | Estados que não podem ser inline (`:hover`, `:focus-visible`, `[disabled]`, modal, **spinner**) |
 | `src/index.css` | Importa `tokens.css` + `color-themes.css` e classes utilitárias legadas |
 | `docs/DESIGN_SYSTEM.md` | Este documento |
 

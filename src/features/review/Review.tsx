@@ -93,11 +93,14 @@ export default function Review() {
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         handleAnswer(false);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        navigate(`/decks/${id}`);
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [cards.length, finished, answering, handleAnswer]);
+  }, [cards.length, finished, answering, handleAnswer, navigate, id]);
 
   const handleRestart = () => {
     load();
@@ -206,6 +209,7 @@ export default function Review() {
           className="btn"
           onClick={() => navigate(`/decks/${id}`)}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          aria-label="Voltar para baralhos"
         >
           <ArrowLeftIcon size={16} style={{ flexShrink: 0 }} /> ← Baralhos
         </button>
@@ -274,6 +278,8 @@ export default function Review() {
           className="btn"
           onClick={() => handleAnswer(false)}
           disabled={answering || flipped}
+          tabIndex={0}
+          aria-label="Difícil - Errei"
           style={{
             flex: 1,
             minHeight: '56px',
@@ -283,20 +289,24 @@ export default function Review() {
             border: `1px solid ${tokens.colors.err}`,
           }}
         >
-          <ArrowLeftIcon size={16} /> Difícil
+          <ArrowLeftIcon size={16} aria-hidden="true" /> Difícil
         </button>
         <button
           className="btn btn-primary"
           onClick={() => handleAnswer(true)}
           disabled={answering || flipped}
+          tabIndex={0}
+          aria-label="Bom - Acertei"
           style={{ flex: 1, minHeight: '56px', fontSize: '1.1rem' }}
         >
-          Bom <CheckIcon size={16} style={{ verticalAlign: 'middle' }} />
+          Bom <CheckIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
         </button>
         <button
           className="btn"
           onClick={() => handleAnswer(true)}
           disabled={answering || flipped}
+          tabIndex={0}
+          aria-label="Fácil - Acertei fácil"
           style={{
             flex: 1,
             minHeight: '56px',
@@ -306,7 +316,7 @@ export default function Review() {
             border: `1px solid ${tokens.colors.ok}`,
           }}
         >
-          Fácil <ArrowRightIcon size={16} style={{ verticalAlign: 'middle' }} />
+          Fácil <ArrowRightIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
         </button>
       </div>
 
@@ -322,6 +332,8 @@ export default function Review() {
           className="btn"
           onClick={handleFlip}
           disabled={answering}
+          tabIndex={0}
+          aria-label={flipped ? 'Esconder resposta' : 'Mostrar resposta'}
           style={{ minHeight: '44px' }}
         >
           {flipped ? 'Esconder resposta' : 'Mostrar resposta'}

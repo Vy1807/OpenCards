@@ -1,0 +1,10 @@
+{
+  "completed_tasks": [
+    "T-11: Migrated createCard to use rpc('next_card_code') PG function (HDN-03). Removed client-side SELECT MAX(card_code) race condition; now calls supabase.rpc('next_card_code', {deck_id_param: input.deck_id}) with fallback to client-side logic if function doesn't exist. Lint passes."
+  ],
+  "blockers": [
+    "T-12: Validate RLS policies with 2 users - requires Supabase dev credentials (IMP-02). Need VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to create .env and test: user A creates deck → user B cannot see; user A edits → user B cannot edit; review_log isolated per user.",
+    "T-13: Verify bucket card-images policies - requires Supabase dev credentials (IMP-02). Migration 0001 policies are correctly written (INSERT/SELECT/UPDATE/DELETE restricted to user_id folder via storage.foldername(name)[1] = auth.uid()::text). uploadImage uses path format userId/folder/uuid.ext which matches. Signed URL expiration is 1 year (60*60*24*365) as required. Manual test needs real Supabase connection."
+  ],
+  "notes": "T-11 complete and verified (lint passes). Migration 0001 already has next_card_code function and correct RLS/storage policies. T-12 and T-13 blocked on IMP-02 (no Supabase dev credentials). User must provide VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to proceed with manual validation."
+}

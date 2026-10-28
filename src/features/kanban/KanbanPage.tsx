@@ -1,7 +1,6 @@
-/** OpenCards — página do quadro Kanban (fluxo autônomo TO DO → IN PROGRESS → TESTING → DONE). */
-
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AlertIcon } from '../../shared/ui/icons';
 
 import Board from './components/Board';
 import { createKanbanStore } from './kanbanStore';
@@ -49,10 +48,15 @@ export default function KanbanPage() {
   );
 
   const handleEditCard = useCallback(
-    (cardId: string) => {
-      navigate(`/decks/${cardId}/edit`);
+    (_cardId: string) => {
+      setError(null);
+      // IMP-03: Kanban cards não possuem deck_id. Sem mapeamento, não é possível
+      // navegar para /decks/{deckId}/edit. Mostramos erro amigável.
+      setError(
+        'Edição de cartões do Kanban não disponível: cartões do quadro não estão vinculados a baralhos. Use a página do baralho para editar cartões.'
+      );
     },
-    [navigate]
+    []
   );
 
   return (
@@ -68,18 +72,22 @@ export default function KanbanPage() {
         <h2 style={{ margin: 0, fontSize: '1.5rem' }}>Quadro Kanban</h2>
       </header>
       {error && (
-        <p
+        <div
           style={{
             margin: 0,
-            padding: '0.5rem 0.75rem',
+            padding: '0.75rem 1rem',
             borderRadius: '0.5rem',
             background: '#FBF0EC',
             color: '#B3261E',
             fontSize: '0.875rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
           }}
         >
-          {error}
-        </p>
+          <AlertIcon size={18} style={{ flexShrink: 0 }} />
+          <span>{error}</span>
+        </div>
       )}
       <Board
         columns={columns}

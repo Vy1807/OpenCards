@@ -3,6 +3,7 @@ import { ThemeSwitcher } from '../shared/ui';
 import { LogoutIcon } from '../shared/ui/icons';
 import { AuthProvider, CardsProvider, useAuth } from './providers';
 import { routes } from './routes';
+import { ErrorBoundary } from '../components/ui';
 
 /**
  * Botão de saída. Renderizado apenas com sessão ativa; encerra a sessão no
@@ -36,6 +37,14 @@ function Sessao() {
   );
 }
 
+function AppRoutes() {
+  return (
+    <ErrorBoundary>
+      {routes()}
+    </ErrorBoundary>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -44,7 +53,7 @@ export default function App() {
           <div className="app" style={{ display: 'flex', flexDirection: 'column' }}>
             <ThemeSwitcher />
             <Sessao />
-            {routes()}
+            <AppRoutes />
           </div>
         </CardsProvider>
       </AuthProvider>

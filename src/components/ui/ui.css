@@ -106,3 +106,51 @@
     animation: none !important;
   }
 }
+
+/* Spinner — animações de carregamento */
+.ui-spinner {
+  animation: ui-spinner-rotate 1s linear infinite;
+}
+
+.ui-spinner__track {
+  opacity: 0.25;
+}
+
+.ui-spinner__indicator {
+  animation: ui-spinner-dash 1.5s ease-in-out infinite;
+}
+
+@keyframes ui-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ui-spinner-dash {
+  0% {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 1 84;
+  }
+  50% {
+    stroke-dashoffset: -35;
+    stroke-dasharray: 42 42;
+  }
+  100% {
+    stroke-dashoffset: -126;
+    stroke-dasharray: 1 84;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-spinner {
+    animation: none !important;
+  }
+  .ui-spinner__indicator {
+    animation: none !important;
+    stroke-dasharray: 56 28 !important;
+    stroke-dashoffset: 0 !important;
+  }
+}

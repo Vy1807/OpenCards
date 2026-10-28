@@ -252,16 +252,18 @@ export default function DeckEdit() {
                 </button>
               </div>
               <div style={{ marginBottom: '0.5rem' }}>
-                <label className="label">Frente</label>
+                <label className="label" htmlFor={`card-front-${card.id}`}>Frente</label>
                 <input
+                  id={`card-front-${card.id}`}
                   className="input"
                   value={card.front_text}
                   onChange={(e) => handleEditCard(card.id, { front_text: e.target.value })}
                 />
               </div>
               <div style={{ marginBottom: '0.5rem' }}>
-                <label className="label">Verso</label>
+                <label className="label" htmlFor={`card-back-${card.id}`}>Verso</label>
                 <input
+                  id={`card-back-${card.id}`}
                   className="input"
                   value={card.back_text}
                   onChange={(e) => handleEditCard(card.id, { back_text: e.target.value })}
@@ -358,8 +360,9 @@ function CardForm({ deckId }: { deckId: string }) {
       {error && <p style={{ color: 'var(--err)', marginBottom: '0.75rem' }}>{error}</p>}
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
         <div style={{ flex: 1, minWidth: '150px' }}>
-          <label className="label">ID do cartão (opcional)</label>
+          <label className="label" htmlFor="card-code">ID do cartão (opcional)</label>
           <input
+            id="card-code"
             className="input"
             value={cardCode}
             onChange={(e) => setCardCode(e.target.value)}
@@ -368,8 +371,9 @@ function CardForm({ deckId }: { deckId: string }) {
         </div>
       </div>
       <div style={{ marginBottom: '0.75rem' }}>
-        <label className="label">Frente (pergunta)</label>
+        <label className="label" htmlFor="front-text">Frente (pergunta)</label>
         <textarea
+          id="front-text"
           className="input"
           style={{ minHeight: '80px', resize: 'vertical', padding: '0.625rem 0.875rem' }}
           value={frontText}
@@ -407,8 +411,9 @@ function CardForm({ deckId }: { deckId: string }) {
         )}
       </div>
       <div style={{ marginBottom: '0.75rem' }}>
-        <label className="label">Verso (resposta)</label>
+        <label className="label" htmlFor="back-text">Verso (resposta)</label>
         <textarea
+          id="back-text"
           className="input"
           style={{ minHeight: '80px', resize: 'vertical', padding: '0.625rem 0.875rem' }}
           value={backText}
@@ -513,24 +518,26 @@ function ImportCardForm({
       <form onSubmit={handleParse} className="card section">
         <h3>Importar cartões</h3>
         <p
-          style={{
-            fontSize: '0.875rem',
-            color: 'var(--muted)',
-            marginBottom: '0.75rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-          }}
-        >
-          <InfoIcon size={16} style={{ flexShrink: 0 }} />
-          Formato:{' '}
-          <code>
-            {'[{' +
-              '\\\\\\\"id\\\\\": \\\\\\\"CARD-001\\\\\\\", \\\\\\\"question\\\\\": \\\\\\\"...\\\\\\\", \\\\\\\"answer\\\\\": \\\\\\\"...\\\\\\\"' +
-              '}]'}
-          </code>
-        </p>
-        <textarea
+                  style={{
+                    fontSize: '0.875rem',
+                    color: 'var(--muted)',
+                    marginBottom: '0.75rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <InfoIcon size={16} style={{ flexShrink: 0 }} />
+                  Formato:{' '}
+                  <code>
+                    {'[{' +
+                      '\\\\\\\\\\\\\\\"id\\\\\\\\\\\": \\\\\\\\\\\\\\\"CARD-001\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"question\\\\\\\\\\\": \\\\\\\\\\\\\\\"...\\\\\\\\\\\\\\\", \\\\\\\\\\\\\\\"answer\\\\\\\\\\\\\\\"...\\\\\\\\\\\\\\\"' +
+                      '}]'}
+                  </code>
+                </p>
+                <label className="label" htmlFor="import-json">JSON para importação</label>
+                <textarea
+          id="import-json"
           className="input"
           value={input}
           onChange={(e) => setInput(e.target.value)}

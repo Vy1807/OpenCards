@@ -10,5 +10,8 @@ export { default as Select } from './Select';
 export type { SelectProps, SelectOption } from './Select';
 export { default as StatusPill } from './StatusPill';
 export type { StatusPillProps, StatusPillVariant } from './StatusPill';
+export { default as Spinner } from './Spinner';
+export type { SpinnerProps } from './Spinner';
+export { ErrorBoundary } from './ErrorBoundary';
 
 import './ui.css';

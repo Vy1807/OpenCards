@@ -4,7 +4,7 @@ export type Deck = {
   name: string;
   tag: string | null;
   created_at: string;
-  cards_count?: number;
+  cards_count: number;
 };
 
 export type Card = {

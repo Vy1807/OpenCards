@@ -291,109 +291,116 @@ export function CardsProvider({ children }: { children: ReactNode }) {
     [user, setFailure]
   );
 
-  /**
-   * Inscrições em tempo real (Supabase Realtime). Mantém baralhos e cartões
-   * sincronizados com alterações vindas de qualquer sessão do usuário:
-   * inserção, atualização e exclusão são refletidas no estado global sem
-   * precisar recarregar a página. Se o Realtime não estiver disponível, o
-   * app continua funcionando normalmente via buscas sob demanda.
-   */
-  useEffect(() => {
-    if (!user) return;
+  /** 
+     * Inscrições em tempo real (Supabase Realtime). Mantém baralhos e cartões
+     * sincronizados com alterações vindas de qualquer sessão do usuário:
+     * inserção, atualização e exclusão são refletidas no estado global sem
+     * precisar recarregar a página. Se o Realtime não estiver disponível, o
+     * app continua funcionando normalmente via buscas sob demanda.
+     * 
+     * Guard `mounted` evita atualizações de estado após o componente desmontar
+     * (race condition quando o payload chega depois do cleanup).
+     */
+    useEffect(() => {
+      if (!user) return;
 
-    let channel: RealtimeChannel | undefined;
-    try {
-      channel = supabase
-        .channel('realtime:decks-cards')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'decks',
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            const {
-              eventType,
-              new: newRecord,
-              old: oldRecord,
-            } = payload as Record<string, unknown>;
-            if (eventType === 'INSERT' && newRecord) {
-              const deck = newRecord as Deck & { cards_count?: number };
-              setDecks((current) =>
-                current.find((d) => d.id === deck.id)
-                  ? current
-                  : [{ ...deck, cards_count: deck.cards_count ?? 0 }, ...current]
-              );
-            } else if (eventType === 'UPDATE' && newRecord) {
-              const updated = newRecord as Deck & { cards_count?: number };
-              setDecks((current) =>
-                current.map((d) => (d.id === updated.id ? { ...d, ...updated } : d))
-              );
-              setDeck((current) =>
-                current?.id === updated.id ? { ...current, ...updated } : current
-              );
-            } else if (eventType === 'DELETE' && oldRecord) {
-              const id = (oldRecord as { id: string }).id;
-              setDecks((current) => current.filter((d) => d.id !== id));
-              setDeck((current) => (current?.id === id ? null : current));
+      let mounted = true;
+      let channel: RealtimeChannel | undefined;
+      try {
+        channel = supabase
+          .channel('realtime:decks-cards')
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'decks',
+              filter: `user_id=eq.${user.id}`,
+            },
+            (payload) => {
+              if (!mounted) return;
+              const {
+                eventType,
+                new: newRecord,
+                old: oldRecord,
+              } = payload as Record<string, unknown>;
+              if (eventType === 'INSERT' && newRecord) {
+                const deck = newRecord as Deck & { cards_count?: number };
+                setDecks((current) =>
+                  current.find((d) => d.id === deck.id)
+                    ? current
+                    : [{ ...deck, cards_count: deck.cards_count ?? 0 }, ...current]
+                );
+              } else if (eventType === 'UPDATE' && newRecord) {
+                const updated = newRecord as Deck & { cards_count?: number };
+                setDecks((current) =>
+                  current.map((d) => (d.id === updated.id ? { ...d, ...updated } : d))
+                );
+                setDeck((current) =>
+                  current?.id === updated.id ? { ...current, ...updated } : current
+                );
+              } else if (eventType === 'DELETE' && oldRecord) {
+                const id = (oldRecord as { id: string }).id;
+                setDecks((current) => current.filter((d) => d.id !== id));
+                setDeck((current) => (current?.id === id ? null : current));
+              }
             }
-          }
-        )
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'cards',
-            filter: `user_id=eq.${user.id}`,
-          },
-          (payload) => {
-            const {
-              eventType,
-              new: newRecord,
-              old: oldRecord,
-            } = payload as Record<string, unknown>;
-            if (eventType === 'INSERT' && newRecord) {
-              const card = newRecord as Card;
-              setCards((current) =>
-                current.find((c) => c.id === card.id) ? current : [...current, card]
-              );
-              setDeck((d) =>
-                d && d.id === card.deck_id
-                  ? {
-                      ...d,
-                      cards_count: Math.max(0, (d.cards_count ?? 0) + 1),
-                    }
-                  : d
-              );
-            } else if (eventType === 'UPDATE' && newRecord) {
-              const card = newRecord as Card;
-              setCards((current) => current.map((c) => (c.id === card.id ? card : c)));
-            } else if (eventType === 'DELETE' && oldRecord) {
-              const card = oldRecord as Card;
-              setCards((current) => current.filter((c) => c.id !== card.id));
-              setDeck((d) =>
-                d && d.id === card.deck_id
-                  ? {
-                      ...d,
-                      cards_count: Math.max(0, (d.cards_count ?? 0) - 1),
-                    }
-                  : d
-              );
+          )
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'cards',
+              filter: `user_id=eq.${user.id}`,
+            },
+            (payload) => {
+              if (!mounted) return;
+              const {
+                eventType,
+                new: newRecord,
+                old: oldRecord,
+              } = payload as Record<string, unknown>;
+              if (eventType === 'INSERT' && newRecord) {
+                const card = newRecord as Card;
+                setCards((current) =>
+                  current.find((c) => c.id === card.id) ? current : [...current, card]
+                );
+                setDeck((d) =>
+                  d && d.id === card.deck_id
+                    ? {
+                        ...d,
+                        cards_count: Math.max(0, (d.cards_count ?? 0) + 1),
+                      }
+                    : d
+                );
+              } else if (eventType === 'UPDATE' && newRecord) {
+                const card = newRecord as Card;
+                setCards((current) => current.map((c) => (c.id === card.id ? card : c)));
+              } else if (eventType === 'DELETE' && oldRecord) {
+                const card = oldRecord as Card;
+                setCards((current) => current.filter((c) => c.id !== card.id));
+                setDeck((d) =>
+                  d && d.id === card.deck_id
+                    ? {
+                        ...d,
+                        cards_count: Math.max(0, (d.cards_count ?? 0) - 1),
+                      }
+                    : d
+                );
+              }
             }
-          }
-        )
-        .subscribe();
-    } catch {
-      // Realtime indisponível: o app continua buscando dados sob demanda.
-    }
+          )
+          .subscribe();
+      } catch {
+        // Realtime indisponível: o app continua buscando dados sob demanda.
+      }
 
-    return () => {
-      if (channel) supabase.removeChannel(channel);
-    };
-  }, [user]);
+      return () => {
+        mounted = false;
+        if (channel) supabase.removeChannel(channel);
+      };
+    }, [user]);
 
   return (
     <CardsContext.Provider
