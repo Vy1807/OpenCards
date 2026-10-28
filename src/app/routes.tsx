@@ -25,8 +25,8 @@ export function routes() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
-      <Route path="/" element={<Home />} />
       <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Home />} />
         <Route
           path="/decks/:id"
           element={
