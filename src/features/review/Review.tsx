@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { shuffle } from '../../shared/lib/shuffle';
 import { useDeck } from '../decks/useDeck';
@@ -25,13 +25,21 @@ export default function Review() {
   const [answering, setAnswering] = useState(false);
   const [reviewLoading, setReviewLoading] = useState(false);
 
+  const deckCardsRef = useRef(deckCards);
+  useEffect(() => {
+    deckCardsRef.current = deckCards;
+  }, [deckCards]);
+
   const load = useCallback(async () => {
     if (!id) return;
     setReviewLoading(true);
     try {
       await refresh();
       const now = new Date();
-      const filtered = deckCards.filter((c) => isDue(c.due_at ?? now.toISOString(), now));
+      // Usa ref para ter sempre os cards mais recentes sem re-disparar o effect
+      const filtered = deckCardsRef.current.filter((c) =>
+        isDue(c.due_at ?? now.toISOString(), now)
+      );
       const shuffled = shuffle(filtered);
       setCards(shuffled);
       setIndex(0);
@@ -44,7 +52,7 @@ export default function Review() {
     } finally {
       setReviewLoading(false);
     }
-  }, [id, deckCards, refresh]);
+  }, [id, refresh]); // SEM deckCards: evita re-disparar o effect a cada mudança do provider
 
   useEffect(() => {
     load();
