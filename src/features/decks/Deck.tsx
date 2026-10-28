@@ -11,6 +11,7 @@ import {
   TrashIcon,
 } from '../../shared/ui/icons';
 import Header from '../../components/ui/Header';
+import { tokens } from '../../design/tokens';
 
 type Params = { id: string };
 
@@ -57,7 +58,7 @@ export default function Deck() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${(deck?.name || 'baralho').replace(/\s+/g, '_')}.json`;
+      a.download = `${(deck?.name || 'baralho').replace(/\\s+/g, '_')}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -94,129 +95,183 @@ export default function Deck() {
   return (
     <div className="page">
       <Header title={deck.name} showBack backTo="/" />
-      <header style={{ marginBottom: '1.5rem' }}>
-        <div className="card section">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
-              <div style={{ textAlign: 'center' }}>
-                <span
-                  style={{
-                    display: 'block',
-                    fontSize: '1.5rem',
-                    fontWeight: '700',
-                    color: 'var(--rose-600)',
-                  }}
-                >
-                  {total}
-                </span>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--muted)' }}>
-                  total
-                </span>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <span
-                  style={{
-                    display: 'block',
-                    fontSize: '1.5rem',
-                    fontWeight: '700',
-                    color: 'var(--ok)',
-                  }}
-                >
-                  {mastered}
-                </span>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--muted)' }}>
-                  dominados
-                </span>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <span
-                  style={{
-                    display: 'block',
-                    fontSize: '1.5rem',
-                    fontWeight: '700',
-                    color: 'var(--err)',
-                  }}
-                >
-                  {dueToday}
-                </span>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--muted)' }}>
-                  pendentes hoje
-                </span>
-              </div>
-              <div style={{ textAlign: 'center' }}>
-                <span
-                  style={{
-                    display: 'block',
-                    fontSize: '1.5rem',
-                    fontWeight: '700',
-                    color: 'var(--ink)',
-                  }}
-                >
-                  {accuracy}%
-                </span>
-                <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--muted)' }}>
-                  taxa de acerto
-                </span>
-              </div>
-            </div>
-            <div className="ecg-progress">
-              <div className="ecg-progress__fill" style={{ width: `${progress}%` }} />
-            </div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--muted)', textAlign: 'center' }}>
-              {mastered} de {total} dominados
-            </p>
-          </div>
-        </div>
-      </header>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      {/* Título e stats do baralho */}
+      <section className="card section" style={{ marginBottom: tokens.space[6] }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: tokens.space[4],
+          }}
+        >
+          {/* Estatísticas em grid 2x2 */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: tokens.space[3] }}>
+            <div style={{ textAlign: 'center' }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: tokens.colors.primary,
+                }}
+              >
+                {total}
+              </span>
+              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+                total
+              </span>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: tokens.colors.ok,
+                }}
+              >
+                {mastered}
+              </span>
+              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+                dominados
+              </span>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: tokens.colors.err,
+                }}
+              >
+                {dueToday}
+              </span>
+              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+                pendentes hoje
+              </span>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: tokens.colors.ink,
+                }}
+              >
+                {accuracy}%
+              </span>
+              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+                taxa de acerto
+              </span>
+            </div>
+          </div>
+
+          {/* Barra de progresso */}
+          <div className="ecg-progress">
+            <div className="ecg-progress__fill" style={{ width: `${progress}%` }} />
+          </div>
+          <p style={{ fontSize: '0.875rem', color: tokens.colors.muted, textAlign: 'center' }}>
+            {mastered} de {total} dominados
+          </p>
+        </div>
+      </section>
+
+      {/* Ações — hierarquia visual */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.space[3] }}>
+        {/* Ação primária: Revisar (largura total) */}
         <button
           className="btn btn-primary"
           onClick={() => navigate(`/decks/${id!}/review`)}
           disabled={!hasCards}
-          style={{ minHeight: '56px', fontSize: '1.1rem', width: '100%' }}
+          style={{ minHeight: '56px', fontSize: '1.125rem', width: '100%' }}
         >
           {hasCards ? 'Revisar' : 'Sem cartões para revisar'}
         </button>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
-          <button
-            className="btn"
-            onClick={() => navigate(`/decks/${id}/edit`)}
-            style={{ minHeight: '48px', width: '100%' }}
-            title="Editar baralho"
-          >
-            <PencilIcon size={18} style={{ verticalAlign: 'middle' }} /> Editar
-          </button>
-          <button
-            className="btn"
-            onClick={handleExport}
-            disabled={exporting || !hasCards}
-            style={{ minHeight: '48px', width: '100%' }}
-          >
-            <DownloadIcon size={18} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />
-            {exporting ? 'Exportando…' : 'Exportar JSON'}
-          </button>
-        </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+
+        {/* Ações secundárias e terciárias */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: tokens.space[2] }}>
+          {/* Secundário: Adicionar cartão */}
           <button
             className="btn"
             onClick={() => navigate(`/novo-card?deckId=${id}`)}
+            disabled={!hasCards}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.5rem',
+              gap: tokens.space[3],
               flex: 1,
-              minHeight: '44px',
+              minHeight: '48px',
+              padding: `${tokens.space[3]} ${tokens.space[5]}`,
+              border: 'var(--border)',
+              background: tokens.colors.surface,
+              color: tokens.colors.ink,
             }}
           >
-            <PlusIcon size={16} style={{ verticalAlign: 'middle' }} /> Adicionar cartão
+            <PlusIcon size={16} style={{ verticalAlign: 'middle' }} />
+            Adicionar cartão
           </button>
+
+          {/* Terciários: Editar + Exportar (menu ou lado a lado) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: tokens.space[2] }}>
+            <button
+              className="btn"
+              onClick={() => navigate(`/decks/${id}/edit`)}
+              style={{
+                minHeight: '48px',
+                width: '100%',
+                padding: `${tokens.space[3]} ${tokens.space[5]}`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: tokens.space[3],
+                border: 'var(--border)',
+                background: tokens.colors.surface,
+                color: tokens.colors.ink,
+              }}
+              title="Editar baralho"
+            >
+              <PencilIcon size={18} style={{ verticalAlign: 'middle' }} />
+              Editar
+            </button>
+            <button
+              className="btn"
+              onClick={handleExport}
+              disabled={exporting || !hasCards}
+              style={{
+                minHeight: '48px',
+                width: '100%',
+                padding: `${tokens.space[3]} ${tokens.space[5]}`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: tokens.space[3],
+                border: 'var(--border)',
+                background: tokens.colors.surface,
+                color: tokens.colors.ink,
+              }}
+            >
+              <DownloadIcon size={18} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />
+              {exporting ? 'Exportando…' : 'Exportar JSON'}
+            </button>
+          </div>
         </div>
       </div>
 
-      <h2 style={{ marginTop: '2rem' }}>Cartões ({cards.length})</h2>
+      {/* Lista de cartões */}
+      <h2
+        style={{
+          fontFamily: tokens.typography.fontHeading,
+          fontSize: tokens.typography.fontSize.xl,
+          color: tokens.colors.ink,
+          margin: `${tokens.space[6]} 0 ${tokens.space[4]} 0`,
+        }}
+      >
+        Cartões ({cards.length})
+      </h2>
+
       {cards.length === 0 ? (
-        <div className="empty-state">
+        <div className="empty-state" style={{ padding: `${tokens.space[8]} ${tokens.space[4]}` }}>
           <InfoIcon size={32} style={{ marginBottom: '0.75rem', display: 'block' }} />
           <h3>Nenhum cartão ainda</h3>
           <p>Adicione um na tela de edição.</p>
@@ -224,28 +279,40 @@ export default function Deck() {
       ) : (
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {cards.map((card) => (
-            <li key={card.id} className="card section">
+            <li key={card.id} className="card section" style={{ marginBottom: tokens.space[4] }}>
               <div
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '0.75rem',
+                  alignItems: 'flex-start',
+                  gap: tokens.space[4],
                 }}
               >
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <strong>#{card.card_code}</strong>
-                  <p style={{ marginTop: '0.25rem', color: 'var(--muted)' }}>{card.front_text}</p>
+                  <strong style={{ color: tokens.colors.primary }}>#{card.card_code}</strong>
+                  <p style={{ marginTop: tokens.space[2], color: tokens.colors.muted }}>
+                    {card.front_text}
+                  </p>
+                  <p
+                    style={{
+                      marginTop: tokens.space[2],
+                      fontSize: '0.875rem',
+                      color: tokens.colors.secondary,
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    {card.back_text}
+                  </p>
                 </div>
                 <button
                   className="btn btn-danger"
                   style={{
-                    padding: '0.375rem 0.75rem',
+                    padding: `${tokens.space[2]} ${tokens.space[4]}`,
                     fontSize: '0.875rem',
                     minHeight: 'auto',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.5rem',
+                    gap: tokens.space[2],
                   }}
                   onClick={() =>
                     deleteCard(card.id).catch(() =>
@@ -253,7 +320,8 @@ export default function Deck() {
                     )
                   }
                 >
-                  <TrashIcon size={16} style={{ verticalAlign: 'middle' }} /> Excluir
+                  <TrashIcon size={16} style={{ verticalAlign: 'middle' }} />
+                  Excluir
                 </button>
               </div>
             </li>
