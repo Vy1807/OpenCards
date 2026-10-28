@@ -1,84 +1,34 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { signIn, signUp } from '../../entities/user/api/auth';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './useAuth';
+import AuthForm from './AuthForm';
 import { UserIcon } from '../../shared/ui/icons';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
 
 export default function Login() {
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      if (mode === 'login') {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password);
-      }
-      navigate(from);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro de autenticação.');
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/');
     }
-  };
+  }, [user, loading, navigate]);
 
-  return (
-    <div className="page" style={{ maxWidth: '400px' }}>
-      <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <UserIcon size={28} style={{ flexShrink: 0 }} />{' '}
-        {mode === 'login' ? 'Entrar' : 'Criar conta'}
-      </h1>
-      {error && <p style={{ color: 'var(--danger)', marginBottom: '1rem' }}>{error}</p>}
-      <form onSubmit={handleSubmit} className="card section">
-        <Input
-          label="E-mail"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          fullWidth
-          error={error && mode === 'login' ? error : undefined}
-        />
-        <Input
-          label="Senha"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          fullWidth
-        />
-        <Button
-          variant="solid"
-          type="submit"
-          disabled={loading}
-          fullWidth
-          style={{ minHeight: '44px' }}
-        >
-          {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : 'Criar conta'}
-        </Button>
-      </form>
-      <p style={{ marginTop: '1rem', fontSize: '0.875rem', textAlign: 'center' }}>
-        {mode === 'login' ? 'Não tem uma conta? ' : 'Já tem uma conta? '}
-        <button
-          type="button"
-          className="btn"
-          onClick={() => setMode(mode === 'login' ? 'signup' : 'login')}
-          style={{ color: 'var(--accent)', fontWeight: '600', padding: 0 }}
-        >
-          {mode === 'login' ? 'Crie uma' : 'Faça login'}
-        </button>
-      </p>
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <div className="auth-card">
+          <div className="auth-brand">
+            <UserIcon size={32} style={{ verticalAlign: 'middle' }} />
+            <span className="auth-brand-name">OpenCards</span>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--color-primary)', borderRight: '2px solid transparent', animation: 'spin 1s linear infinite' }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <AuthForm mode="login" setMode={() => {}} onAuthenticated={() => navigate('/')} />;
 }
