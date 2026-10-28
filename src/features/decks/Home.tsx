@@ -374,7 +374,7 @@ export default function Home() {
             const total = deck.cards_count ?? 0;
             const progress = total > 0 ? Math.round((0 / total) * 100) : 0;
             return (
-              <li key={deck.id} style={{ cursor: 'pointer' }}>
+              <li key={deck.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/decks/${deck.id}`)}>
                 <Card
                   padded="lg"
                   shadowed
