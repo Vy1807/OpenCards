@@ -19,7 +19,8 @@
 | IMP-13 | Acessibilidade formulários incompleta | `htmlFor`/`id` faltando em alguns inputs | 🟡 Média | Resolvido | T-211/212: A11y formulários + Review | 2026-10-28 |
 | IMP-14 | Decisão HDN-05 (Kanban ↔ Decks) pendente | Arquitetura incoerente; T-214 bloqueado | 🟡 Média | Resolvido | Decisão PO: Opção A (manter separado) | 2026-10-28 |
 | IMP-15 | Snapshots UI não atualizados (Node 18 local) | Regressão visual não detectada | 🟡 Média | Aberto | T-301: CI Node 20 roda `--update` | — |
-| IMP-16 | DEK-06: Adicionar cartão rápido não implementado | UX: precisa ir em Editar para criar 1 cartão | 🟡 Média | Aberto | T-302: Botão "Adicionar cartão" em `/decks/:id` | — |
+|| IMP-16 | DEK-06: Adicionar cartão rápido não implementado | UX: precisa ir em Editar para criar 1 cartão | 🟡 Média | Resolvido | T-302: Botão "Adicionar cartão" em `/decks/:id` | 2026-10-30 |
+|| IMP-17 | Review piscando / não funciona | Review tela reinicia a cada resposta (useEffect re-dispara por deckCards) | 🔴 Crítica | Resolvido | useRef deckCards + load deps [id, refresh] | 2026-10-30 |
 
 ---
 
