@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { shuffle } from '../../shared/lib/shuffle';
 import { useDeck } from '../decks/useDeck';
-import { isDue } from '../../shared/lib/schedule';
+import { isDue, INTERVALS_DAYS } from '../../shared/lib/schedule';
 import type { Card } from '../../entities/card/model/card';
 import Flashcard from './Flashcard';
 import Confetti from './Confetti';
@@ -12,6 +12,15 @@ import ProgressBar from '../../components/ui/ProgressBar';
 import { tokens } from '../../design/tokens';
 
 type Params = { id: string };
+
+const INTERVAL_LABELS: Record<number, string> = {
+  0: 'Amanhã',
+  1: 'Em 1 dia',
+  3: 'Em 3 dias',
+  7: 'Em 1 semana',
+  14: 'Em 2 semanas',
+  30: 'Em 1 mês',
+};
 
 export default function Review() {
   const navigate = useNavigate();
@@ -37,7 +46,6 @@ export default function Review() {
     try {
       await refresh();
       const now = new Date();
-      // Usa ref para ter sempre os cards mais recentes sem re-disparar o effect
       const filtered = deckCardsRef.current.filter((c) =>
         isDue(c.due_at ?? now.toISOString(), now)
       );
@@ -53,7 +61,7 @@ export default function Review() {
     } finally {
       setReviewLoading(false);
     }
-  }, [id, refresh]); // SEM deckCards: evita re-disparar o effect a cada mudança do provider
+  }, [id, refresh]);
 
   useEffect(() => {
     load();
@@ -72,7 +80,6 @@ export default function Review() {
       await new Promise((r) => setTimeout(r, 400));
 
       try {
-        // aciona scheduleNext (intervalos Leitner 0/1/3/7/14/30) no servidor
         await answerCard(card.id, isCorrect);
       } catch {
         // erro ao salvar, continua mesmo assim
@@ -145,8 +152,10 @@ export default function Review() {
     const confetti = pct >= 80;
     return (
       <div className="page">
-        <h1>Revisão concluída!</h1>
-        <div className="card section" style={{ textAlign: 'center' }}>
+        <header style={{ marginBottom: tokens.space[6] }}>
+          <Header title="Revisão concluída" showBack backTo={`/decks/${id}`} />
+        </header>
+        <section className="card section" style={{ textAlign: 'center' }}>
           <div className="ring" style={{ transform: `rotate(${-45 + ringDeg}deg)` }}>
             <span style={{ fontSize: '1.5rem', fontWeight: '700', color: tokens.colors.ink }}>
               {correct}/{total}
@@ -165,9 +174,9 @@ export default function Review() {
           <div
             style={{
               display: 'flex',
-              gap: '0.5rem',
+              gap: tokens.space[3],
               justifyContent: 'center',
-              marginBottom: '1rem',
+              marginBottom: tokens.space[4],
             }}
           >
             <button
@@ -183,142 +192,200 @@ export default function Review() {
                 setFinished(false);
               }}
               disabled={wrong === 0}
+              style={{ minHeight: '48px', flex: 1 }}
             >
               {wrong > 0 ? `Revisar erros (${wrong})` : 'Revisar erros'}
             </button>
-            <button className="btn" onClick={handleRestart}>
+            <button className="btn" onClick={handleRestart} style={{ minHeight: '48px', flex: 1 }}>
               Revisar de novo
             </button>
           </div>
           <button
             className="btn"
             onClick={() => navigate(`/decks/${id}`)}
-            style={{ marginTop: '0.5rem' }}
+            style={{ marginTop: tokens.space[3], minHeight: '44px' }}
           >
             Voltar ao baralho
           </button>
-        </div>
+        </section>
       </div>
     );
   }
 
+  // Calcula o próximo intervalo se o usuário acertar este card
+  const nextIntervalDays = card.box != null ? INTERVALS_DAYS[Math.min(card.box + 1, 5)] : 1;
+  const nextIntervalLabel = INTERVAL_LABELS[nextIntervalDays] ?? 'Em breve';
+
   return (
     <div className="page">
-      <Header title="Revisão do dia" showBack backTo={`/decks/${id}`} />
+      {/* Cabeçalho sem sobreposição: título + contador lado a lado */}
+      <header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: tokens.space[6],
+          gap: tokens.space[4],
+        }}
+      >
+        <Header title="Revisão do dia" showBack backTo={`/decks/${id}`} />
+        <span
+          style={{
+            fontFamily: tokens.typography.fontHeading,
+            fontSize: tokens.typography.fontSize.lg,
+            fontWeight: '700',
+            color: tokens.colors.ink,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {index + 1} de {total}
+        </span>
+      </header>
 
-      {/* Barra de progresso ECG (avanca a cada card respondido) */}
+      {/* Barra de progresso ECG */}
       <ProgressBar
         value={progress}
         label={`${done} de ${total} respondido`}
-        style={{ marginBottom: '1rem' }}
+        style={{ marginBottom: tokens.space[4] }}
       />
+
+      {/* Contador do card */}
       <p
         style={{
-          fontSize: tokens.typography.fontSize.xs,
+          fontSize: tokens.typography.fontSize.sm,
           color: tokens.colors.muted,
           textAlign: 'center',
-          marginBottom: '1rem',
+          marginBottom: tokens.space[4],
         }}
       >
         Cartão {index + 1} de {total}
       </p>
+
+      {/* Card grande centralizado com altura mínima e scroll interno */}
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.5rem',
-          marginBottom: '1rem',
+          gap: tokens.space[3],
+          marginBottom: tokens.space[6],
         }}
       >
-        <Flashcard card={card} flipped={flipped} onFlip={handleFlip} />
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '420px',
+            minHeight: '320px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.5rem',
+          }}
+        >
+          <Flashcard card={card} flipped={flipped} onFlip={handleFlip} />
+        </div>
         <p
           style={{
             fontSize: tokens.typography.fontSize.xs,
             color: tokens.colors.muted,
+            textAlign: 'center',
           }}
         >
           Vire o card para ver a resposta e avaliar
         </p>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem', width: '100%', marginBottom: '1rem' }}>
-        <button
-          className="btn"
-          onClick={() => handleAnswer(false)}
-          disabled={answering || !flipped}
-          tabIndex={0}
-          aria-label="Difícil - Errei"
+      {/* Botões de avaliação com próximo intervalo */}
+      <div style={{ width: '100%', maxWidth: '420px', marginBottom: tokens.space[6] }}>
+        <div style={{ display: 'flex', gap: tokens.space[3], width: '100%', marginBottom: tokens.space[3] }}>
+          <button
+            className="btn"
+            onClick={() => handleAnswer(false)}
+            disabled={answering || !flipped}
+            tabIndex={0}
+            aria-label="Difícil - Errei"
+            style={{
+              flex: 1,
+              minHeight: '56px',
+              fontSize: '1rem',
+              background: 'transparent',
+              color: tokens.colors.err,
+              border: `1px solid ${tokens.colors.err}`,
+            }}
+          >
+            <ArrowLeftIcon size={16} aria-hidden="true" /> Difícil
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => handleAnswer(true)}
+            disabled={answering || !flipped}
+            tabIndex={0}
+            aria-label="Bom - Acertei"
+            style={{ flex: 1, minHeight: '56px', fontSize: '1rem' }}
+          >
+            Bom <CheckIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
+          </button>
+          <button
+            className="btn"
+            onClick={() => handleAnswer(true)}
+            disabled={answering || !flipped}
+            tabIndex={0}
+            aria-label="Fácil - Acertei fácil"
+            style={{
+              flex: 1,
+              minHeight: '56px',
+              fontSize: '1rem',
+              background: 'transparent',
+              color: tokens.colors.ok,
+              border: `1px solid ${tokens.colors.ok}`,
+            }}
+          >
+            Fácil <ArrowRightIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
+          </button>
+        </div>
+
+        {/* Próximo intervalo */}
+        <p
           style={{
-            flex: 1,
-            minHeight: '56px',
-            fontSize: '1.1rem',
-            background: 'transparent',
-            color: tokens.colors.err,
-            border: `1px solid ${tokens.colors.err}`,
+            fontSize: tokens.typography.fontSize.sm,
+            color: tokens.colors.primary,
+            fontWeight: '600',
+            textAlign: 'center',
+            margin: 0,
           }}
         >
-          <ArrowLeftIcon size={16} aria-hidden="true" /> Difícil
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={() => handleAnswer(true)}
-          disabled={answering || !flipped}
-          tabIndex={0}
-          aria-label="Bom - Acertei"
-          style={{ flex: 1, minHeight: '56px', fontSize: '1.1rem' }}
-        >
-          Bom <CheckIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
-        </button>
-        <button
-          className="btn"
-          onClick={() => handleAnswer(true)}
-          disabled={answering || !flipped}
-          tabIndex={0}
-          aria-label="Fácil - Acertei fácil"
-          style={{
-            flex: 1,
-            minHeight: '56px',
-            fontSize: '1.1rem',
-            background: 'transparent',
-            color: tokens.colors.ok,
-            border: `1px solid ${tokens.colors.ok}`,
-          }}
-        >
-          Fácil <ArrowRightIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
-        </button>
+          Se acertar: próximo review {nextIntervalLabel}
+        </p>
       </div>
 
-      <div
-        style={{
-          marginTop: '1rem',
-          display: 'flex',
-          gap: '0.5rem',
-          justifyContent: 'center',
-        }}
-      >
+      {/* Botão mostrar/esconder resposta */}
+      <div style={{ width: '100%', maxWidth: '420px', marginBottom: tokens.space[4] }}>
         <button
           className="btn"
           onClick={handleFlip}
           disabled={answering}
           tabIndex={0}
           aria-label={flipped ? 'Esconder resposta' : 'Mostrar resposta'}
-          style={{ minHeight: '44px' }}
+          style={{ width: '100%', minHeight: '44px' }}
         >
           {flipped ? 'Esconder resposta' : 'Mostrar resposta'}
         </button>
       </div>
+
+      {/* Dica de teclado coerente com controles */}
       <p
         style={{
-          marginTop: '0.5rem',
           color: tokens.colors.muted,
-          fontSize: '0.875rem',
+          fontSize: tokens.typography.fontSize.xs,
           textAlign: 'center',
+          margin: 0,
         }}
       >
-        Espaço/Enter: virar <ArrowRightIcon size={14} style={{ margin: '0 0.25rem' }} />
-        acertei <ArrowLeftIcon size={14} style={{ margin: '0 0.25rem' }} />
-        errei
+        Espaço/Enter: virar{' '}
+        <ArrowRightIcon size={14} style={{ margin: '0 0.25rem', verticalAlign: 'middle' }} />{' '}
+        acertei{' '}
+        <ArrowLeftIcon size={14} style={{ margin: '0 0.25rem', verticalAlign: 'middle' }} /> errei{' '}
+        Esc: sair
       </p>
     </div>
   );

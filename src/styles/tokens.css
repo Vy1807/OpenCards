@@ -296,6 +296,9 @@ h3 {
   align-items: center;
   text-align: center;
   box-shadow: var(--shadow-sm);
+  /* Cartões longos rolam dentro do card (U-324) */
+  overflow-y: auto;
+  max-height: 320px;
 }
 
 .flashcard-face.back {
