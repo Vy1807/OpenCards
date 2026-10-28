@@ -1,0 +1,108 @@
+/* Componentes base do sistema de design (src/components/ui).
+ *
+ * Regras de estado (:hover, :focus-visible, [disabled]) que não podem ser
+ * aplicadas como estilo inline. As cores espelham src/design/tokens.ts e
+ * src/styles/tokens.css — mantê-las sincronizadas quando os tokens mudarem.
+ */
+
+.ui-button {
+  position: relative;
+}
+
+.ui-button:focus-visible {
+  outline: 2px solid #e0527f !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(224, 82, 127, 0.15) !important;
+}
+
+.ui-button:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.ui-button--solid:not(:disabled):hover {
+  background: #c73e6b !important;
+}
+
+.ui-button--outline:not(:disabled):hover {
+  background: #fce4ec !important;
+}
+
+.ui-button--ghost:not(:disabled):hover {
+  background: #fce4ec !important;
+  color: #c73e6b !important;
+}
+
+.ui-input:focus-visible {
+  outline: none !important;
+  border-color: #e0527f !important;
+  box-shadow: 0 0 0 3px rgba(224, 82, 127, 0.15) !important;
+}
+
+.ui-input:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background: #faf2f5 !important;
+}
+
+.ui-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 20, 25, 0.35);
+  animation: ui-modal-fade-in var(--ui-modal-duration, 0.3s) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ui-modal__panel {
+  width: min(92vw, 520px);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #f3d9e1;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(224, 82, 127, 0.12);
+  animation: ui-modal-slide-in var(--ui-modal-duration, 0.3s) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ui-modal {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .ui-modal__panel {
+    background: #2a1d24;
+    border-color: #3a2a30;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@keyframes ui-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-modal-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-modal,
+  .ui-modal__panel {
+    animation: none !important;
+  }
+}
