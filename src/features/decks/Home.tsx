@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDecks } from './useDecks';
-import { streak } from '../../shared/lib/streak';
+import { streak, formatStreak } from '../../shared/lib/streak';
 import StatusPill from '../../components/ui/StatusPill';
 import ProgressBar from '../../components/ui/ProgressBar';
 import Card from '../../components/ui/Card';
@@ -213,7 +213,7 @@ export default function Home() {
               color: tokens.colors.muted,
             }}
           >
-            {currentStreak} dias
+            {formatStreak(currentStreak)}
             <span
               style={{
                 color: tokens.colors.primary,

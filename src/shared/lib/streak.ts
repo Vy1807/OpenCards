@@ -30,3 +30,15 @@ export function streak(reviewedAtDates: string[], now: Date = new Date()): numbe
 
   return count;
 }
+
+/**
+ * Formata a mensagem de streak para exibição ao usuário.
+ * - 0 dias: "Hoje você já revisou"
+ * - 1 dia: "1 dia desde sua última revisão"
+ * - N dias: "N dias desde sua última revisão"
+ */
+export function formatStreak(count: number): string {
+  if (count === 0) return 'Hoje você já revisou';
+  if (count === 1) return '1 dia desde sua última revisão';
+  return `${count} dias desde sua última revisão`;
+}
