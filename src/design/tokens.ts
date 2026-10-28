@@ -43,6 +43,11 @@ export const colors = {
   err: '#E4694F', // errei
   errBg: '#FBF0EC', // fundo suave de erro
 
+  // contraste de texto sobre cores de estado
+  onErr: '#2B2024',   // texto sobre fundo de erro
+  onOk: '#FFFFFF',    // texto sobre fundo de sucesso
+  onPrimary: '#FFFFFF', // texto sobre fundo primário
+
   // desabilitado
   disabledOpacity: 0.55,
 };

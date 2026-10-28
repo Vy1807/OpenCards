@@ -204,7 +204,7 @@ export default function Import() {
               dragActive ? tokens.colors.primary : tokens.colors.primaryLightStronger
             }`,
             borderRadius: tokens.radius.md,
-            background: dragActive ? tokens.colors.primaryLight : '#FDFCFE',
+            background: dragActive ? tokens.colors.primaryLight : tokens.colors.surface,
             padding: tokens.spacing[10],
             textAlign: 'center',
             cursor: 'pointer',

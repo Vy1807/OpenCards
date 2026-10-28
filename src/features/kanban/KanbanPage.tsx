@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertIcon } from '../../shared/ui/icons';
+import { tokens } from '../../design/tokens';
 
 import Board from './components/Board';
 import { createKanbanStore } from './kanbanStore';
@@ -77,8 +78,8 @@ export default function KanbanPage() {
             margin: 0,
             padding: '0.75rem 1rem',
             borderRadius: '0.5rem',
-            background: '#FBF0EC',
-            color: '#B3261E',
+            background: tokens.colors.errBg,
+            color: tokens.colors.err,
             fontSize: '0.875rem',
             display: 'flex',
             alignItems: 'center',

@@ -30,6 +30,11 @@
 
   /* alvos de toque */
   --touch-target: 44px;
+
+  /* contraste de texto sobre cores de estado */
+  --on-err: #2b2024;      /* texto sobre fundo de erro */
+  --on-ok: #ffffff;       /* texto sobre fundo de sucesso */
+  --on-primary: #ffffff;  /* texto sobre fundo primário */
 }
 
 /* modo escuro automático */
@@ -48,6 +53,9 @@
     --err: #e4694f;
     --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --on-err: #f5e8ec;      /* texto sobre fundo de erro */
+    --on-ok: #1e1419;       /* texto sobre fundo de sucesso */
+    --on-primary: #1e1419;  /* texto sobre fundo primário */
   }
 }
 

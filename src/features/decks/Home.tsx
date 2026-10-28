@@ -129,7 +129,7 @@ export default function Home() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#ffffff',
+              color: tokens.colors.onErr,
               fontWeight: '700',
               fontSize: '1.25rem',
               fontFamily: tokens.typography.fontBody,
