@@ -6,6 +6,7 @@ import Home from '../features/decks/Home';
 import Deck from '../features/decks/Deck';
 import DeckEdit from '../features/decks/DeckEdit';
 import Review from '../features/review/Review';
+import { NewCardPage } from '../features/decks/NewCard';
 import Cadastro from '../features/auth/Cadastro';
 
 export function routes() {
@@ -18,6 +19,7 @@ export function routes() {
         <Route path="/decks/:id" element={<Deck />} />
         <Route path="/decks/:id/edit" element={<DeckEdit />} />
         <Route path="/decks/:id/review" element={<Review />} />
+        <Route path="/novo-card" element={<NewCardPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

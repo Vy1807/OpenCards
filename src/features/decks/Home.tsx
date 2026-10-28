@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDecks } from './useDecks';
 import { streak } from '../../shared/lib/streak';
+import StatusPill from '../../components/ui/StatusPill';
 import {
   DeckIcon,
   PlusIcon,
@@ -231,6 +232,11 @@ export default function Home() {
                   <span className="badge badge-neutral">
                     {`${deck.cards_count ?? 0} cartão${deck.cards_count !== 1 ? 's' : ''}`}
                   </span>
+                  {deck.cards_count === 0 ? (
+                    <StatusPill variant="uptodate" />
+                  ) : (
+                    <StatusPill variant="due" count={deck.cards_count} />
+                  )}
                 </div>
                 <span style={{ fontWeight: '600', color: 'var(--rose-600)' }}>
                   {`${deck.cards_count ?? 0} ${deck.cards_count === 1 ? 'cartão' : 'cartões'}`}

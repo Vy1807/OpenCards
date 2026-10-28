@@ -6,5 +6,9 @@ export { default as Card } from './Card';
 export type { CardProps, CardPadding } from './Card';
 export { default as Modal } from './Modal';
 export type { ModalProps } from './Modal';
+export { default as Select } from './Select';
+export type { SelectProps, SelectOption } from './Select';
+export { default as StatusPill } from './StatusPill';
+export type { StatusPillProps, StatusPillVariant } from './StatusPill';
 
 import './ui.css';
