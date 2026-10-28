@@ -84,6 +84,7 @@ export default function Button({
         fontSize: s.fontSize,
         lineHeight: tokens.typography.lineHeight.tight,
         cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabled ? 0.55 : 1,
         transition:
           'border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease',
         outline: 'none',

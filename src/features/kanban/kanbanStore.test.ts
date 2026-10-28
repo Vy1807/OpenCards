@@ -113,10 +113,17 @@ describe('KanbanStore', () => {
     const c1 = store.addCard({ title: 'A', columnId: 'todo' });
     const c2 = store.addCard({ title: 'B', columnId: 'todo' }); // position 1
 
-    const result = ok(store.moveCard(c1.id, 'done', 0) as { ok: true; card: Card });
-    expect(result.status).toBe('DONE');
-    expect(result.columnId).toBe('done');
-    expect(result.position).toBe(0);
+    // Avanço respeita o ciclo de um estágio por vez (TODO -> IN_PROGRESS -> TESTING -> DONE)
+    const r1 = ok(store.moveCard(c1.id, 'in-progress', 0) as { ok: true; card: Card });
+    expect(r1.status).toBe('IN_PROGRESS');
+    expect(r1.columnId).toBe('in-progress');
+    const r2 = ok(store.moveCard(c1.id, 'testing', 0) as { ok: true; card: Card });
+    expect(r2.status).toBe('TESTING');
+    expect(r2.columnId).toBe('testing');
+    const r3 = ok(store.moveCard(c1.id, 'done', 0) as { ok: true; card: Card });
+    expect(r3.status).toBe('DONE');
+    expect(r3.columnId).toBe('done');
+    expect(r3.position).toBe(0);
 
     const todo = store.cards.filter((c) => c.columnId === 'todo');
     expect(todo.map((c) => c.id)).toEqual([c2.id]);

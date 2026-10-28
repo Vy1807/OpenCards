@@ -47,7 +47,7 @@ describe('NewCard', () => {
 
   it('exibe "Em dia" no toggle de importação quando alternado para JSON', () => {
     renderNewCard();
-    fireEvent.click(screen.getByRole('button', { name: /Importar JSON/ }));
+    fireEvent.click(screen.getByRole('radio', { name: /Importar JSON/ }));
     expect(screen.getByPlaceholderText(/CARD-001/)).toBeInTheDocument();
   });
 });

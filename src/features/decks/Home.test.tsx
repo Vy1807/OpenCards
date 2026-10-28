@@ -47,9 +47,9 @@ describe('Home', () => {
 
     expect(await screen.findByText('Cardiologia')).toBeInTheDocument();
     expect(screen.getAllByText('#estudo')[0]).toBeInTheDocument();
-    expect(await screen.findByText('5 cartões')).toBeInTheDocument();
+    expect(screen.getAllByText((text) => text === '5 cart' + String.fromCharCode(0xe3, 0x6f, 0x73))).toHaveLength(1);
     expect(await screen.findByText('Neurologia')).toBeInTheDocument();
-    expect(await screen.findByText('0 cartões')).toBeInTheDocument();
+    expect(screen.getAllByText((text) => text === '0 cart' + String.fromCharCode(0xe3, 0x6f, 0x73))).toHaveLength(1);
   });
 
   it('renders "Novo baralho" button', async () => {

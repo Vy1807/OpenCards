@@ -101,12 +101,13 @@ export default function Cadastro() {
       {sucesso && <p style={{ color: 'var(--ok)', marginBottom: '1rem' }}>{sucesso}</p>}
       <form onSubmit={handleSubmit(onSubmit)} className="card section">
         <div style={{ marginBottom: '1rem' }}>
-          <label className="label">Nome completo</label>
+          <label className="label" htmlFor="nome">Nome completo</label>
           <Controller
             name="nome"
             control={control}
             render={({ field }) => (
               <input
+                id="nome"
                 className="input"
                 type="text"
                 value={field.value}
@@ -118,12 +119,13 @@ export default function Cadastro() {
           {erroCampo('nome')}
         </div>
         <div style={{ marginBottom: '1rem' }}>
-          <label className="label">E-mail</label>
+          <label className="label" htmlFor="email">E-mail</label>
           <Controller
             name="email"
             control={control}
             render={({ field }) => (
               <input
+                id="email"
                 className="input"
                 type="email"
                 value={field.value}
@@ -135,12 +137,13 @@ export default function Cadastro() {
           {erroCampo('email')}
         </div>
         <div style={{ marginBottom: '1rem' }}>
-          <label className="label">Senha</label>
+          <label className="label" htmlFor="senha">Senha</label>
           <Controller
             name="senha"
             control={control}
             render={({ field }) => (
               <input
+                id="senha"
                 className="input"
                 type="password"
                 value={field.value}
@@ -152,12 +155,13 @@ export default function Cadastro() {
           {erroCampo('senha')}
         </div>
         <div style={{ marginBottom: '1rem' }}>
-          <label className="label">Confirmar senha</label>
+          <label className="label" htmlFor="confirmarSenha">Confirmar senha</label>
           <Controller
             name="confirmarSenha"
             control={control}
             render={({ field }) => (
               <input
+                id="confirmarSenha"
                 className="input"
                 type="password"
                 value={field.value}
@@ -169,23 +173,35 @@ export default function Cadastro() {
           {erroCampo('confirmarSenha')}
         </div>
         <div style={{ marginBottom: '1rem' }}>
-          <label className="label">CPF</label>
+          <label className="label" htmlFor="cpf">CPF</label>
           <Controller
             name="cpf"
             control={control}
             render={({ field }) => (
-              <MaskedInput mask="cpf" value={field.value} onChange={field.onChange} required />
+              <MaskedInput
+                id="cpf"
+                mask="cpf"
+                value={field.value}
+                onChange={field.onChange}
+                required
+              />
             )}
           />
           {erroCampo('cpf')}
         </div>
         <div style={{ marginBottom: '1rem' }}>
-          <label className="label">Telefone</label>
+          <label className="label" htmlFor="telefone">Telefone</label>
           <Controller
             name="telefone"
             control={control}
             render={({ field }) => (
-              <MaskedInput mask="telefone" value={field.value} onChange={field.onChange} required />
+              <MaskedInput
+                id="telefone"
+                mask="telefone"
+                value={field.value}
+                onChange={field.onChange}
+                required
+              />
             )}
           />
           {erroCampo('telefone')}

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCards } from '../../app/providers';
 import Button from '../../components/ui/Button';
@@ -22,7 +22,7 @@ export type SimpleImportError = { index: number; reason: string };
  */
 export default function Import() {
   const navigate = useNavigate();
-  const { decks, upsertCard } = useCards();
+  const { decks, upsertCard, fetchDecks } = useCards();
   const [deckId, setDeckId] = useState<string>('');
   const [input, setInput] = useState('');
   const [dragActive, setDragActive] = useState(false);
@@ -35,6 +35,10 @@ export default function Import() {
     type: 'success' | 'error';
     message: string;
   } | null>(null);
+
+  useEffect(() => {
+    fetchDecks();
+  }, [fetchDecks]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();

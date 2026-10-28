@@ -8,7 +8,7 @@ describe('StatusPill', () => {
     render(<StatusPill variant="uptodate" />);
     const pill = screen.getByText('Em dia');
     expect(pill).toBeInTheDocument();
-    expect(pill).toHaveStyle('background-color: transparent');
+    expect(pill).toHaveStyle('background-color: rgba(0, 0, 0, 0)');
     expect(pill).toHaveStyle('color: #E0527F');
   });
 

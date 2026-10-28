@@ -25,7 +25,7 @@ describe('Card', () => {
       </Card>
     );
     expect(container.firstChild).toHaveStyle('padding: 0');
-    expect(container.firstChild).toHaveStyle('border: none');
+    expect(container.firstChild).toHaveStyle({ borderStyle: 'none' });
     expect(container.firstChild).toHaveStyle('box-shadow: none');
   });
 

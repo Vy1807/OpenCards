@@ -56,7 +56,7 @@ describe('Import (tela de importacao em lote)', () => {
     fireEvent.change(textarea, { target: { value: '{ json quebrado' } });
     fireEvent.click(screen.getByRole('button', { name: /Validar/ }));
 
-    await waitFor(() => expect(screen.getByText(/Itens invalidos:/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Itens inválidos:/)).toBeInTheDocument());
     expect(screen.getByRole('button', { name: /Importar cards/ })).toBeDisabled();
   });
 
@@ -77,7 +77,7 @@ describe('Import (tela de importacao em lote)', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /Validar/ }));
 
-    await waitFor(() => expect(screen.getByText(/Validos:/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Válidos:/)).toBeInTheDocument());
     const select = screen.getByRole('combobox', { name: /Baralho de destino/ });
     fireEvent.change(select, { target: { value: 'd1' } });
 
@@ -90,7 +90,7 @@ describe('Import (tela de importacao em lote)', () => {
       front_text: 'Qual e a capital?',
       back_text: 'Brasilia',
     });
-    await waitFor(() => expect(screen.getByText(/importado com sucesso/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/importados com sucesso/)).toBeInTheDocument());
   });
 
   it('le um arquivo JSON via drop (FileReader) e habilita a validacao', async () => {
@@ -112,6 +112,6 @@ describe('Import (tela de importacao em lote)', () => {
       )
     );
     fireEvent.click(screen.getByRole('button', { name: /Validar/ }));
-    await waitFor(() => expect(screen.getByText(/Validos:/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Válidos:/)).toBeInTheDocument());
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 import Cadastro from './Cadastro';
 import { signUp, getCurrentUser } from '../../entities/user/api/auth';
 import { upsertProfile } from '../../entities/user/api/profiles';
@@ -18,10 +19,10 @@ const mockGetCurrentUser = vi.mocked(getCurrentUser);
 const mockUpsertProfile = vi.mocked(upsertProfile);
 
 beforeEach(() => {
-  render(<Cadastro />);
+  render(<MemoryRouter><Cadastro /></MemoryRouter>);
   vi.clearAllMocks();
   mockSignUp.mockResolvedValue(undefined);
-  mockGetCurrentUser.mockResolvedValue({ user: { id: 'u1' } } as never);
+  mockGetCurrentUser.mockResolvedValue({ id: 'u1' } as never);
   mockUpsertProfile.mockResolvedValue({} as never);
 });
 
@@ -47,7 +48,7 @@ const preencherFormulario = () => {
 describe('Cadastro', () => {
   it('cadastra o usuario, persiste o perfil no Supabase e avisa ao usuario', async () => {
     preencherFormulario();
-    fireEvent.submit(screen.getByRole('form'));
+    fireEvent.submit(screen.getByRole('button', { name: 'Criar conta' }).closest('form')!);
 
     await waitFor(() =>
       expect(screen.getByText('Conta criada com sucesso. Redirecionando...')).toBeInTheDocument()
@@ -71,7 +72,7 @@ describe('Cadastro', () => {
     fireEvent.change(screen.getByLabelText('Confirmar senha'), {
       target: { value: 'senha1234' },
     });
-    fireEvent.submit(screen.getByRole('form'));
+    fireEvent.submit(screen.getByRole('button', { name: 'Criar conta' }).closest('form')!);
 
     await waitFor(() => expect(screen.getByText('CPF invalido.')).toBeInTheDocument());
     expect(screen.getByText('Senha deve ter pelo menos 8 caracteres.')).toBeInTheDocument();
@@ -82,7 +83,7 @@ describe('Cadastro', () => {
   it('mapeia erro de e-mail ja cadastrado do Supabase para o campo inline', async () => {
     mockSignUp.mockRejectedValueOnce(new Error('User already registered'));
     preencherFormulario();
-    fireEvent.submit(screen.getByRole('form'));
+    fireEvent.submit(screen.getByRole('button', { name: 'Criar conta' }).closest('form')!);
 
     await waitFor(() => expect(screen.getByText(/Este e-mail ja esta em uso/)).toBeInTheDocument());
     expect(mockGetCurrentUser).not.toHaveBeenCalled();
@@ -100,10 +101,9 @@ describe('Cadastro', () => {
     preencherFormulario();
 
     const botao = screen.getByRole('button', { name: 'Criar conta' });
-    fireEvent.submit(screen.getByRole('form'));
+    fireEvent.submit(screen.getByRole('button', { name: 'Criar conta' }).closest('form')!);
     expect(botao).toBeDisabled();
-
-    resolver!();
+    await waitFor(() => resolver!());
     await waitFor(() => expect(botao).toBeEnabled());
   });
 });

@@ -5,6 +5,8 @@ import { maskDefinition, type MaskKind } from '../lib/masks';
 export interface MaskedInputProps {
   /** Mascara aplicada na entrada. */
   mask: MaskKind;
+  /** id do input, para associar a um rótulo externo (htmlFor). */
+  id?: string;
   /** Valor desmascarado (apenas digitos), controlado pelo form. */
   value: string;
   /** Disparado com o valor desmascarado a cada mudanca do usuario. */
@@ -23,6 +25,7 @@ export interface MaskedInputProps {
  * por fora (ex.: reset), preservando o cursor do usuario.
  */
 export function MaskedInput({
+  id,
   mask,
   value,
   onChange,
@@ -33,7 +36,8 @@ export function MaskedInput({
 }: MaskedInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const maskRef = useRef<ReturnType<typeof IMask> | null>(null);
-  const id = useId();
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
 
   useEffect(() => {
     const input = inputRef.current;
@@ -64,12 +68,12 @@ export function MaskedInput({
   return (
     <div className={className ?? undefined}>
       {label && (
-        <label className="label" htmlFor={`masked-input-${id}`}>
+        <label className="label" htmlFor={inputId}>
           {label}
         </label>
       )}
       <input
-        id={`masked-input-${id}`}
+        id={inputId}
         ref={inputRef}
         className={`input ${error ? 'error' : ''}`}
         required={required}
