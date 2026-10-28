@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-// @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDeck } from './useDeck';
 import { useCards } from '../../app/providers/CardsProvider';
@@ -41,7 +40,7 @@ export default function DeckEdit() {
     updateDeck,
     deleteDeck,
     deleteCard,
-  } = useDeck(id);
+  } = useDeck(id!);
   const { updateCard } = useCards();
   const [deckName, setDeckName] = useState('');
   const [deckTag, setDeckTag] = useState('');

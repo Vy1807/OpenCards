@@ -1,4 +1,3 @@
-// @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
 import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { ThemeSwitcher } from '../shared/ui';
 import { LogoutIcon } from '../shared/ui/icons';

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-// @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
 import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import { AuthProvider, CardsProvider } from '../app/providers';

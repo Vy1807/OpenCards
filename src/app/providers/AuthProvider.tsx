@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     restoreSession();
 
-    const { data: authChannel } = onAuthStateChange((_event, session) => {
+    const authChannel = onAuthStateChange((_event, session) => {
       if (!mounted) return;
       const event = _event as 'SIGNED_IN' | 'SIGNED_OUT' | 'USER_UPDATED';
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {

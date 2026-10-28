@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
 import { useNavigate, useLocation } from 'react-router-dom';
 import { signIn, signUp } from '../../entities/user/api/auth';
 import { UserIcon } from '../../shared/ui/icons';

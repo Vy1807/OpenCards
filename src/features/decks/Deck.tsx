@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-// @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDeck } from './useDeck';
 import { exportCards } from '../../shared/lib/exportCards';
@@ -17,7 +16,7 @@ type Params = { id: string };
 export default function Deck() {
   const navigate = useNavigate();
   const { id } = useParams<Params>();
-  const { deck, cards, loading, refresh, getDeckStats, deleteCard } = useDeck(id);
+  const { deck, cards, loading, refresh, getDeckStats, deleteCard } = useDeck(id!);
   const [stats, setStats] = useState<{
     total: number;
     mastered: number;

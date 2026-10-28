@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-// @ts-expect-error - react-router-dom v7 tipos não exportam esses membros no .d.ts, mas funcionam em tempo de execução.
 import { useNavigate } from 'react-router-dom';
 import { useDecks } from './useDecks';
 import { streak } from '../../shared/lib/streak';

@@ -4,6 +4,21 @@ import '@testing-library/jest-dom';
 import Board from './components/Board';
 import { type Column, type Card } from './kanban';
 
+// Polyfill de localStorage para rodar também em ambiente 'node' (sem DOM).
+// Sob jsdom (CI) o valor nativo é mantido.
+if (typeof globalThis.localStorage === 'undefined') {
+  const storageData = new Map<string, string>();
+  Object.defineProperty(globalThis, 'localStorage', {
+    configurable: true,
+    value: {
+      getItem: (key: string) => storageData.get(key) ?? null,
+      setItem: (key: string, value: string) => storageData.set(key, value),
+      removeItem: (key: string) => storageData.delete(key),
+      clear: () => storageData.clear(),
+    },
+  });
+}
+
 function buildCards(overrides: Partial<Card>[] = []): Card[] {
   const base: Card[] = [
     { id: 'c-1', title: 'Pesquisar sintomas', status: 'TODO', columnId: 'todo', position: 0, updatedAt: new Date().toISOString() },
@@ -30,7 +45,7 @@ describe('Board', () => {
     localStorage.clear();
   });
 
-  it('renderiza o quadro com três colunas e os respectivos cartões', () => {
+  it('renderiza o quadro com quatro colunas e os respectivos cartões', () => {
     const cards = buildCards();
     render(<Board columns={columns} cards={cards} onCardMove={() => {}} />);
 
@@ -48,18 +63,32 @@ describe('Board', () => {
     expect(screen.getByTestId('column-done')).toContainElement(screen.getByTestId('card-c-4'));
   });
 
-  it('renderiza cartões como arrastáveis com pílula de status colorida', () => {
+  it('pílula de status TODO usa a cor do TO DO (#757575)', () => {
     const cards = buildCards();
     render(<Board columns={columns} cards={cards} onCardMove={() => {}} />);
 
     const card = screen.getByTestId('card-c-1');
     expect(card).toHaveAttribute('draggable', 'true');
-    expect(card).toHaveStyle('border-color: #757575');
 
-    const doneCards = buildCards([{ status: 'DONE' }]);
-    render(<Board columns={columns} cards={[...cards.slice(0, 3), doneCards[0]]} onCardMove={() => {}} />);
-    const doneCard = screen.getByTestId('card-c-4');
-    expect(doneCard).toHaveStyle('border-color: #4FA38A');
+    const pill = card.querySelector('.ui-kanban-status-pill');
+    expect(pill).not.toBeNull();
+    expect(pill).toHaveStyle('border-color: #757575');
+  });
+
+  it('pílula de status DONE usa a cor ok (#4FA38A)', () => {
+    const card: Card = {
+      id: 'c-done',
+      title: 'Feito',
+      status: 'DONE',
+      columnId: 'done',
+      position: 0,
+      updatedAt: new Date().toISOString(),
+    };
+    render(<Board columns={columns} cards={[card]} onCardMove={() => {}} />);
+
+    const pill = screen.getByTestId('card-c-done').querySelector('.ui-kanban-status-pill');
+    expect(pill).not.toBeNull();
+    expect(pill).toHaveStyle('border-color: #4FA38A');
   });
 
   it('coluna sem cartões exibe estado vazio', () => {
@@ -86,6 +115,7 @@ describe('Board', () => {
     } as unknown as React.DragEvent<HTMLDivElement>);
 
     expect(onCardMove).toHaveBeenCalledTimes(1);
-    expect(onCardMove).toHaveBeenCalledWith('c-1', 'todo', 'done', 0);
+    // A coluna destino já tem c-4, então o cartão é anexado na posição 1 (final da coluna).
+    expect(onCardMove).toHaveBeenCalledWith('c-1', 'todo', 'done', 1);
   });
 });
