@@ -9,11 +9,11 @@ beforeEach(() => {
 });
 
 describe('ThemeSwitcher', () => {
-  it('renders a select with all 8 themes, defaulting to slate', () => {
+  it('renders a select with all 5 themes, defaulting to rosa-menta', () => {
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' });
     expect(select).toBeInTheDocument();
-    expect(select).toHaveValue('slate');
+    expect(select).toHaveValue('rosa-menta');
 
     for (const theme of THEMES) {
       expect(screen.getByRole('option', { name: theme.name })).toBeInTheDocument();
@@ -24,31 +24,31 @@ describe('ThemeSwitcher', () => {
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' }) as HTMLSelectElement;
 
-    expect(document.documentElement.getAttribute('data-theme')).toBe('slate');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('rosa-menta');
 
-    fireEvent.change(select, { target: { value: 'cobalt' } });
-    expect(document.documentElement.getAttribute('data-theme')).toBe('cobalt');
-    expect(document.documentElement.getAttribute('data-theme')).not.toBe('slate');
-    expect(localStorage.getItem('selected-theme')).toBe('cobalt');
+    fireEvent.change(select, { target: { value: 'azul-laranja' } });
+    expect(document.documentElement.getAttribute('data-theme')).toBe('azul-laranja');
+    expect(document.documentElement.getAttribute('data-theme')).not.toBe('rosa-menta');
+    expect(localStorage.getItem('selected-theme')).toBe('azul-laranja');
 
-    fireEvent.change(select, { target: { value: 'zinc' } });
-    expect(document.documentElement.getAttribute('data-theme')).toBe('zinc');
-    expect(document.documentElement.getAttribute('data-theme')).not.toBe('cobalt');
-    expect(localStorage.getItem('selected-theme')).toBe('zinc');
+    fireEvent.change(select, { target: { value: 'dark-neon' } });
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark-neon');
+    expect(document.documentElement.getAttribute('data-theme')).not.toBe('azul-laranja');
+    expect(localStorage.getItem('selected-theme')).toBe('dark-neon');
   });
 
   it('restores the persisted theme on mount', () => {
-    localStorage.setItem('selected-theme', 'rose');
+    localStorage.setItem('selected-theme', 'roxo-amarelo');
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' }) as HTMLSelectElement;
-    expect(select.value).toBe('rose');
-    expect(document.documentElement.getAttribute('data-theme')).toBe('rose');
+    expect(select.value).toBe('roxo-amarelo');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('roxo-amarelo');
   });
 
   it('only sets data-theme for the active theme', () => {
     render(<ThemeSwitcher />);
     const select = screen.getByRole('combobox', { name: 'Tema' }) as HTMLSelectElement;
-    fireEvent.change(select, { target: { value: 'zinc' } });
-    expect(document.documentElement.getAttribute('data-theme')).toBe('zinc');
+    fireEvent.change(select, { target: { value: 'verde-coral' } });
+    expect(document.documentElement.getAttribute('data-theme')).toBe('verde-coral');
   });
 });

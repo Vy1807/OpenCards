@@ -1,23 +1,20 @@
 import { useState, useCallback, useEffect } from 'react';
 
-/* The 8 color themes delivered by the design-token task (T-310/T-311).
+/* The 5 new color themes delivered by the design system task (T-311).
  * Keys map 1:1 to the [data-theme="<key>"] selectors in src/styles/color-themes.css.
  */
 export type Theme = { key: string; name: string };
 
 export const THEMES: Theme[] = [
-  { key: 'slate', name: 'Slate' },
-  { key: 'cobalt', name: 'Cobalt' },
-  { key: 'amber', name: 'Amber' },
-  { key: 'rose', name: 'Rose' },
-  { key: 'indigo', name: 'Indigo' },
-  { key: 'teal', name: 'Teal' },
-  { key: 'violet', name: 'Violet' },
-  { key: 'zinc', name: 'Zinc' },
+  { key: 'rosa-menta', name: 'Rosa Suave & Menta' },
+  { key: 'azul-laranja', name: 'Azul Foco & Laranja Estudo' },
+  { key: 'roxo-amarelo', name: 'Roxo Criativo & Amarelo Sol' },
+  { key: 'verde-coral', name: 'Verde Concentração & Coral' },
+  { key: 'dark-neon', name: 'Dark Mode Neon' },
 ];
 
 const THEME_STORAGE_KEY = 'selected-theme';
-const DEFAULT_THEME = 'slate';
+const DEFAULT_THEME = 'rosa-menta';
 
 function isThemeKey(value: string | null): value is (typeof THEMES)[number]['key'] {
   return value !== null && THEMES.some((t) => t.key === value);

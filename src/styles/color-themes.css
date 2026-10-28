@@ -1,51 +1,23 @@
-/* 8 functional color themes — adopted from the design-token task (T-310/T-311).
+/* 5 color themes — T-311 (New color themes).
  *
  * Each [data-theme="<key>"] sets the --color-* design tokens AND the legacy component
  * variables (--bg, --surface, --ink, --muted, --line, --rose-500/600) so the
  * whole interface re-colors when the theme switcher swaps data-theme on <html>.
  *
- * Usage (theme switcher task):
- *   document.documentElement.dataset.theme swaps between slate .. zinc
+ * Usage:
+ *   document.documentElement.dataset.theme swaps between the 5 theme keys
  *   and the choice is persisted in localStorage (key: selected-theme).
  */
-/* default theme: slate */
-:root[data-theme="slate"] {
-  --color-primary: #334155;
-  --color-secondary: #64748b;
-  --color-background: #ffffff;
-  --color-surface: #f1f5f9;
-  --color-text: #0f172a;
-  --color-accent: #0ea5e9;
-  --color-text-on-primary: #ffffff;
-}
 
-[data-theme="slate"] {
-  --color-primary: #334155;
-  --color-secondary: #64748b;
-  --color-background: #ffffff;
-  --color-surface: #f1f5f9;
-  --color-text: #0f172a;
-  --color-accent: #0ea5e9;
-  --color-text-on-primary: #ffffff;
-
-  /* legacy component variables re-colored to slate */
-  --bg: var(--color-background);
-  --surface: var(--color-surface);
-  --ink: var(--color-text);
-  --muted: var(--color-secondary);
-  --line: var(--color-secondary);
-  --rose-500: var(--color-primary);
-  --rose-600: var(--color-primary);
-}
-
-[data-theme="cobalt"] {
-  --color-primary: #1d4ed8;
-  --color-secondary: #3b82f6;
-  --color-background: #ffffff;
-  --color-surface: #eff6ff;
-  --color-text: #0f172a;
-  --color-accent: #2563eb;
-  --color-text-on-primary: #ffffff;
+/* default theme: rosa-menta */
+:root[data-theme="rosa-menta"] {
+  --color-primary: #F7A8B8;
+  --color-secondary: #98D8AA;
+  --color-background: #FFF7F9;
+  --color-surface: #FFFFFF;
+  --color-text: #4A4E69;
+  --color-accent: #F7A8B8;
+  --color-text-on-primary: #4A4E69;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -56,14 +28,14 @@
   --rose-600: var(--color-primary);
 }
 
-[data-theme="amber"] {
-  --color-primary: #b45309;
-  --color-secondary: #f59e0b;
-  --color-background: #ffffff;
-  --color-surface: #fffbeb;
-  --color-text: #0f172a;
-  --color-accent: #d97706;
-  --color-text-on-primary: #ffffff;
+[data-theme="rosa-menta"] {
+  --color-primary: #F7A8B8;
+  --color-secondary: #98D8AA;
+  --color-background: #FFF7F9;
+  --color-surface: #FFFFFF;
+  --color-text: #4A4E69;
+  --color-accent: #F7A8B8;
+  --color-text-on-primary: #4A4E69;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -74,14 +46,14 @@
   --rose-600: var(--color-primary);
 }
 
-[data-theme="rose"] {
-  --color-primary: #be123c;
-  --color-secondary: #fb7185;
-  --color-background: #ffffff;
-  --color-surface: #fff1f2;
-  --color-text: #0f172a;
-  --color-accent: #e11d48;
-  --color-text-on-primary: #ffffff;
+[data-theme="azul-laranja"] {
+  --color-primary: #2A6F97;
+  --color-secondary: #FF9F1C;
+  --color-background: #F8F9FA;
+  --color-surface: #FFFFFF;
+  --color-text: #2A6F97;
+  --color-accent: #FF9F1C;
+  --color-text-on-primary: #FFFFFF;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -92,14 +64,14 @@
   --rose-600: var(--color-primary);
 }
 
-[data-theme="indigo"] {
-  --color-primary: #3730a3;
-  --color-secondary: #818cf8;
-  --color-background: #ffffff;
-  --color-surface: #eef2ff;
-  --color-text: #0f172a;
-  --color-accent: #6366f1;
-  --color-text-on-primary: #ffffff;
+[data-theme="roxo-amarelo"] {
+  --color-primary: #6C5CE7;
+  --color-secondary: #FDCB6E;
+  --color-background: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-text: #2D3436;
+  --color-accent: #6C5CE7;
+  --color-text-on-primary: #FFFFFF;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -110,14 +82,14 @@
   --rose-600: var(--color-primary);
 }
 
-[data-theme="teal"] {
-  --color-primary: #0f766e;
-  --color-secondary: #14b8a6;
-  --color-background: #ffffff;
-  --color-surface: #ccfbf1;
-  --color-text: #0f172a;
-  --color-accent: #0d9488;
-  --color-text-on-primary: #ffffff;
+[data-theme="verde-coral"] {
+  --color-primary: #2E7D32;
+  --color-secondary: #FF6B6B;
+  --color-background: #EFECE6;
+  --color-surface: #FFFFFF;
+  --color-text: #2E7D32;
+  --color-accent: #2E7D32;
+  --color-text-on-primary: #FFFFFF;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
@@ -128,32 +100,14 @@
   --rose-600: var(--color-primary);
 }
 
-[data-theme="violet"] {
-  --color-primary: #6d28d9;
-  --color-secondary: #8b5cf6;
-  --color-background: #ffffff;
-  --color-surface: #f5f3ff;
-  --color-text: #0f172a;
-  --color-accent: #7c3aed;
-  --color-text-on-primary: #ffffff;
-
-  --bg: var(--color-background);
-  --surface: var(--color-surface);
-  --ink: var(--color-text);
-  --muted: var(--color-secondary);
-  --line: var(--color-secondary);
-  --rose-500: var(--color-primary);
-  --rose-600: var(--color-primary);
-}
-
-[data-theme="zinc"] {
-  --color-primary: #404040;
-  --color-secondary: #71717a;
-  --color-background: #ffffff;
-  --color-surface: #f9fafb;
-  --color-text: #0f172a;
-  --color-accent: #a1a1aa;
-  --color-text-on-primary: #ffffff;
+[data-theme="dark-neon"] {
+  --color-primary: #1E1B2E;
+  --color-secondary: #00F5D4;
+  --color-background: #1E1B2E;
+  --color-surface: #2A2640;
+  --color-text: #F8F9FA;
+  --color-accent: #00F5D4;
+  --color-text-on-primary: #00F5D4;
 
   --bg: var(--color-background);
   --surface: var(--color-surface);
