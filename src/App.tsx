@@ -11,24 +11,30 @@ import Review from './pages/Review'
 export function ProtectedRoute({ children }: { children: React.ReactElement }) {
   const [session, setSession] = React.useState<{ user: { id: string } | null } | null>(null)
   const [loading, setLoading] = React.useState(true)
+  const [initialized, setInitialized] = React.useState(false)
 
   React.useEffect(() => {
     let mounted = true
 
-    // Carrega a sessão inicial
+    // Carrega a sessão inicial UMA VEZ
     // @ts-ignore - getSession exists at runtime but types may be outdated
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!mounted) return
       setSession({ user: session?.user ?? null })
       setLoading(false)
+      setInitialized(true)
     })
 
-    // Escuta mudanças de autenticação
+    // Escuta mudanças de autenticação (login/logout explícito)
     // @ts-ignore - onAuthStateChange exists at runtime but types may be outdated
     const { data: authChannel } = supabase.auth.onAuthStateChange((_event: string, session: { user: { id: string } } | null) => {
       if (!mounted) return
-      setSession({ user: session?.user ?? null })
-      setLoading(false)
+      // Só atualiza se for um evento real de login/logout, não refresh de token
+      // SIGNED_IN / SIGNED_OUT / USER_UPDATED são eventos reais
+      if (_event === 'SIGNED_IN' || _event === 'SIGNED_OUT' || _event === 'USER_UPDATED') {
+        setSession({ user: session?.user ?? null })
+      }
+      // Não muda loading após inicialização - evita redirect durante navegação
     })
 
     return () => {
@@ -39,7 +45,8 @@ export function ProtectedRoute({ children }: { children: React.ReactElement }) {
 
   if (loading) return null
 
-  if (!session?.user) {
+  // Só redireciona se NÃO inicializou OU se inicializou sem usuário
+  if (!initialized || !session?.user) {
     return <Navigate to="/login" replace />
   }
 
