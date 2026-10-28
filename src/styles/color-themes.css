@@ -117,3 +117,17 @@
   --rose-500: var(--color-primary);
   --rose-600: var(--color-primary);
 }
+
+/* Theme menu dropdown */
+.theme-menu__dropdown {
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 0.25rem;
+  min-width: 200px;
+}
+
+.theme-menu__dropdown button:hover {
+  background-color: var(--surface-hover, #f4ecf0);
+}

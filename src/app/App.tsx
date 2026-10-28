@@ -1,5 +1,5 @@
 import { BrowserRouter, useNavigate } from 'react-router-dom';
-import { ThemeSwitcher } from '../shared/ui';
+import { ThemeMenu } from '../shared/ui';
 import { LogoutIcon } from '../shared/ui/icons';
 import { AuthProvider, CardsProvider, useAuth } from './providers';
 import { routes } from './routes';
@@ -51,7 +51,7 @@ export default function App() {
       <AuthProvider>
         <CardsProvider>
           <div className="app" style={{ display: 'flex', flexDirection: 'column' }}>
-            <ThemeSwitcher />
+            <ThemeMenu />
             <Sessao />
             <AppRoutes />
           </div>
