@@ -57,7 +57,7 @@
 | T-ID | Título | História | Critérios de Aceite | Status |
 |------|--------|----------|---------------------|--------|
 | T-214 | Decisão e implementação HDN-05: Kanban ↔ Decks | HDN-05 | **Decisão PO registrada em `decisoes.md`**: (a) manter separado OU (b) migration `ALTER TABLE kanban_cards ADD COLUMN deck_id UUID REFERENCES decks(id)` + FK + UI para vincular card→deck; se (b), `handleEditCard` navega para `/decks/{deckId}/edit` correto | ✅ DONE (Opção A: manter separado) |
-| T-215 | Migration `cards_count` NOT NULL DEFAULT 0 | HDN-04 | `ALTER TABLE decks ALTER COLUMN cards_count SET NOT NULL; ALTER TABLE decks ALTER COLUMN cards_count SET DEFAULT 0;` (ou view/computed column); type `Deck` remove `?` em `cards_count` | ✅ DONE |
+| T-215 | Contagem de cards por baralho via relacionamento | HDN-04 | **Cancelada**: coluna `cards_count` não existe em `decks`. Implementado: `select('..., cards(count)')` nas queries `getDecks`/`getDeck`; tipo `Deck` com `cards_count?: number` opcional vindo do relacionamento; realtime não mantém contador manual | ✅ DONE (abordagem corrigida) |
 | T-216 | Signed URL expiração 1h + refresh on-demand | HDN-06 | `uploadImage` cria signed URL 1h (`60*60`); `Flashcard`/`Card` components chamam `createSignedUrl` on-demand antes de renderizar imagem; cache curto (5min) em `useImageUrl` hook | ✅ DONE |
 
 ---

@@ -6,25 +6,36 @@ import type { Card, Deck, DeckStats, NewCardInput } from '../model/card';
 export async function getDecks(): Promise<Deck[]> {
   const { data, error } = await supabase
     .from('decks')
-    .select('*, cards(count)')
+    .select('id, user_id, name, tag, created_at, cards(count)')
     .order('created_at', { ascending: false });
 
   if (error) throw error;
   return (data || []).map((d) => ({
-    ...d,
-    cards_count: Number(d.cards_count) || 0,
-  })) as unknown as Deck[];
+    id: d.id,
+    user_id: d.user_id,
+    name: d.name,
+    tag: d.tag,
+    created_at: d.created_at,
+    cards_count: d.cards?.[0]?.count ?? 0,
+  })) as Deck[];
 }
 
 export async function getDeck(id: string): Promise<Deck> {
   const { data, error } = await supabase
     .from('decks')
-    .select('*, cards(count)')
+    .select('id, user_id, name, tag, created_at, cards(count)')
     .eq('id', id)
     .single();
 
   if (error) throw error;
-  return { ...data, cards_count: Number(data.cards_count) || 0 } as unknown as Deck;
+  return {
+    id: data.id,
+    user_id: data.user_id,
+    name: data.name,
+    tag: data.tag,
+    created_at: data.created_at,
+    cards_count: data.cards?.[0]?.count ?? 0,
+  } as Deck;
 }
 
 export async function createDeck(name: string, tag: string | null): Promise<Deck> {

@@ -325,14 +325,14 @@ export function CardsProvider({ children }: { children: ReactNode }) {
                 old: oldRecord,
               } = payload as Record<string, unknown>;
               if (eventType === 'INSERT' && newRecord) {
-                const deck = newRecord as Deck & { cards_count?: number };
+                const deck = newRecord as Deck;
                 setDecks((current) =>
                   current.find((d) => d.id === deck.id)
                     ? current
-                    : [{ ...deck, cards_count: deck.cards_count ?? 0 }, ...current]
+                    : [deck, ...current]
                 );
               } else if (eventType === 'UPDATE' && newRecord) {
-                const updated = newRecord as Deck & { cards_count?: number };
+                const updated = newRecord as Deck;
                 setDecks((current) =>
                   current.map((d) => (d.id === updated.id ? { ...d, ...updated } : d))
                 );
@@ -366,28 +366,14 @@ export function CardsProvider({ children }: { children: ReactNode }) {
                 setCards((current) =>
                   current.find((c) => c.id === card.id) ? current : [...current, card]
                 );
-                setDeck((d) =>
-                  d && d.id === card.deck_id
-                    ? {
-                        ...d,
-                        cards_count: Math.max(0, (d.cards_count ?? 0) + 1),
-                      }
-                    : d
-                );
+                // cards_count é calculado on-demand via select('..., cards(count)')
+                // não mantemos contador manual para evitar dessincronização
               } else if (eventType === 'UPDATE' && newRecord) {
                 const card = newRecord as Card;
                 setCards((current) => current.map((c) => (c.id === card.id ? card : c)));
               } else if (eventType === 'DELETE' && oldRecord) {
                 const card = oldRecord as Card;
                 setCards((current) => current.filter((c) => c.id !== card.id));
-                setDeck((d) =>
-                  d && d.id === card.deck_id
-                    ? {
-                        ...d,
-                        cards_count: Math.max(0, (d.cards_count ?? 0) - 1),
-                      }
-                    : d
-                );
               }
             }
           )
