@@ -59,7 +59,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       const event = _event as 'SIGNED_IN' | 'SIGNED_OUT' | 'USER_UPDATED';
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') {
-        setUser(session?.user ? { id: session.user.id } : null);
+        setUser((prev) => {
+          const next = session?.user ? { id: session.user.id } : null;
+          if (prev?.id === next?.id) return prev;
+          return next;
+        });
       }
       // Não altera loading após a inicialização: evita redirect durante navegação.
     });
