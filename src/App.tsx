@@ -8,7 +8,7 @@ import Deck from './pages/Deck'
 import DeckEdit from './pages/DeckEdit'
 import Review from './pages/Review'
 
-export function ProtectedRoute({ children }: { children: React.ReactElement }) {
+export function ProtectedRoute({ children }: { children?: React.ReactNode }) {
   const [session, setSession] = React.useState<{ user: { id: string } | null } | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [initialized, setInitialized] = React.useState(false)
@@ -58,19 +58,11 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route
-          element={
-            <ProtectedRoute>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/decks/:id" element={<Deck />} />
-                <Route path="/decks/:id/edit" element={<DeckEdit />} />
-                <Route path="/decks/:id/review" element={<Review />} />
-              </Routes>
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Navigate to="/" replace />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/decks/:id" element={<Deck />} />
+          <Route path="/decks/:id/edit" element={<DeckEdit />} />
+          <Route path="/decks/:id/review" element={<Review />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
