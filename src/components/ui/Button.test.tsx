@@ -1,9 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Button from './Button';
 
 describe('Button', () => {
+  beforeEach(() => {
+    document.documentElement.setAttribute('data-theme', 'rosa-menta');
+  });
+
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-theme');
+  });
+
   it('renderiza com papel de botão e texto informado', () => {
     render(<Button variant="solid">Salvar card</Button>);
     expect(screen.getByRole('button', { name: 'Salvar card' })).toBeInTheDocument();
@@ -12,9 +20,8 @@ describe('Button', () => {
   it('aplica variante solid com cor primária de fundo', () => {
     const { container } = render(<Button variant="solid">Salvar</Button>);
     const button = container.firstChild as HTMLElement;
-    expect(button).toHaveStyle('background-color: #E0527F');
-    // happy-dom returns uppercase hex for colors
-    expect(button).toHaveStyle('color: #FFFFFF');
+    expect(button).toHaveStyle('background-color: #F7A8B8');
+    expect(button).toHaveStyle('color: #33364D');
   });
 
   it('desabilitado aplica opacidade e desativa interação', () => {

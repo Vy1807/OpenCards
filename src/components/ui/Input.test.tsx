@@ -1,9 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Input from './Input';
 
 describe('Input', () => {
+  beforeEach(() => {
+    document.documentElement.setAttribute('data-theme', 'rosa-menta');
+  });
+
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-theme');
+  });
+
   it('associa label ao input via htmlFor', () => {
     render(<Input label="Nome do baralho" id="deck-name" />);
     const input = screen.getByLabelText('Nome do baralho');

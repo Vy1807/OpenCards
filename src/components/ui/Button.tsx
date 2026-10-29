@@ -35,18 +35,18 @@ const SIZE: Record<
 
 const VARIANT: Record<ButtonVariant, React.CSSProperties> = {
   solid: {
-    background: tokens.colors.primary,
-    color: tokens.colors.inkInverse,
-    border: `1px solid ${tokens.colors.primary}`,
+    background: 'var(--role-acao-principal)',
+    color: 'var(--role-texto-sobre-acao)',
+    border: '1px solid var(--role-acao-principal)',
   },
   outline: {
     background: 'transparent',
-    color: tokens.colors.primary,
-    border: `1px solid ${tokens.colors.primary}`,
+    color: 'var(--role-acao-principal)',
+    border: '1px solid var(--role-acao-principal)',
   },
   ghost: {
     background: 'transparent',
-    color: tokens.colors.muted,
+    color: 'var(--role-texto-suave)',
     border: 'none',
   },
 };

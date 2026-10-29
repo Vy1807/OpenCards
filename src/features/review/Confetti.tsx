@@ -28,7 +28,17 @@ export default function Confetti({ ariaHidden = true }: ConfettiProps) {
       life: number;
       color: string;
     }[] = [];
-    const colors = ['#E0527F', '#F5A3BE', '#FCE4EC', '#4FA38A', '#C73E6B'];
+    // Lê as cores de papel do tema atual via CSS (não usa hex solto em componente)
+    const roleColors = [
+      getComputedStyle(document.documentElement).getPropertyValue('--role-acao-principal').trim(),
+      getComputedStyle(document.documentElement).getPropertyValue('--role-superficie-2').trim(),
+      getComputedStyle(document.documentElement).getPropertyValue('--role-sucesso').trim(),
+      getComputedStyle(document.documentElement).getPropertyValue('--role-aviso').trim(),
+      getComputedStyle(document.documentElement).getPropertyValue('--role-erro').trim(),
+    ].filter(Boolean);
+
+    // Fallback seguro: se as variáveis CSS não carregarem, usa a ação principal
+    const fallbackColor = roleColors[0] || 'var(--role-acao-principal)';
 
     for (let i = 0; i < 60; i++) {
       particles.push({
@@ -37,7 +47,7 @@ export default function Confetti({ ariaHidden = true }: ConfettiProps) {
         vx: (Math.random() - 0.5) * 20,
         vy: (Math.random() - 0.5) * 20 - 5,
         life: 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
+        color: roleColors[Math.floor(Math.random() * roleColors.length)] || fallbackColor,
       });
     }
 

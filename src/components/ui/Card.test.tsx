@@ -1,9 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Card from './Card';
 
 describe('Card', () => {
+  beforeEach(() => {
+    document.documentElement.setAttribute('data-theme', 'rosa-menta');
+  });
+
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-theme');
+  });
+
   it('renderiza filhos com superfície, raio e borda do token', () => {
     const { container } = render(
       <Card padded="md" shadowed>

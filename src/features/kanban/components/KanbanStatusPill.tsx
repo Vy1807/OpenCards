@@ -26,8 +26,8 @@ export default function KanbanStatusPill({
         alignItems: 'center',
         gap: '0.375rem',
         borderRadius: tokens.radius.full,
-        border: `1px solid ${color}`,
-        color,
+        border: `1px solid var(${color})`,
+        color: `var(${color})`,
         background: 'transparent',
         padding: '0.25rem 0.625rem',
         fontFamily: tokens.typography.fontBody,
@@ -42,7 +42,7 @@ export default function KanbanStatusPill({
           width: '8px',
           height: '8px',
           borderRadius: '50%',
-          background: color,
+          background: `var(${color})`,
         }}
       />
       {STATUS_LABELS[status]}

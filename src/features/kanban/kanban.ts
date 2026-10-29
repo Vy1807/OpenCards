@@ -17,14 +17,14 @@ export const STATUS_LABELS: Record<CardStatus, string> = {
 
 /**
  * Pill colors per status (UI/UX spec, sections 3.3 and 4.1).
- * IN_PROGRESS and DONE reuse the project brand tokens (primary / ok) so the
- * kanban board stays consistent with the rest of the interface.
+ * Usa variáveis CSS de papel de cor (--role-*) para respeitar o tema ativo.
+ * Nenhum hex solto em componente.
  */
 export const STATUS_COLORS: Record<CardStatus, string> = {
-  TODO: '#757575',
-  IN_PROGRESS: '#E0527F',
-  TESTING: '#B45309',
-  DONE: '#4FA38A',
+  TODO: '--role-texto-suave',
+  IN_PROGRESS: '--role-acao-principal',
+  TESTING: '--role-aviso',
+  DONE: '--role-sucesso',
 };
 
 export type ColumnId = 'todo' | 'in-progress' | 'testing' | 'done';

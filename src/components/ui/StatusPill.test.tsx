@@ -1,9 +1,17 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import StatusPill from './StatusPill';
 
 describe('StatusPill', () => {
+  beforeEach(() => {
+    document.documentElement.setAttribute('data-theme', 'rosa-menta');
+  });
+
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-theme');
+  });
+
   it('exibe "Em dia" (outline, rosa claro) quando o baralho não tem pendentes', () => {
     render(<StatusPill variant="uptodate" />);
     const pill = screen.getByText('Em dia');
@@ -18,7 +26,6 @@ describe('StatusPill', () => {
     const pill = screen.getByText('3 para hoje');
     expect(pill).toBeInTheDocument();
     expect(pill).toHaveStyle('background-color: #E0527F');
-    // happy-dom returns uppercase hex for colors
     expect(pill).toHaveStyle('color: #FFFFFF');
   });
 

@@ -39,10 +39,12 @@ const columns: Column[] = [
 describe('Board', () => {
   beforeEach(() => {
     localStorage.clear();
+    document.documentElement.setAttribute('data-theme', 'rosa-menta');
   });
 
   afterEach(() => {
     localStorage.clear();
+    document.documentElement.removeAttribute('data-theme');
   });
 
   it('renderiza o quadro com quatro colunas e os respectivos cartões', () => {
@@ -63,7 +65,7 @@ describe('Board', () => {
     expect(screen.getByTestId('column-done')).toContainElement(screen.getByTestId('card-c-4'));
   });
 
-  it('pílula de status TODO usa a cor do TO DO (#757575)', () => {
+  it('pílula de status TODO usa a cor do TO DO (--role-texto-suave)', () => {
     const cards = buildCards();
     render(<Board columns={columns} cards={cards} onCardMove={() => {}} />);
 
@@ -72,10 +74,10 @@ describe('Board', () => {
 
     const pill = card.querySelector('.ui-kanban-status-pill');
     expect(pill).not.toBeNull();
-    expect(pill).toHaveStyle('border-color: #757575');
+    expect(pill).toHaveStyle('border-color: #666A86');
   });
 
-  it('pílula de status DONE usa a cor ok (#4FA38A)', () => {
+  it('pílula de status DONE usa a cor ok (--role-sucesso)', () => {
     const card: Card = {
       id: 'c-done',
       title: 'Feito',
@@ -88,7 +90,7 @@ describe('Board', () => {
 
     const pill = screen.getByTestId('card-c-done').querySelector('.ui-kanban-status-pill');
     expect(pill).not.toBeNull();
-    expect(pill).toHaveStyle('border-color: #4FA38A');
+    expect(pill).toHaveStyle('border-color: #1F6B3A');
   });
 
   it('coluna sem cartões exibe estado vazio', () => {
