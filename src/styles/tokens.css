@@ -1,5 +1,19 @@
 /* design tokens — minimalista, rosa, medicina */
 
+/* Fonte Figtree — empacotada localmente (PARTE 1, seção 3).
+   Arquivos .woff2 devem ser colocados em src/fonts/figtree/.
+   Fallback para fontes do sistema se os arquivos não estiverem disponíveis. */
+@font-face {
+  font-family: 'Figtree';
+  src: url('../fonts/figtree/Figtree-Bold.woff2') format('woff2'),
+       url('../fonts/figtree/Figtree-SemiBold.woff2') format('woff2'),
+       url('../fonts/figtree/Figtree-Medium.woff2') format('woff2'),
+       url('../fonts/figtree/Figtree-Regular.woff2') format('woff2');
+  font-weight: 400, 500, 600, 700, 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* cores claras */
   --bg: #fff7f9;
