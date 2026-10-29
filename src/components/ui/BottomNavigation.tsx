@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LayersIcon, RefreshIcon, PlusIcon } from '../../shared/ui/icons';
 
 /**
  * Barra de navegação inferior para celular/tablet (PARTE 1, seção 8).
  * Apenas visível em telas < 1024px. Contém:
  * - Baralhos, Revisar, Tarefas
- * - Botão "+" rosa central para criar do contexto
+ * - Botão "+" rosa rosa central para criar do contexto
+ * - Some na tela de revisão
  */
 export default function BottomNavigation({
   onCreate,
@@ -15,6 +16,12 @@ export default function BottomNavigation({
   activeTab?: 'decks' | 'review' | 'tasks';
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Oculta barra de baixo na tela de revisão
+  const isReview = location?.pathname?.includes('/review') ?? false;
+
+  if (isReview) return null;
 
   return (
     <nav className="bottom-nav">
