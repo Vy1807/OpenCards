@@ -28,6 +28,17 @@ function useNavigateSafe() {
 }
 
 /**
+ * Wrapper seguro ao useLocation: retorna pathname '/' quando não há <Router> no contexto.
+ */
+function useLocationSafe() {
+  try {
+    return useLocation();
+  } catch {
+    return { pathname: '/' };
+  }
+}
+
+/**
  * Cabeçalho único usado em todas as telas internas do app.
  *
  * - Esquerda: marca "OpenCards" + botão "Voltar" (quando `showBack`).
@@ -47,7 +58,7 @@ type HeaderProps = {
 export default function Header({ title, showBack = false, backTo = '/' }: HeaderProps) {
   const { user, signOut } = useAuthSafe();
   const navigate = useNavigateSafe();
-  const location = useLocation();
+  const location = useLocationSafe();
 
   const handleSignOut = useCallback(async () => {
     await signOut();

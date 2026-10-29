@@ -331,7 +331,7 @@ export default function Home() {
         </div>
       ) : (
         <ul
-          className="home-degrades-grid"
+          className="home-decks-grid"
           style={{
             listStyle: 'none',
             padding: 0,

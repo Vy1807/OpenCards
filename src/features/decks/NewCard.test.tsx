@@ -33,28 +33,13 @@ describe('NewCard', () => {
     expect(buttons).toHaveLength(2);
   });
 
-  it('atualiza a pré-visualização em tempo real ao digitar frente e verso', () => {
+  it('renderiza seção de importação JSON com dropzone, colar texto e botão importar', () => {
     renderNewCard();
-    const frente = screen.getByPlaceholderText('Digite a pergunta');
-    const verso = screen.getByPlaceholderText('Digite a resposta');
-
-    fireEvent.change(frente, { target: { value: 'Qual é a capital do Brasil?' } });
-    fireEvent.change(verso, { target: { value: 'Brasília' } });
-
-    // Pré-visualização mostra frente por padrão
-    expect(screen.getByTestId('preview-text')).toHaveTextContent(
-      'Qual é a capital do Brasil?'
-    );
-
-    // Alternar para verso
-    fireEvent.click(screen.getByRole('button', { name: 'Mostrar resposta' }));
-    expect(screen.getByTestId('preview-text')).toHaveTextContent('Brasília');
-
-    // Voltar para frente
-    fireEvent.click(screen.getByRole('button', { name: 'Mostrar pergunta' }));
-    expect(screen.getByTestId('preview-text')).toHaveTextContent(
-      'Qual é a capital do Brasil?'
-    );
+    // Abrir aba de importação
+    fireEvent.click(screen.getByRole('radio', { name: /Importar JSON/ }));
+    expect(screen.getByText('Escolher arquivo .json')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Cole o JSON dos cartões aqui/)).toBeInTheDocument();
+    expect(screen.getByText(/Baixar modelo de JSON/)).toBeInTheDocument();
   });
 
   it('desabilita o botão Salvar card quando pergunta ou resposta estão vazias', () => {

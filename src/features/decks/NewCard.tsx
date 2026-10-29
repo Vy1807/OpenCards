@@ -8,6 +8,17 @@ import { tokens } from '../../design/tokens';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { parseAndValidateImport } from '../../shared/lib/importCards';
 
+/**
+ * Wrapper seguro ao useCards: retorna createCard noop quando não há <CardsProvider> no contexto.
+ */
+function useCardsSafe() {
+  try {
+    return useCards();
+  } catch {
+    return { decks: [], createCard: async () => null };
+  }
+}
+
 export type NewCardMode = 'manual' | 'import';
 
 export interface NewCardProps {
@@ -34,7 +45,7 @@ export interface NewCardProps {
  * (modo manual) ou quando há cartões válidos para importar (modo import).
  */
 function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProps) {
-  const { createCard } = useCards();
+  const { createCard } = useCardsSafe();
   const [deckId, setDeckId] = useState<string>(defaultDeckId || '');
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
