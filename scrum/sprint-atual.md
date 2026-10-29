@@ -53,11 +53,11 @@
 | T-S5-06-02 | Menu da conta (avatar, nome, e-mail, linha divisória, Sair) | S5-06 | Menu da conta: avatar, [nome da pessoa], e-mail, linha divisória, "Sair" em cor de alerta. "Sair" existe só aqui. (seção 8) | ✅ done | T-S5-04-03 |
 | T-S5-06-03 | Esc fecha menus, foco volta ao botão que abriu | S5-06 | Teclado: Esc fecha os menus (tema e conta) e o foco volta ao botão que os abriu. Tudo funciona por teclado. (seção 8) | ✅ done | T-S5-06-01, T-S5-06-02 |
 | T-S5-06-04 | Migração localStorage de tema salvo | S5-06 | Preferência de tema salva pelo usuário migra sem perda. Valor antigo/desconhecido → rosa-menta (padrão D5). Chave localStorage: selected-theme. Migração ocorre ao montar o App. (seção 6, decisão D5) | ✅ done | T-S5-01-02 |
-| T-S5-07-01 | Painel dividido 50/50 desktop (login) | S5-07 | Desktop: painel dividido 50/50. Esquerda fundo Principal com logo, frase e dois cartões decorativos (pergunta/resposta, resposta em menta). Direita fundo Fundo com formulário max-width 432 px centralizado na vertical. (seção 9.1, breakpoint 1280px) | ⬜ TODO | T-S5-01-02, T-S5-02-03, T-S5-03-01 |
-| T-S5-07-02 | Controle segmentado Entrar | Criar conta | S5-07 | Controle segmentado Entrar | Criar conta (fundo Superfície 2, aba ativa branca). (seção 9.1) | ⬜ TODO | T-S5-07-01 |
-| T-S5-07-03 | Campos E-mail e Senha com ícone olho, link "Esqueci minha senha" | S5-07 | Título "Bem-vinda de volta". Campo E-mail (placeholder nome@email.com). Campo Senha (placeholder "Sua senha", ícone de olho, link "Esqueci minha senha" à direita do rótulo). (seção 9.1) | ⬜ TODO | T-S5-07-02 |
-| T-S5-07-04 | Botão Entrar, estados erro e carregando | S5-07 | Botão Entrar. Estado erro: faixa perigo suave com ícone ("E-mail ou senha incorretos. Confira e tente de novo."). Estado carregando: spinner + "Entrando…" + botão desabilitado. (seção 9.1) | ⬜ TODO | T-S5-07-03 |
-| T-S5-07-05 | Já logado → /login redireciona para / | S5-07 | Usuário já logado que abre /login é redirecionado para Home (/). (seção 9.1 / visão) | ⬜ TODO | T-S5-07-04 |
+| T-S5-07-01 | Painel dividido 50/50 desktop (login) | S5-07 | Desktop: painel dividido 50/50. Esquerda fundo Principal com logo, frase e dois cartões decorativos (pergunta/resposta, resposta em menta). Direita fundo Fundo com formulário max-width 432 px centralizado na vertical. (seção 9.1, breakpoint 1280px) | ✅ done | T-S5-01-02, T-S5-02-03, T-S5-03-01 |
+| T-S5-07-02 | Controle segmentado Entrar | Criar conta | S5-07 | Controle segmentado Entrar | Criar conta (fundo Superfície 2, aba ativa branca). (seção 9.1) | ✅ done | T-S5-07-01 |
+| T-S5-07-03 | Campos E-mail e Senha com ícone olho, link "Esqueci minha senha" | S5-07 | Título "Bem-vinda de volta". Campo E-mail (placeholder nome@email.com). Campo Senha (placeholder "Sua senha", ícone de olho, link "Esqueci minha senha" à direita do rótulo). (seção 9.1) | ✅ done | T-S5-07-02 |
+| T-S5-07-04 | Botão Entrar, estados erro e carregando | S5-07 | Botão Entrar. Estado erro: faixa perigo suave com ícone ("E-mail ou senha incorretos. Confira e tente de novo."). Estado carregando: spinner + "Entrando…" + botão desabilitado. (seção 9.1) | ✅ done | T-S5-07-03 |
+| T-S5-07-05 | Já logado → /login redireciona para / | S5-07 | Usuário já logado que abre /login é redirecionado para Home (/). (seção 9.1 / visão) | ✅ done | T-S5-07-04 |
 
 ---
 
