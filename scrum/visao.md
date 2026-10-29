@@ -36,3 +36,15 @@ App web de flashcards para estudo de medicina, com repetição espaçada (Leitne
 - Variáveis de ambiente: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
 - Migrations SQL versionadas em `supabase/migrations/`
 - Commits pequenos, mensagens em inglês (conventional commits)
+
+## Objetivo da Sprint 5
+
+Deixar a interface com paridade visual e de comportamento com o design descrito em `scrum/sprint-5.md` (PARTE 1). Não é inspiração: é paridade.
+
+Princípios-chave da PARTE 1:
+- Uma ação principal por tela. O botão rosa é sempre o próximo passo (Revisar, Salvar, Entrar).
+- Espaço de sobra: grade de 8 px; mínimo 24 px entre blocos, 12 px entre itens.
+- Legível em qualquer tema: todo texto com contraste mínimo 4,5:1 nos cinco temas.
+- Celular e tablet primeiro, desktop próprio: no desktop o layout muda (colunas e navegação no topo), não só estica.
+- Só tokens e papéis de cor; nenhum hex solto em componente.
+- Definição de pronto: textos, rótulos, pesos, tamanhos, espaçamentos, raios e estados batem com a spec; verificado em 375, 768 e 1280 px, nos 5 temas; contraste ≥ 4,5:1 em todo texto (teste automático por tema); teclado completo; alvos de toque ≥ 44 px; um único cabeçalho por tela; nenhuma função existente quebrada.

@@ -57,6 +57,22 @@ export const colors = {
 
   // desabilitado
   disabledOpacity: 0.55,
+
+  // papéis de cor — PARTE 1 seção 6 (tema rosa-menta padrão)
+  papelFundo: '#FFF7F9',
+  papelSuperficie: '#FFFFFF',
+  papelSuperficie2: '#FDEEF2',
+  papelTexto: '#2D3436',
+  papelTextoSuave: '#666A86',
+  papelBorda: '#98D8AA',
+  papelAcaoPrincipal: '#F7A8B8',
+  papelTextoSobreAcao: '#33364D',
+  papelDestaque: '#98D8AA',
+  papelProgresso: '#F7A8B8',
+  papelAvatar: '#F7A8B8',
+  papelSucesso: '#1F6B3A',
+  papelAviso: '#8A5A00',
+  papelErro: '#B3261E',
 };
 
 export const colorSchemes: Record<ColorScheme, typeof colors> = {
@@ -81,6 +97,22 @@ export const colorSchemes: Record<ColorScheme, typeof colors> = {
     onSecondary: '#1E1419',
     warning: '#FBBF24',
     focusRing: '#38BDF8',
+
+    // papéis de cor — PARTE 1 seção 6 (tema dark-neon)
+    papelFundo: '#1F1B2E',
+    papelSuperficie: '#2A2640',
+    papelSuperficie2: '#2A2640',
+    papelTexto: '#F2F0FF',
+    papelTextoSuave: '#B4B0CC',
+    papelBorda: '#00F5D4',
+    papelAcaoPrincipal: '#00F5D4',
+    papelTextoSobreAcao: '#1F1B2E',
+    papelDestaque: '#00F5D4',
+    papelProgresso: '#00F5D4',
+    papelAvatar: '#00F5D4',
+    papelSucesso: '#1F6B3A',
+    papelAviso: '#8A5A00',
+    papelErro: '#6B1E2E',
   },
 };
 

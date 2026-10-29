@@ -62,6 +62,22 @@
   --line: var(--color-secondary);
   --rose-500: var(--color-primary);
   --rose-600: var(--color-primary);
+
+  /* papéis de cor — PARTE 1 seção 6 */
+  --role-fundo: #EAF0F6;
+  --role-superficie: #F6F8FB;
+  --role-superficie-2: #F6F8FB;
+  --role-texto: #1B2A3A;
+  --role-texto-suave: #4F6272;
+  --role-borda: #2A6F97;
+  --role-acao-principal: #FF9F1C;
+  --role-texto-sobre-acao: #1B2A3A;
+  --role-destaque: #FF9F1C;
+  --role-progresso: #2A6F97;
+  --role-avatar: #2A6F97;
+  --role-sucesso: #1F6B3A;
+  --role-aviso: #8A5A00;
+  --role-erro: #B3261E;
 }
 
 [data-theme="roxo-amarelo"] {
@@ -80,6 +96,22 @@
   --line: var(--color-secondary);
   --rose-500: var(--color-primary);
   --rose-600: var(--color-primary);
+
+  /* papéis de cor — PARTE 1 seção 6 */
+  --role-fundo: #F6F4FF;
+  --role-superficie: #FFFFFF;
+  --role-superficie-2: #FFFFFF;
+  --role-texto: #2D3436;
+  --role-texto-suave: #5E6470;
+  --role-borda: #6C5CE7;
+  --role-acao-principal: #6C5CE7;
+  --role-texto-sobre-acao: #FFFFFF;
+  --role-destaque: #FDCB6E;
+  --role-progresso: #6C5CE7;
+  --role-avatar: #FDCB6E;
+  --role-sucesso: #1F6B3A;
+  --role-aviso: #8A5A00;
+  --role-erro: #B3261E;
 }
 
 [data-theme="verde-coral"] {
@@ -98,6 +130,22 @@
   --line: var(--color-secondary);
   --rose-500: var(--color-primary);
   --rose-600: var(--color-primary);
+
+  /* papéis de cor — PARTE 1 seção 6 */
+  --role-fundo: #F4F4EF;
+  --role-superficie: #FFFFFF;
+  --role-superficie-2: #ECEAE2;
+  --role-texto: #23302A;
+  --role-texto-suave: #5E6470;
+  --role-borda: #2E7D32;
+  --role-acao-principal: #2E7D32;
+  --role-texto-sobre-acao: #FFFFFF;
+  --role-destaque: #2E7D32;
+  --role-progresso: #2E7D32;
+  --role-avatar: #2E7D32;
+  --role-sucesso: #256B29;
+  --role-aviso: #8A5A00;
+  --role-erro: #FF6B6B;
 }
 
 [data-theme="dark-neon"] {
@@ -116,6 +164,22 @@
   --line: var(--color-secondary);
   --rose-500: var(--color-primary);
   --rose-600: var(--color-primary);
+
+  /* papéis de cor — PARTE 1 seção 6 */
+  --role-fundo: #1F1B2E;
+  --role-superficie: #2A2640;
+  --role-superficie-2: #2A2640;
+  --role-texto: #F2F0FF;
+  --role-texto-suave: #B4B0CC;
+  --role-borda: #00F5D4;
+  --role-acao-principal: #00F5D4;
+  --role-texto-sobre-acao: #1F1B2E;
+  --role-destaque: #00F5D4;
+  --role-progresso: #00F5D4;
+  --role-avatar: #00F5D4;
+  --role-sucesso: #1F6B3A;
+  --role-aviso: #8A5A00;
+  --role-erro: #6B1E2E;
 }
 
 /* Theme menu dropdown */

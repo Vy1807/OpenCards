@@ -187,6 +187,8 @@ supabase/
 || 14 | **HDN-04: Contagem de cards via relacionamento (sem coluna física)** | Coluna `cards_count` em `decks` + migration NOT NULL | `select('..., cards(count)')` nas queries; tipo `Deck` com `cards_count?: number` vindo do relacionamento; realtime não mantém contador manual | A coluna não existia no banco; cálculo on-demand via FK `cards.deck_id → decks.id` é mais simples, nunca desatualiza, e evita migração desnecessária. Para uso pessoal, performance é suficiente. Se escalar, considerar trigger + coluna materializada. |
 | 15 | **B-302: Estabilizar referência de `user` no AuthProvider** | `setUser(session?.user ? { id: session.user.id } : null)` direto | `setUser((prev) => { const next = ...; if (prev?.id === next?.id) return prev; return next; })` | `AuthProvider` criava novo objeto `{ id }` a cada evento `onAuthStateChange`, mesmo com id igual. Isso fazia `CardsProvider` re-renderizar (user mudou de referência), re-executar o `useEffect` do realtime ([user]) e causar re-renders em cadeia no `Deck`, fazendo o botão "Editar" piscar. Agora `user` mantém a mesma referência quando o id não mudou. |
 
+---\n\n## 9. Design — Fonte da Verdade (Sprint 5)\n\n**PARTE 1 de `scrum/sprint-5.md` é a única fonte da verdade do design da Sprint 5.** Se existirem PDFs ou imagens em `docs/design/`, servem apenas como apoio visual; em conflito, vale a spec escrita.\n\n### Decisões D1 a D5 (seção 10 da PARTE 1)\n\n| # | Decisão | Fonte |\n|---|---------|-------|\n| D1 | Avaliação na revisão: manter os 5 níveis (1 a 5) com rótulos e atalhos de teclado; algoritmo de repetição espaçada inalterado. | PARTE 1, seção 10 |\n| D2 | Cadastro sem CPF e telefone na UI. Se o backend exigir, tornar opcional, sem apagar dados existentes. | PARTE 1, seção 10 |\n| D3 | "Kanban" vira "Tarefas" na navegação. | PARTE 1, seção 10 |\n| D4 | Saudação com o nome da pessoa quando existir no cadastro; sem nome, só "Bem-vinda de volta". | PARTE 1, seção 10 |\n| D5 | Tema inicial rosa-menta para quem nunca escolheu. | PARTE 1, seção 10 |\n\n### Pendências da seção 12 (O que o design não define)\n\n- Entrar e Criar conta no celular: empilhar, com o painel rosa reduzido a um topo com logo e frase curta.\n- Tablet: seguir os breakpoints da seção 5 da PARTE 1.\n- Estados vazio, carregando e erro das demais telas: usar chips, faixas de erro e spinner dos componentes base, sem inventar novos padrões visuais.\n- Texto no feminino ("Bem-vinda", "Como quer ser chamada") é do design; manter.
+
 ---
 
 ## 7. Áreas de Dev Necessárias (para `scrum-dev` instances)
@@ -245,5 +247,93 @@ supabase/
 | M-335 | Testes E2E com Playwright | ⬜ Aberto | Não configurado |
 
 **Conclusão da triagem B-400:** Todos os itens P0/P1 da Sprint 3 (B-301 a B-306, T-310 a T-313, U-320 a U-326) estão ✅ ok. Os itens M-330 a M-335 (P2) continuam abertos e entram no backlog da Sprint 4 conforme prioridade.
+
+---
+
+## 10. Arquitetura Técnica — Sprint 5: Paridade com o Design (PARTE 1)
+
+**Origem**: `scrum/sprint-5.md` (PARTE 1), `scrum/backlog.md` (Épico F), código atual do repo.
+
+### 10.1 Decisões de arquitetura
+
+| # | Decisão | Alternativas | Por quê |
+|---|---------|--------------|---------|
+| 16 | **Tokens por papel de cor, não por cor fixa** | Manter tokens atuais (--rose-500, --ink, etc.) | A PARTE 1 (seções 6, 7, 13) exige que componentes consumam apenas papéis (fundo, superfície, superfície 2, texto, texto suave, borda, ação principal, texto sobre ação, destaque, progresso, avatar, sucesso, aviso, erro). Cada tema define esses papéis; trocar de tema não altera componente. Nenhum hex solto em componente (seção 13). |
+| 17 | **Empacotar Figtree via @font-face local** | Google Fonts CDN, fontes do sistema | A PARTE 1 (seção 3) especifica Figtree. Empacotar localmente (src/fonts/figtree/*.woff2) garante disponibilidade offline, controle de versão e não depende de rede externa. Declaração @font-face em src/styles/index.css ou tokens.css. |
+| 18 | **Layout compartilhado com cabeçalho único + barra de baixo mobile/tablet** | Cabeçalho por página, barra flutuante (FAB) | A PARTE 1 (seção 8) exige um único cabeçalho por tela feito no layout compartilhado; páginas não desenham o próprio. Barra de baixo existe apenas em mobile/tablet (Baralhos, Revisar, Tarefas + "+" rosa central). Menus de tema e conta ficam atrás do avatar (sem barra extra). |
+| 19 | **Migração de tema salvo no localStorage** | Não migrar, forçar rosa-menta | A PARTE 1 (seção 6) diz que preferência de tema salva deve migrar sem perda. Valor antigo/desconhecido → rosa-menta (padrão D5). Chave localStorage: selected-theme. Migração ocorre ao montar o App. |
+| 20 | **Componentes base consomem apenas papéis de cor (variáveis CSS)** | Componentes usam hex fixos ou tokens TypeScript | Nenhum hex solto em componente (seção 13 da PARTE 1). Componentes base (Button, Input, Card, Modal, ProgressBar, Chip, Select, Spinner) consomem variáveis CSS de papel (--role-*) definidas por tema em color-themes.css. Tokens TypeScript (tokens.ts) espelham para snapshots determinísticos. |
+| 21 | **Teste automático de contraste por tema em Vitest** | Teste manual, Chromatic, Percy | A PARTE 1 (seção 13) exige contraste ≥ 4,5:1 em todo texto, verificado por teste automático por tema. Teste Vitest que itera os 5 temas, aplica data-theme no <html>, mede razões de contraste texto/fundo e texto/ação principal, falha se abaixo de 4,5:1 (texto normal) ou 3:1 (texto grande/ícones). |
+| 22 | **Captura de screenshots em 375, 768 e 1280 px** | Testes visuais comerciais (Chromatic/Percy) | Definição de pronto (seção 13): verificado em 375, 768 e 1280 px nos 5 temas. Screenshots automáticos no CI por viewport e tema para comparação visual de regressão. |
+
+### 10.2 Mapeamento de dados: o que a interface exige vs o que já existe
+
+| Dado exigido pela interface | Existe? | Onde | Observação |
+|----------------------------|---------|------|------------|
+| Sequência de dias (streak) | Sim | src/shared/lib/streak.ts | `streak()` a partir de `review_log`; `formatStreak()` para exibição |
+| Última revisão por baralho | Parcial | `review_log` (last_reviewed_at) | Precisa de query que agregue a última revisão por deck |
+| Taxa de acerto | Sim | `DeckStats.accuracy` | Já existe em `entities/card/model/card.ts` |
+| Próxima revisão por cartão | Sim | `Card.due_at`, `Card.box` | Leitner schedule já existe (`scheduleNext`) |
+| Paginação "Carregar mais" | Não | — | Novo: Home e Deck precisam de paginação de cartões (seção 9.3, 9.4) |
+| Validação por item na importação | Sim | src/shared/lib/importCards.ts | `parseAndValidateImport` já retorna válidos/inválidos por item (seção 9.8) |
+| Tarefas com tag, data e coluna | Sim | `kanbanStore`, `kanban_cards` | Kanban já tem colunas, tags e datas; renomear para "Tarefas" (D3) |
+
+### 10.3 Arquivos que serão tocados
+
+**Tokens e tema:**
+- `src/styles/tokens.css` — adicionar variáveis de papel de cor por tema; fontes Figtree via @font-face
+- `src/design/tokens.ts` — adicionar tipos de papel de cor; espelhar tokens.css
+- `src/styles/color-themes.css` — reescrever com papéis de cor para os 5 temas (rosa-menta, azul-laranja, roxo-amarelo, verde-coral, dark-neon)
+- `src/shared/ui/ThemeSwitcher.tsx` — ajustar para 5 temas + migração localStorage de tema salvo
+
+**Layout compartilhado:**
+- `src/app/App.tsx` — layout compartilhado com cabeçalho único + barra de baixo mobile/tablet
+- `src/components/ui/Header.tsx` — cabeçalho único (logo, navegação desktop Baralhos/Revisar/Tarefas, botão tema, avatar com menu)
+- `src/components/ui/` — componentes base (Button, Input, Card, Modal, ProgressBar, Chip, Select, Spinner) consumindo apenas papéis de cor
+
+**Telas (paridade com PARTE 1, seções 9.1 a 9.10):**
+- `src/features/auth/Login.tsx` — painel dividido 50/50 desktop (seção 9.1)
+- `src/features/auth/Cadastro.tsx` — sem CPF/telefone (seção 9.2, decisão D2)
+- `src/features/decks/Home.tsx` — grade 3 colunas, busca, filtros, cartão "Para hoje", paginação "Carregar mais" (seção 9.3); versão mobile (seção 9.10)
+- `src/features/decks/Deck.tsx` — duas colunas desktop (stats à esquerda, lista à direita), paginação "Carregar mais" (seção 9.4); versão mobile (seção 9.10)
+- `src/features/decks/NewCard.tsx` — duas colunas desktop (formulário + prévia) (seção 9.7); versão mobile com rodapé fixo (seção 9.7)
+- `src/features/decks/DeckEdit.tsx` — edição inline, exclusão com confirmação (seção 9.5)
+- `src/features/decks/Import.tsx` — dropzone, colar JSON, prévia, validação por item (seção 9.8)
+- `src/features/review/Review.tsx` — 5 botões de avaliação, atalhos teclado, cartão centralizado desktop (seção 9.6); versão mobile (seção 9.6)
+- `src/features/kanban/KanbanPage.tsx` — renomear para "Tarefas", 3 colunas, mover por teclado (seção 9.9, decisão D3)
+
+**Testes:**
+- Novo arquivo de teste de contraste automático por tema (Vitest)
+- Atualizar testes existentes para consumir apenas papéis de cor
+
+### 10.4 Riscos
+
+| Risco | Prob. | Impacto | Mitigação |
+|-------|-------|---------|-----------|
+| **Regressão de funções existentes** (criar, editar, excluir, revisar, importar, tarefas, tema salvo) | Média | Alta | Definição de pronto (seção 13): nenhuma função existente quebrada. Testes de integração cobrem rotas críticas. |
+| **Cadastro sem CPF/telefone (D2)** | Média | Média | Se o backend exigir CPF/telefone, tornar opcional no cadastro; não apagar dados existentes do `profiles`. |
+| **JSON de importação não quebrar** | Baixa | Alta | Formato atual (id, pergunta, resposta) preservado; `parseAndValidateImport` já valida por item. |
+| **Migração de tema salvo** | Baixa | Média | Valor antigo/desconhecido → rosa-menta sem erro (D5). |
+| **Figtree não carregar** | Baixa | Baixa | Fallback para fonte do sistema (Georgia/Inter) no CSS. |
+
+### 10.5 Áreas de dev necessárias (para `scrum-dev` instances)
+
+| Área | Foco | Histórias relacionadas (Épico F) | Skills esperados |
+|------|------|----------------------------------|------------------|
+| **Frontend Core** | Tokens por papel, Figtree, layout compartilhado (cabeçalho único, barra de baixo, menus), componentes base | S5-01 a S5-06 | React 18, TS, CSS variables, Vitest/RTL, Acessibilidade, Figtree |
+| **Auth & Session** | Login/cadastro redesenhado (desktop 50/50, sem CPF/telefone) | S5-07, S5-08 | React Hook Forms + Zod, Supabase Auth, Router guards |
+| **Decks & Cards** | Home, Deck, DeckEdit, NewCard, Import com paridade visual | S5-09 a S5-16 | CSS grid, paginação, validação por item, File upload |
+| **Review Engine** | Revisão desktop e celular, 5 botões de avaliação, atalhos teclado | S5-17, S5-18 | Animações CSS 3D, Keyboard events, Leitner |
+| **Kanban/Tarefas** | Renomear para Tarefas, 3 colunas, mover por teclado e "Mover para" | S5-19, S5-20 | Drag-drop, Keyboard navigation, localStorage |
+| **Quality & Tooling** | Teste automático de contraste por tema, screenshots 375/768/1280px | S5-21, S5-22 | Vitest, Playwright, Acessibilidade (foco 44px, Esc) |
+
+> **Nota**: O projeto **não tem backend próprio** — toda lógica de dados fica em `entities/*/api` (client-side Supabase calls). Não há área "Backend/API". Não mudar regras de negócio, só interface e os dados que ela precisa exibir.
+
+### 10.6 Próximos passos imediatos (Arquiteto → Orquestrador)
+
+1. **Criar instâncias `scrum-dev`** por área de dev (Frontend Core, Auth & Session, Decks & Cards, Review Engine, Kanban/Tarefas, Quality & Tooling).
+2. **Orquestrador cria cards no kanban** a partir do Épico F (S5-01 a S5-22), respeitando ordem de dependência.
+3. **Definição de pronto** (seção 13 da PARTE 1) é o critério de aceite para cada história visual.
+
 
 ---\n
