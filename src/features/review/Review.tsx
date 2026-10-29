@@ -215,7 +215,7 @@ export default function Review() {
   const nextIntervalLabel = INTERVAL_LABELS[nextIntervalDays] ?? 'Em breve';
 
   return (
-    <div className="page">
+    <div className="page review-card-wrapper">
       {/* Cabeçalho sem sobreposição: título + contador lado a lado */}
       <header
         style={{
@@ -295,7 +295,7 @@ export default function Review() {
       {/* Botões de avaliação com próximo intervalo */}
       <div style={{ width: '100%', maxWidth: '420px', marginBottom: tokens.space[6] }}>
         <div
-          className="review-actions"
+          className="review-actions desktop"
           style={{ display: 'flex', gap: tokens.space[3], width: '100%', marginBottom: tokens.space[3] }}>
           <button
             className="btn"

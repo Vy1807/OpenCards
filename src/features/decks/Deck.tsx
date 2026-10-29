@@ -107,27 +107,20 @@ export default function Deck() {
   const progress = total > 0 ? Math.round((mastered / total) * 100) : 0;
 
   return (
-    <div className="page">
+    <div className="page deck-page-layout">
       {/* Título e stats do baralho */}
-      <section className="card section" style={{ marginBottom: tokens.space[6] }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: tokens.space[4],
-          }}
-        >
-          <h1
+      <section className="deck-page-sidebar">
+        <div className="card section">
+          <h2
             style={{
               fontFamily: tokens.typography.fontHeading,
-              fontSize: tokens.typography.fontSize.xxl,
-              fontWeight: '700',
-              color: 'var(--ink)',
+              fontSize: tokens.typography.fontSize.xl,
+              color: tokens.colors.ink,
               margin: 0,
             }}
           >
-            {deck?.name}
-          </h1>
+            {deck?.name || 'Baralho'}
+          </h2>
           {deck?.tag && (
             <span
               style={{
@@ -306,7 +299,8 @@ export default function Deck() {
       </div>
 
       {/* Lista de cartões */}
-      <h2
+      <main>
+        <h2
         style={{
           fontFamily: tokens.typography.fontHeading,
           fontSize: tokens.typography.fontSize.xl,
@@ -375,6 +369,7 @@ export default function Deck() {
           ))}
         </ul>
       )}
+      </main>
     </div>
   );
 }

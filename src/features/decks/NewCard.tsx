@@ -291,7 +291,7 @@ function NewCard({ decks, onSave, creating = false, defaultDeckId }: NewCardProp
   }, []);
 
   return (
-    <div className="page" style={{ maxWidth: '720px', margin: '0 auto', padding: tokens.space[4] }}>
+    <div className="page new-card-layout" style={{ maxWidth: '1000px', margin: '0 auto', padding: tokens.space[4] }}>
       {error && (
         <p style={{ color: 'var(--err)', fontSize: tokens.typography.fontSize.sm }}>
           {error}
