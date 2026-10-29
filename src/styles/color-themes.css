@@ -24,8 +24,21 @@
   --ink: var(--color-text);
   --muted: #4A4E69;
   --line: var(--color-secondary);
-  --rose-500: var(--color-primary);
-  --rose-600: var(--color-primary);
+  /* papéis de cor — PARTE 1 seção 6 */
+  --role-fundo: #FFF7F9;
+  --role-superficie: #FFFFFF;
+  --role-superficie-2: #FDEEF2;
+  --role-texto: #2D3436;
+  --role-texto-suave: #666A86;
+  --role-borda: #98D8AA;
+  --role-acao-principal: #F7A8B8;
+  --role-texto-sobre-acao: #33364D;
+  --role-destaque: #98D8AA;
+  --role-progresso: #F7A8B8;
+  --role-avatar: #F7A8B8;
+  --role-sucesso: #1F6B3A;
+  --role-aviso: #8A5A00;
+  --role-erro: #B3261E;
 }
 
 [data-theme="rosa-menta"] {
@@ -42,8 +55,21 @@
   --ink: var(--color-text);
   --muted: #4A4E69;
   --line: var(--color-secondary);
-  --rose-500: var(--color-primary);
-  --rose-600: var(--color-primary);
+  /* papéis de cor — PARTE 1 seção 6 */
+  --role-fundo: #FFF7F9;
+  --role-superficie: #FFFFFF;
+  --role-superficie-2: #FDEEF2;
+  --role-texto: #2D3436;
+  --role-texto-suave: #666A86;
+  --role-borda: #98D8AA;
+  --role-acao-principal: #F7A8B8;
+  --role-texto-sobre-acao: #33364D;
+  --role-destaque: #98D8AA;
+  --role-progresso: #F7A8B8;
+  --role-avatar: #F7A8B8;
+  --role-sucesso: #1F6B3A;
+  --role-aviso: #8A5A00;
+  --role-erro: #B3261E;
 }
 
 [data-theme="azul-laranja"] {
