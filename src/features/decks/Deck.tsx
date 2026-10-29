@@ -350,7 +350,7 @@ export default function Deck() {
                   style={{
                     padding: `${tokens.space[2]} ${tokens.space[4]}`,
                     fontSize: 'var(--font-pequeno-size)',
-                    minHeight: 'auto',
+                    minHeight: tokens.touchTarget,
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: tokens.space[2],

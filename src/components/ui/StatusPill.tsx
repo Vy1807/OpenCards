@@ -33,7 +33,7 @@ export default function StatusPill({ variant, count, className, style }: StatusP
           fontSize: tokens.typography.fontSize.xs,
           fontWeight: tokens.typography.fontWeight.semibold,
           padding: '0.25rem 0.625rem',
-          minHeight: '24px',
+          minHeight: tokens.touchTarget,
           border: `1px solid`,
           ...(isDue
             ? {

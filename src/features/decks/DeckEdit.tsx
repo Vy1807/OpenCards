@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDeck } from './useDeck';
 import { useCards } from '../../app/providers/CardsProvider';
 import { useAuth } from '../auth/useAuth';
+import { tokens } from '../../design/tokens';
 import {
   parseAndValidateImport,
   type ImportCard,
@@ -242,7 +243,7 @@ export default function DeckEdit() {
                   style={{
                     padding: '0.375rem 0.75rem',
                     fontSize: 'var(--font-pequeno-size)',
-                    minHeight: 'auto',
+                    minHeight: tokens.touchTarget,
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.5rem',

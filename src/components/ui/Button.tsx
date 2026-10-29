@@ -23,7 +23,7 @@ const SIZE: Record<
     paddingY: '0.5rem',
     paddingX: '1rem',
     fontSize: tokens.typography.fontSize.sm,
-    minHeight: '40px',
+    minHeight: tokens.touchTarget,
   },
   md: {
     paddingY: '0.75rem',
