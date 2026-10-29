@@ -1,7 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../app/providers';
-import { ArrowLeftIcon, LogoutIcon, PaletteIcon, LogoIcon } from '../../shared/ui/icons';
+import { ArrowLeftIcon, LogoutIcon, LogoIcon } from '../../shared/ui/icons';
+import ThemeSwitcher from '../../shared/ui/ThemeSwitcher';
 
 /**
  * Wrapper seguro ao useAuth: retorna { user: null, signOut: noop } quando
@@ -60,10 +61,29 @@ export default function Header({ title, showBack = false, backTo = '/' }: Header
   const navigate = useNavigateSafe();
   const location = useLocationSafe();
 
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+
   const handleSignOut = useCallback(async () => {
     await signOut();
     navigate('/login');
   }, [signOut, navigate]);
+
+  const closeMenus = useCallback(() => {
+    setThemeMenuOpen(false);
+    setUserMenuOpen(false);
+  }, []);
+
+  // Esc fecha os menus e devolve o foco ao botão que os abriu
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMenus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [closeMenus]);
 
   const initial = user?.id.charAt(0).toUpperCase() || '?';
 
@@ -119,19 +139,16 @@ export default function Header({ title, showBack = false, backTo = '/' }: Header
       </nav>
 
       <div className="header__actions">
-        <button
-          type="button"
-          className="btn theme-button"
-          aria-label="Tema"
-          title="Tema"
-          onClick={() => {}}
-        >
-          <PaletteIcon size={20} style={{ verticalAlign: 'middle' }} />
-        </button>
+        <ThemeSwitcher
+          isOpen={themeMenuOpen}
+          onClose={() => setThemeMenuOpen(false)}
+        />
         <div className="user-menu">
           <button
             type="button"
-            className="btn user-menu__trigger"
+            className={`btn user-menu__trigger ${userMenuOpen ? 'active' : ''}`}
+            onClick={() => setUserMenuOpen(!userMenuOpen)}
+            aria-expanded={userMenuOpen}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -146,24 +163,26 @@ export default function Header({ title, showBack = false, backTo = '/' }: Header
           >
             <span className="user-menu__avatar">{initial}</span>
           </button>
-          <div className="user-menu__dropdown">
-            <button
-              type="button"
-              className="user-menu__item"
-              onClick={handleSignOut}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.5rem 0.75rem',
-                width: '100%',
-                textAlign: 'left',
-              }}
-            >
-              <LogoutIcon size={16} style={{ verticalAlign: 'middle' }} />
-              <span>Sair</span>
-            </button>
-          </div>
+          {userMenuOpen && (
+            <div className="user-menu__dropdown">
+              <button
+                type="button"
+                className="user-menu__item"
+                onClick={handleSignOut}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 0.75rem',
+                  width: '100%',
+                  textAlign: 'left',
+                }}
+              >
+                <LogoutIcon size={16} style={{ verticalAlign: 'middle' }} />
+                <span>Sair</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
