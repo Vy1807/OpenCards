@@ -22,7 +22,8 @@ describe('Input', () => {
     const { container } = render(<Input label="Input" />);
     const input = container.querySelector('input') as HTMLInputElement;
     expect(input).toHaveStyle('background-color: #FFFFFF');
-    expect(input).toHaveStyle('border-color: #F3D9E1');
+    // Verifica que a borda usa variável CSS de papel (resolvida pelo tema)
+    expect(input.getAttribute('style')).toContain('var(--role-borda)');
     expect(input).toHaveStyle('min-height: 44px');
   });
 
@@ -30,7 +31,7 @@ describe('Input', () => {
     const { container } = render(<Input label="Campo" error="Inválido" />);
     const input = container.querySelector('input') as HTMLInputElement;
     expect(screen.getByText('Inválido')).toBeInTheDocument();
-    expect(input).toHaveStyle('border-color: #E4694F');
+    expect(input).toHaveStyle('border-color: #B3261E');
   });
 
   it('gera snapshot de regressão visual', () => {

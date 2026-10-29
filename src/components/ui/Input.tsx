@@ -40,7 +40,7 @@ export default function Input({
             fontFamily: tokens.typography.fontBody,
             fontSize: tokens.typography.fontSize.sm,
             fontWeight: tokens.typography.fontWeight.semibold,
-            color: error ? tokens.colors.err : tokens.colors.muted,
+            color: error ? 'var(--role-erro)' : 'var(--role-texto-suave)',
           }}
         >
           {label}
@@ -56,9 +56,9 @@ export default function Input({
           minHeight: tokens.touchTarget,
           padding: '0.625rem 0.875rem',
           borderRadius: tokens.radius.sm,
-          border: `1px solid ${error ? tokens.colors.err : tokens.colors.line}`,
-          background: tokens.colors.surface,
-          color: tokens.colors.ink,
+          border: `1px solid ${error ? 'var(--role-erro)' : 'var(--role-borda)'}`,
+          background: 'var(--role-superficie)',
+          color: 'var(--role-texto)',
           fontFamily: tokens.typography.fontBody,
           fontSize: tokens.typography.fontSize.base,
           transition: 'border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
@@ -72,7 +72,7 @@ export default function Input({
           style={{
             fontFamily: tokens.typography.fontBody,
             fontSize: tokens.typography.fontSize.xs,
-            color: tokens.colors.err,
+            color: 'var(--role-erro)',
           }}
         >
           {error}
@@ -83,7 +83,7 @@ export default function Input({
           style={{
             fontFamily: tokens.typography.fontBody,
             fontSize: tokens.typography.fontSize.xs,
-            color: tokens.colors.muted,
+            color: 'var(--role-texto-suave)',
           }}
         >
           {helper}

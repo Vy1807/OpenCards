@@ -20,6 +20,8 @@ const ROLE_COLORS: Record<string, string> = {
   '--role-erro': '#B3261E',
 };
 
-for (const [prop, value] of Object.entries(ROLE_COLORS)) {
-  document.documentElement.style.setProperty(prop, value);
-}
+const styleEl = document.createElement('style');
+styleEl.textContent = `:root { ${Object.entries(ROLE_COLORS)
+  .map(([k, v]) => `${k}: ${v};`)
+  .join('')} }`;
+document.head.appendChild(styleEl);
