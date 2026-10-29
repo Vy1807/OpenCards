@@ -25,7 +25,7 @@ export default function ProgressBar({ value, label, className, style }: Progress
           width: '100%',
           height: '10px',
           borderRadius: tokens.radius.full,
-          background: tokens.colors.primaryLight,
+          background: 'var(--role-superficie-2)',
           overflow: 'hidden',
           ...style,
         } as React.CSSProperties
@@ -36,7 +36,7 @@ export default function ProgressBar({ value, label, className, style }: Progress
         style={{
           width: `${pct}%`,
           height: '100%',
-          background: tokens.colors.primary,
+          background: 'var(--role-acao-principal)',
           borderRadius: tokens.radius.full,
           transition: 'width 0.3s ease',
         }}
@@ -48,7 +48,7 @@ export default function ProgressBar({ value, label, className, style }: Progress
             fontFamily: tokens.typography.fontBody,
             fontSize: tokens.typography.fontSize.xs,
             fontWeight: tokens.typography.fontWeight.semibold,
-            color: tokens.colors.muted,
+            color: 'var(--role-texto-suave)',
             marginTop: '0.25rem',
             textAlign: 'right',
           }}
