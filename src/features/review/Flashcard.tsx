@@ -23,7 +23,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
         <div className="flashcard-face front" data-testid="flashcard-frente">
           <div
             style={{
-              fontSize: '0.875rem',
+              fontSize: 'var(--font-pequeno-size)',
               color: 'var(--muted)',
               marginBottom: '0.5rem',
             }}
@@ -33,7 +33,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
           <div
             data-testid="flashcard-frente-texto"
             style={{
-              fontSize: '1.25rem',
+              fontSize: 'var(--font-subtitulo-size)',
               fontWeight: '600',
               wordBreak: 'break-word',
             }}
@@ -50,7 +50,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
           )}
           <p
             style={{
-              fontSize: '0.875rem',
+              fontSize: 'var(--font-pequeno-size)',
               color: 'var(--muted)',
               marginTop: '1rem',
             }}
@@ -63,7 +63,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
         <div className="flashcard-face back" data-testid="flashcard-verso">
           <div
             style={{
-              fontSize: '0.875rem',
+              fontSize: 'var(--font-pequeno-size)',
               color: 'var(--muted)',
               marginBottom: '0.5rem',
             }}
@@ -73,7 +73,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
           <div
             data-testid="flashcard-verso-texto"
             style={{
-              fontSize: '1.25rem',
+              fontSize: 'var(--font-subtitulo-size)',
               fontWeight: '600',
               marginBottom: backImageUrl ? '0.5rem' : 0,
               wordBreak: 'break-word',
@@ -90,7 +90,7 @@ export default function Flashcard({ card, flipped, onFlip }: FlashcardProps) {
           )}
           <p
             style={{
-              fontSize: '0.875rem',
+              fontSize: 'var(--font-pequeno-size)',
               color: 'var(--muted)',
               marginTop: '1rem',
             }}

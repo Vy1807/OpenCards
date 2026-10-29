@@ -89,7 +89,7 @@ export default function Cadastro() {
     const erro = errors[nome];
     if (!erro) return null;
     return (
-      <p style={{ color: 'var(--err)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+      <p style={{ color: 'var(--err)', fontSize: 'var(--font-pequeno-size)', marginTop: '0.25rem' }}>
         {erro.message}
       </p>
     );
@@ -255,7 +255,7 @@ export default function Cadastro() {
           </Button>
         </form>
 
-        <p style={{ marginTop: '1rem', fontSize: '0.875rem', textAlign: 'center' }}>
+        <p style={{ marginTop: '1rem', fontSize: 'var(--font-pequeno-size)', textAlign: 'center' }}>
           Já tem uma conta?{' '}
           <button
             type="button"

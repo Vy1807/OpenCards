@@ -141,14 +141,14 @@ export default function Deck() {
               <span
                 style={{
                   display: 'block',
-                  fontSize: '1.5rem',
+                  fontSize: 'var(--font-secao-size)',
                   fontWeight: '700',
                   color: 'var(--color-primary)',
                 }}
               >
                 {total}
               </span>
-              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+              <span style={{ display: 'block', fontSize: 'var(--font-pequeno-size)', color: tokens.colors.muted }}>
                 total
               </span>
             </div>
@@ -156,14 +156,14 @@ export default function Deck() {
               <span
                 style={{
                   display: 'block',
-                  fontSize: '1.5rem',
+                  fontSize: 'var(--font-secao-size)',
                   fontWeight: '700',
                   color: 'var(--ok)',
                 }}
               >
                 {mastered}
               </span>
-              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+              <span style={{ display: 'block', fontSize: 'var(--font-pequeno-size)', color: tokens.colors.muted }}>
                 dominados
               </span>
             </div>
@@ -171,14 +171,14 @@ export default function Deck() {
               <span
                 style={{
                   display: 'block',
-                  fontSize: '1.5rem',
+                  fontSize: 'var(--font-secao-size)',
                   fontWeight: '700',
                   color: 'var(--err)',
                 }}
               >
                 {dueToday}
               </span>
-              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+              <span style={{ display: 'block', fontSize: 'var(--font-pequeno-size)', color: tokens.colors.muted }}>
                 pendentes hoje
               </span>
             </div>
@@ -186,14 +186,14 @@ export default function Deck() {
               <span
                 style={{
                   display: 'block',
-                  fontSize: '1.5rem',
+                  fontSize: 'var(--font-secao-size)',
                   fontWeight: '700',
                   color: 'var(--ink)',
                 }}
               >
                 {accuracy}%
               </span>
-              <span style={{ display: 'block', fontSize: '0.875rem', color: tokens.colors.muted }}>
+              <span style={{ display: 'block', fontSize: 'var(--font-pequeno-size)', color: tokens.colors.muted }}>
                 taxa de acerto
               </span>
             </div>
@@ -203,7 +203,7 @@ export default function Deck() {
           <div className="ecg-progress">
             <div className="ecg-progress__fill" style={{ width: `${progress}%` }} />
           </div>
-          <p style={{ fontSize: '0.875rem',            color: 'var(--muted)', textAlign: 'center' }}>
+          <p style={{ fontSize: 'var(--font-pequeno-size)',            color: 'var(--muted)', textAlign: 'center' }}>
             {mastered} de {total} dominados
           </p>
         </div>
@@ -216,7 +216,7 @@ export default function Deck() {
           className="btn btn-primary"
           onClick={() => navigate(`/decks/${id!}/review`)}
           disabled={!hasCards}
-          style={{ minHeight: '56px', fontSize: '1.125rem', width: '100%' }}
+          style={{ minHeight: '56px', fontSize: 'var(--font-subtitulo-size)', width: '100%' }}
         >
           {hasCards ? 'Revisar' : 'Sem cartões para revisar'}
         </button>
@@ -337,7 +337,7 @@ export default function Deck() {
                   <p
                     style={{
                       marginTop: tokens.space[2],
-                      fontSize: '0.875rem',
+                      fontSize: 'var(--font-pequeno-size)',
                       color: 'var(--color-secondary)',
                       fontStyle: 'italic',
                     }}
@@ -349,7 +349,7 @@ export default function Deck() {
                   className="btn btn-danger"
                   style={{
                     padding: `${tokens.space[2]} ${tokens.space[4]}`,
-                    fontSize: '0.875rem',
+                    fontSize: 'var(--font-pequeno-size)',
                     minHeight: 'auto',
                     display: 'inline-flex',
                     alignItems: 'center',

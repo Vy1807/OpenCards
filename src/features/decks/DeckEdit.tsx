@@ -205,7 +205,7 @@ export default function DeckEdit() {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
         <InfoIcon size={18} style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>
+        <span style={{ fontSize: 'var(--font-pequeno-size)', color: 'var(--muted)' }}>
           Dica: use a importação de JSON para adicionar vários cartões de uma vez.
         </span>
       </div>
@@ -241,7 +241,7 @@ export default function DeckEdit() {
                   onClick={() => handleDeleteCard(card.id)}
                   style={{
                     padding: '0.375rem 0.75rem',
-                    fontSize: '0.875rem',
+                    fontSize: 'var(--font-pequeno-size)',
                     minHeight: 'auto',
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -519,7 +519,7 @@ function ImportCardForm({
         <h3>Importar cartões</h3>
         <p
                   style={{
-                    fontSize: '0.875rem',
+                    fontSize: 'var(--font-pequeno-size)',
                     color: 'var(--muted)',
                     marginBottom: '0.75rem',
                     display: 'flex',
@@ -542,7 +542,7 @@ function ImportCardForm({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Cole o JSON aqui..."
-          style={{ minHeight: '120px', fontFamily: 'monospace', fontSize: '0.875rem' }}
+          style={{ minHeight: '120px', fontFamily: 'monospace', fontSize: 'var(--font-pequeno-size)' }}
         />
         <button type="button" className="btn" onClick={onClose} style={{ marginRight: '0.5rem' }}>
           Cancelar
@@ -565,10 +565,10 @@ function ImportCardForm({
 
       {invalid.length > 0 && (
         <div style={{ marginBottom: '0.75rem' }}>
-          <h4 style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}>Itens inválidos:</h4>
+          <h4 style={{ fontSize: 'var(--font-pequeno-size)', marginBottom: '0.25rem' }}>Itens inválidos:</h4>
           <ul
             style={{
-              fontSize: '0.875rem',
+              fontSize: 'var(--font-pequeno-size)',
               color: 'var(--err)',
               listStyle: 'disc',
               paddingLeft: '1.2rem',

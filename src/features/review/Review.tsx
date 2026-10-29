@@ -155,14 +155,14 @@ export default function Review() {
         </header>
         <section className="card section" style={{ textAlign: 'center' }}>
           <div className="ring" style={{ transform: `rotate(${-45 + ringDeg}deg)` }}>
-            <span style={{ fontSize: '1.5rem', fontWeight: '700', color: tokens.colors.ink }}>
+            <span style={{ fontSize: 'var(--font-secao-size)', fontWeight: '700', color: tokens.colors.ink }}>
               {correct}/{total}
             </span>
           </div>
-          <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>
+          <p style={{ fontSize: 'var(--font-subtitulo-size)', marginBottom: '0.5rem' }}>
             <CheckIcon size={20} title="Acertos" /> Acertos: <strong>{correct}</strong>
           </p>
-          <p style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>
+          <p style={{ fontSize: 'var(--font-subtitulo-size)', marginBottom: '1rem' }}>
             <CloseIcon size={20} title="Erros" /> Erros: <strong>{wrong}</strong>
           </p>
           <p style={{ color: tokens.colors.muted, marginBottom: '1rem' }}>
@@ -306,7 +306,7 @@ export default function Review() {
             style={{
               flex: 1,
               minHeight: '56px',
-              fontSize: '1rem',
+              fontSize: 'var(--font-corpo-size)',
               background: 'transparent',
               color: 'var(--err)',
               border: `1px solid var(--err)`,
@@ -320,7 +320,7 @@ export default function Review() {
             disabled={answering || !flipped}
             tabIndex={0}
             aria-label="Bom - Acertei"
-            style={{ flex: 1, minHeight: '56px', fontSize: '1rem' }}
+            style={{ flex: 1, minHeight: '56px', fontSize: 'var(--font-corpo-size)' }}
           >
             Bom <CheckIcon size={16} aria-hidden="true" style={{ verticalAlign: 'middle' }} />
           </button>
@@ -333,7 +333,7 @@ export default function Review() {
             style={{
               flex: 1,
               minHeight: '56px',
-              fontSize: '1rem',
+              fontSize: 'var(--font-corpo-size)',
               background: 'transparent',
               color: 'var(--ok)',
               border: `1px solid var(--ok)`,

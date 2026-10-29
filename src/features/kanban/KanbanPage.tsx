@@ -68,7 +68,7 @@ export default function KanbanPage() {
             borderRadius: '0.5rem',
             background: tokens.colors.errBg,
             color: tokens.colors.err,
-            fontSize: '0.875rem',
+            fontSize: 'var(--font-pequeno-size)',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
