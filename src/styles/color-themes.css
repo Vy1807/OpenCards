@@ -30,10 +30,10 @@
   --role-superficie-2: #FDEEF2;
   --role-texto: #2D3436;
   --role-texto-suave: #666A86;
-  --role-borda: #98D8AA;
+  --role-borda: #3E6B4E;
   --role-acao-principal: #F7A8B8;
   --role-texto-sobre-acao: #33364D;
-  --role-destaque: #98D8AA;
+  --role-destaque: #3E6B4E;
   --role-progresso: #F7A8B8;
   --role-avatar: #F7A8B8;
   --role-sucesso: #1F6B3A;
@@ -98,7 +98,7 @@
   --role-borda: #2A6F97;
   --role-acao-principal: #FF9F1C;
   --role-texto-sobre-acao: #1B2A3A;
-  --role-destaque: #FF9F1C;
+  --role-destaque: #C2410C;
   --role-progresso: #2A6F97;
   --role-avatar: #2A6F97;
   --role-sucesso: #1F6B3A;
@@ -132,7 +132,7 @@
   --role-borda: #6C5CE7;
   --role-acao-principal: #6C5CE7;
   --role-texto-sobre-acao: #FFFFFF;
-  --role-destaque: #FDCB6E;
+  --role-destaque: #A16207;
   --role-progresso: #6C5CE7;
   --role-avatar: #FDCB6E;
   --role-sucesso: #1F6B3A;
@@ -171,7 +171,7 @@
   --role-avatar: #2E7D32;
   --role-sucesso: #256B29;
   --role-aviso: #8A5A00;
-  --role-erro: #FF6B6B;
+  --role-erro: #B91C1C;
 }
 
 [data-theme="dark-neon"] {
@@ -203,9 +203,9 @@
   --role-destaque: #00F5D4;
   --role-progresso: #00F5D4;
   --role-avatar: #00F5D4;
-  --role-sucesso: #1F6B3A;
-  --role-aviso: #8A5A00;
-  --role-erro: #6B1E2E;
+  --role-sucesso: #4ADE80;
+  --role-aviso: #FDE047;
+  --role-erro: #FCA5A5;
 }
 
 /* Theme menu dropdown */
