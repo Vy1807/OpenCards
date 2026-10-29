@@ -549,6 +549,7 @@ h3 {
 
 .header__brand-name {
   font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .header__title {
@@ -642,6 +643,7 @@ body {
   .page {
     padding: var(--space-4) var(--space-3);
     margin: 0;
+    margin-bottom: 56px; /* espaço para barra de baixo */
   }
 
   .header {
@@ -885,5 +887,65 @@ body {
   .container-max {
     max-width: 1200px;
     margin: 0 auto;
+  }
+}
+
+/* Barra de baixo mobile/tablet — PARTE 1, seção 8 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 56px;
+  background: var(--role-superficie);
+  border-top: 1px solid var(--role-borda);
+  z-index: 60;
+}
+
+.bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  color: var(--role-texto-suave);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.bottom-nav__item.active {
+  color: var(--role-acao-principal);
+}
+
+.bottom-nav__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--role-acao-principal);
+  color: var(--role-texto-sobre-acao);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.bottom-nav__add svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Oculta barra de baixo em desktop */
+@media (min-width: 1024px) {
+  .bottom-nav {
+    display: none;
   }
 }

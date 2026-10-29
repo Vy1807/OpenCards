@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../app/providers';
-import ThemeMenu from '../../shared/ui/ThemeMenu';
-import { ArrowLeftIcon, LogoutIcon, UserIcon } from '../../shared/ui/icons';
+import { ArrowLeftIcon, LogoutIcon, PaletteIcon, LogoIcon } from '../../shared/ui/icons';
 
 /**
  * Wrapper seguro ao useAuth: retorna { user: null, signOut: noop } quando
@@ -39,12 +38,13 @@ function useLocationSafe() {
 }
 
 /**
- * Cabeçalho único usado em todas as telas internas do app.
+ * Cabeçalho único usado em todas as telas do app (PARTE 1, seção 8).
  *
- * - Esquerda: marca "OpenCards" + botão "Voltar" (quando `showBack`).
- *   Título opcional ao centro/esquerda após o botão Voltar.
- * - Direita: seletor de tema (ThemeMenu) + menu do usuário com avatar
- *   (inicial do id), nome exibido e opção "Sair".
+ * Desktop: cabeçalho branco (Superfície), 64px, borda inferior fina,
+ * conteúdo limitado a 1200px. Logo + abas Baralhos/Revisar/Tarefas +
+ * botão de tema (quadrado 40x40, ícone paleta) + avatar circular 40px.
+ *
+ * Celular e tablet: barra de cima (voltar + título + avatar).
  */
 type HeaderProps = {
   /** Título da tela atual (exibido ao lado da marca/volta). */
@@ -66,12 +66,11 @@ export default function Header({ title, showBack = false, backTo = '/' }: Header
   }, [signOut, navigate]);
 
   const initial = user?.id.charAt(0).toUpperCase() || '?';
-  const shortId = user?.id.slice(0, 8) || 'Usuário';
 
   return (
     <header className="header">
       <div className="header__brand">
-        <UserIcon size={22} style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} />
+        <LogoIcon />
         <span className="header__brand-name">OpenCards</span>
       </div>
 
@@ -104,15 +103,31 @@ export default function Header({ title, showBack = false, backTo = '/' }: Header
         <button
           type="button"
           className="header__nav-link"
-          onClick={() => navigate('/')}
-          aria-current={location?.pathname === '/' ? 'page' : undefined}
+          onClick={() => navigate('/decks/:id/review')}
+          aria-current={location?.pathname?.startsWith('/decks') ? 'page' : undefined}
         >
           Revisar
+        </button>
+        <button
+          type="button"
+          className="header__nav-link"
+          onClick={() => navigate('/kanban')}
+          aria-current={location?.pathname === '/kanban' ? 'page' : undefined}
+        >
+          Tarefas
         </button>
       </nav>
 
       <div className="header__actions">
-        <ThemeMenu />
+        <button
+          type="button"
+          className="btn theme-button"
+          aria-label="Tema"
+          title="Tema"
+          onClick={() => {}}
+        >
+          <PaletteIcon size={20} style={{ verticalAlign: 'middle' }} />
+        </button>
         <div className="user-menu">
           <button
             type="button"
@@ -122,10 +137,14 @@ export default function Header({ title, showBack = false, backTo = '/' }: Header
               alignItems: 'center',
               gap: '0.5rem',
               padding: '0.5rem 0.75rem',
+              width: '40px',
+              height: '40px',
+              minHeight: 'auto',
+              minWidth: 'auto',
+              borderRadius: '50%',
             }}
           >
             <span className="user-menu__avatar">{initial}</span>
-            <span className="user-menu__name">{shortId}</span>
           </button>
           <div className="user-menu__dropdown">
             <button
