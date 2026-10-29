@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { getCurrentUser, signUp } from '../../entities/user/api/auth';
+import { signUp, getCurrentUser } from '../../entities/user/api/auth';
 import { upsertProfile } from '../../entities/user/api/profiles';
 import { apenasDigitos, validarCPF, validarTelefone } from '../../shared/lib/validators';
-import { MaskedInput } from '../../shared/ui';
 import { UserIcon } from '../../shared/ui/icons';
+import Input from '../../components/ui/Input';
+import Button from '../../components/ui/Button';
+import { MaskedInput } from '../../shared/ui';
 
 const schema = z
   .object({
@@ -29,6 +31,7 @@ export default function Cadastro() {
   const navigate = useNavigate();
   const [erroForm, setErroForm] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [loadingCadastro, setLoadingCadastro] = useState(false);
 
   const {
     control,
@@ -49,9 +52,8 @@ export default function Cadastro() {
 
   const onSubmit = async (dados: CadastroData) => {
     setErroForm('');
+    setSucesso('');
     try {
-      // Validacao assincrona contra o Supabase: cadastro de auth só
-      // prossegue se o e-mail ainda não estiver em uso.
       await signUp(dados.email, dados.senha);
 
       const currentUser = await getCurrentUser();
@@ -59,7 +61,6 @@ export default function Cadastro() {
         throw new Error('Não foi possível restaurar a sessão após o cadastro.');
       }
 
-      // Dados complementares persistidos no Supabase (tabela profiles, RLS por usuário).
       await upsertProfile({
         userId: currentUser.id,
         nome: dados.nome,
@@ -79,6 +80,8 @@ export default function Cadastro() {
       } else {
         setErroForm(mensagem);
       }
+    } finally {
+      setLoadingCadastro(false);
     }
   };
 
@@ -93,139 +96,176 @@ export default function Cadastro() {
   };
 
   return (
-    <div className="page" style={{ maxWidth: '400px' }}>
-      <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <UserIcon size={28} style={{ flexShrink: 0 }} /> Criar conta
-      </h1>
-      {erroForm && <p style={{ color: 'var(--err)', marginBottom: '1rem' }}>{erroForm}</p>}
-      {sucesso && <p style={{ color: 'var(--ok)', marginBottom: '1rem' }}>{sucesso}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="card section">
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label" htmlFor="nome">Nome completo</label>
-          <Controller
-            name="nome"
-            control={control}
-            render={({ field }) => (
-              <input
-                id="nome"
-                className="input"
-                type="text"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                required
-              />
-            )}
-          />
-          {erroCampo('nome')}
+    <div className="page" style={{ maxWidth: '720px', margin: '0 auto', padding: '1rem' }}>
+      <div className="auth-card">
+        <div className="auth-brand">
+          <UserIcon size={32} style={{ verticalAlign: 'middle' }} />
+          <span className="auth-brand-name">OpenCards</span>
         </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label" htmlFor="email">E-mail</label>
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <input
-                id="email"
-                className="input"
-                type="email"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                required
-              />
-            )}
-          />
-          {erroCampo('email')}
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label" htmlFor="senha">Senha</label>
-          <Controller
-            name="senha"
-            control={control}
-            render={({ field }) => (
-              <input
-                id="senha"
-                className="input"
-                type="password"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                required
-              />
-            )}
-          />
-          {erroCampo('senha')}
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label" htmlFor="confirmarSenha">Confirmar senha</label>
-          <Controller
-            name="confirmarSenha"
-            control={control}
-            render={({ field }) => (
-              <input
-                id="confirmarSenha"
-                className="input"
-                type="password"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-                required
-              />
-            )}
-          />
-          {erroCampo('confirmarSenha')}
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label" htmlFor="cpf">CPF</label>
-          <Controller
-            name="cpf"
-            control={control}
-            render={({ field }) => (
-              <MaskedInput
-                id="cpf"
-                mask="cpf"
-                value={field.value}
-                onChange={field.onChange}
-                required
-              />
-            )}
-          />
-          {erroCampo('cpf')}
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label className="label" htmlFor="telefone">Telefone</label>
-          <Controller
-            name="telefone"
-            control={control}
-            render={({ field }) => (
-              <MaskedInput
-                id="telefone"
-                mask="telefone"
-                value={field.value}
-                onChange={field.onChange}
-                required
-              />
-            )}
-          />
-          {erroCampo('telefone')}
-        </div>
-        <button
-          className="btn btn-primary"
-          type="submit"
-          disabled={isSubmitting}
-          style={{ minHeight: '44px', width: '100%' }}
-        >
-          {isSubmitting ? 'Cadastrando…' : 'Criar conta'}
-        </button>
-      </form>
-      <p style={{ marginTop: '1rem', fontSize: '0.875rem', textAlign: 'center' }}>
-        Ja tem uma conta?{' '}
-        <button
-          type="button"
-          onClick={() => navigate('/login')}
-          className="btn"
-          style={{ color: 'var(--rose-600)', fontWeight: '600', padding: 0 }}
-        >
-          Entre
-        </button>
-      </p>
+
+        <h1 className="auth-title">Criar sua conta</h1>
+        <p className="auth-subtitle">
+          Cadastre-se para começar a estudar com flashcards.
+        </p>
+
+        {erroForm && <p style={{ color: 'var(--err)', marginBottom: '1rem' }}>{erroForm}</p>}
+        {sucesso && <p style={{ color: 'var(--ok)', marginBottom: '1rem' }}>{sucesso}</p>}
+
+        <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
+          <div className="auth-field">
+            <label className="auth-label" htmlFor="cadastro-nome">
+              Nome completo
+            </label>
+            <Controller
+              name="nome"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="cadastro-nome"
+                  type="text"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  placeholder="Seu nome completo"
+                  required
+                  autoComplete="name"
+                  fullWidth
+                />
+              )}
+            />
+            {erroCampo('nome')}
+          </div>
+
+          <div className="auth-field">
+            <label className="auth-label" htmlFor="cadastro-email">
+              E-mail
+            </label>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="cadastro-email"
+                  type="email"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  placeholder="seu@email.com"
+                  required
+                  autoComplete="new-email"
+                  fullWidth
+                />
+              )}
+            />
+            {erroCampo('email')}
+          </div>
+
+          <div className="auth-field">
+            <label className="auth-label" htmlFor="cadastro-senha">
+              Senha
+            </label>
+            <Controller
+              name="senha"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="cadastro-senha"
+                  type="password"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="new-password"
+                  fullWidth
+                />
+              )}
+            />
+            {erroCampo('senha')}
+          </div>
+
+          <div className="auth-field">
+            <label className="auth-label" htmlFor="cadastro-confirmar-senha">
+              Confirmar senha
+            </label>
+            <Controller
+              name="confirmarSenha"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="cadastro-confirmar-senha"
+                  type="password"
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="new-password"
+                  fullWidth
+                />
+              )}
+            />
+            {erroCampo('confirmarSenha')}
+          </div>
+
+          <div className="auth-field">
+            <label className="auth-label" htmlFor="cadastro-cpf">
+              CPF
+            </label>
+            <Controller
+              name="cpf"
+              control={control}
+              render={({ field }) => (
+                <MaskedInput
+                  id="cadastro-cpf"
+                  mask="cpf"
+                  value={field.value}
+                  onChange={field.onChange}
+                  required
+                />
+              )}
+            />
+            {erroCampo('cpf')}
+          </div>
+
+          <div className="auth-field">
+            <label className="auth-label" htmlFor="cadastro-telefone">
+              Telefone
+            </label>
+            <Controller
+              name="telefone"
+              control={control}
+              render={({ field }) => (
+                <MaskedInput
+                  id="cadastro-telefone"
+                  mask="telefone"
+                  value={field.value}
+                  onChange={field.onChange}
+                  required
+                />
+              )}
+            />
+            {erroCampo('telefone')}
+          </div>
+
+          <Button
+            variant="solid"
+            type="submit"
+            disabled={loadingCadastro || isSubmitting}
+            fullWidth
+            style={{ minHeight: '48px' }}
+          >
+            {loadingCadastro || isSubmitting ? 'Cadastrando…' : 'Criar conta'}
+          </Button>
+        </form>
+
+        <p style={{ marginTop: '1rem', fontSize: '0.875rem', textAlign: 'center' }}>
+          Já tem uma conta?{' '}
+          <button
+            type="button"
+            onClick={() => navigate('/login')}
+            style={{ color: 'var(--color-primary)', fontWeight: '600', padding: 0 }}
+          >
+            Entre
+          </button>
+        </p>
+      </div>
     </div>
   );
 }
