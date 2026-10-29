@@ -18,15 +18,15 @@ describe('StatusPill', () => {
     expect(pill).toBeInTheDocument();
     // happy-dom returns 'transparent' instead of rgba(0, 0, 0, 0)
     expect(pill).toHaveStyle('background-color: transparent');
-    expect(pill).toHaveStyle('color: #E0527F');
+    expect(pill).toHaveStyle('color: #F7A8B8');
   });
 
   it('exibe "X para hoje" (sólida, cor primária) com o número de pendentes', () => {
     render(<StatusPill variant="due" count={3} />);
     const pill = screen.getByText('3 para hoje');
     expect(pill).toBeInTheDocument();
-    expect(pill).toHaveStyle('background-color: #E0527F');
-    expect(pill).toHaveStyle('color: #FFFFFF');
+    expect(pill).toHaveStyle('background-color: #F7A8B8');
+    expect(pill).toHaveStyle('color: #33364D');
   });
 
   it('exibe "0 para hoje" quando count é zero em modo devido', () => {

@@ -37,14 +37,14 @@ export default function StatusPill({ variant, count, className, style }: StatusP
           border: `1px solid`,
           ...(isDue
             ? {
-                background: tokens.colors.primary,
-                color: tokens.colors.inkInverse,
-                borderColor: tokens.colors.primary,
+                background: 'var(--role-acao-principal)',
+                color: 'var(--role-texto-sobre-acao)',
+                borderColor: 'var(--role-acao-principal)',
               }
             : {
                 background: 'transparent',
-                color: tokens.colors.primary,
-                borderColor: tokens.colors.primaryLightStronger,
+                color: 'var(--role-acao-principal)',
+                borderColor: 'var(--role-acao-principal)',
               }),
           ...style,
         } as React.CSSProperties
