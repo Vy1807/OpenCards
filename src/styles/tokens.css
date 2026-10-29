@@ -67,6 +67,33 @@
   --space-7: 28px;
   --space-8: 32px;
 
+  /* tipografia Figtree — PARTE 1 seção 3 */
+  --font-display-size: 40px;
+  --font-display-line-height: 48px;
+  --font-display-weight: 800;
+  --font-titulo-size: 32px;
+  --font-titulo-line-height: 40px;
+  --font-titulo-weight: 700;
+  --font-secao-size: 24px;
+  --font-secao-line-height: 32px;
+  --font-secao-weight: 700;
+  --font-subtitulo-size: 18px;
+  --font-subtitulo-line-height: 26px;
+  --font-subtitulo-weight: 700;
+  --font-corpo-size: 16px;
+  --font-corpo-line-height: 24px;
+  --font-corpo-weight: 500;
+  --font-pequeno-size: 14px;
+  --font-pequeno-line-height: 20px;
+  --font-pequeno-weight: 500;
+  --font-legenda-size: 12px;
+  --font-legenda-line-height: 16px;
+  --font-legenda-weight: 600;
+  --font-legenda-transform: uppercase;
+  --font-cartao-size: 28px;
+  --font-cartao-line-height: 36px;
+  --font-cartao-weight: 600;
+
   /* breakpoints (U-430) */
   --breakpoint-mobile: 767px;
   --breakpoint-tablet: 768px;
